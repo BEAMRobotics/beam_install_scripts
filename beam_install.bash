@@ -57,11 +57,11 @@ install_routine()
 
     # submodule_init
 
-    bash ros_install/ros_install.bash
+    bash ros_install.bash
     bash create_catkin_workspace.bash
 
     link_routine
-    bash ros_install/rosdeps_install.bash
+    bash rosdeps_install.bash
 
     bash beam_dependencies_install.bash
 
