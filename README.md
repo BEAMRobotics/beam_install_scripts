@@ -1,2 +1,2 @@
-# beam_install_scripts
+# Beam Install Scripts
 Beam repo containing all required install scripts
