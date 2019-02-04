@@ -6,24 +6,7 @@ source $SCRIPT_DIR/identify_environment.bash
 
 DEPS_DIR="/tmp/beam_dependencies"
 
-# This script installs a series of 'other' dependencies for the autonomoose
-# project.
-
-main()
-{
-    # Ensure wget is available
-    sudo apt-get install -qq wget  > /dev/null
-    
-    install_ceres
-    install_pcl
-    install_geographiclib
-    install_gtsam
-    
-    #install_protobuf
-    #install_dataspeed
-    #install_liquid-dsp
-    #sudo apt-get install -qq clang-format-3.8 > /dev/null
-}
+# This script contains a series of functions to install 'other' dependencies for beam.
 
 install_dataspeed()
 {
@@ -248,5 +231,3 @@ install_liquid-dsp()
     sudo make install > /dev/null
     echo "Liquid DSP installed successfully"
 }
-
-main
