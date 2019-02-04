@@ -18,8 +18,12 @@ rosdep update > /dev/null
 # separately in the repo or cross-compiled stage.
 if [ -d "$ROSPACKAGES_DIR" ]; then
     # we have a source stack distro
+    echo One
+    echo $CATKIN_DIR
     rosdep install -qry --from-paths $CATKIN_DIR/src/ --ignore-src
 else
     # we have a binary stack distro
+    echo Two
+    echo $REPO_DIR
     rosdep install -qry --from-paths $REPO_DIR --ignore-src
 fi

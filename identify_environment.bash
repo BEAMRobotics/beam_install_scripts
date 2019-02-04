@@ -13,4 +13,3 @@ case $UBUNTU_CODENAME in
     echo "Unsupported version of Ubuntu detected. Only trusty (14.04.*) and xenial (16.04.*) are currently supported."
     exit 1
 esac
-export REPO_DIR=$(dirname "$SCRIPT_DIR")

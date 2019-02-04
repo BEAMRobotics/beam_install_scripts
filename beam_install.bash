@@ -8,11 +8,19 @@ set -e
 # -l = link only, creates all symlinks for the various parts of the project
 # -u = unlink only, removes all symlinks
 
+
+# Specify location of installation scripts
+INSTALL_SCRIPTS=$"$HOME/beam_install_scripts"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
-source $SCRIPT_DIR/identify_environment.bash
+
+# Set the repo directory as an environment variable
+export REPO_DIR=$(dirname "$SCRIPT_DIR")
+
+# get UBUNTU_CODENAME, ROS_DISTRO, CATKIN_DIR
+source $INSTALL_SCRIPTS/identify_environment.bash
 
 : ${SYMLINKS_REPO_DIR:=$REPO_DIR}
+
 
 read_args()
 {
@@ -51,21 +59,22 @@ install_routine()
         menu
     fi
 
-    cd "$SCRIPT_DIR"
+    cd "$SCRIPTS_DIR"
     unlink_routine
     catkin_clean
 
     # submodule_init
 
-    bash ros_install.bash
-    bash create_catkin_workspace.bash
+    bash $INSTALL_SCRIPTS/ros_install.bash
+    bash $INSTALL_SCRIPTS/create_catkin_workspace.bash
 
     link_routine
-    bash rosdeps_install.bash
+    bash $INSTALL_SCRIPTS/rosdeps_install.bash
     
     # Import functions to install required dependencies
-    source beam_dependencies_install.bash
+    source $INSTALL_SCRIPTS/beam_dependencies_install.bash
     
+
     # Ensure wget is available
     sudo apt-get install -qq wget  > /dev/null
     # Install dependencies
@@ -73,8 +82,6 @@ install_routine()
     install_pcl
     install_geographiclib
     install_gtsam
-
-    bash beam_dependencies_install.bash
 
     compile
 
