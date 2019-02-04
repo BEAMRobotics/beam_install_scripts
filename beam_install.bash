@@ -62,6 +62,7 @@ install_routine()
 
     link_routine
     bash rosdeps_install.bash
+<<<<<<< HEAD
     
     # Import functions to install required dependencies
     source beam_dependencies_install.bash
@@ -73,6 +74,10 @@ install_routine()
     install_pcl
     install_geographiclib
     install_gtsam
+=======
+
+    bash beam_dependencies_install.bash
+>>>>>>> edccb9363ea9a790c1ee8b7819832f9d5655331e
 
     compile
 
