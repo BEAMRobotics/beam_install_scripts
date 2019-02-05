@@ -185,7 +185,8 @@ install_gtsam()
     GTSAM_URL="https://bitbucket.org/gtborg/gtsam.git"
     GTSAM_DIR="gtsam"
 
-    if (ldconfig -p | grep -q libgtsam.so); then
+    if (find /usr/local/lib -name libgtsam.so | grep -q /usr/local/lib); then
+    #if (ldconfig -p | grep -q libgtsam.so); then
         echo "GTSAM version $GTSAM_VERSION is already installed."
     else
         echo "Installing GTSAM version $GTSAM_VERSION ..."
@@ -230,4 +231,41 @@ install_liquid-dsp()
     make_with_progress -j$(nproc)
     sudo make install > /dev/null
     echo "Liquid DSP installed successfully"
+}
+
+install_libwave()
+{
+    if (find /usr/local/lib -name libwave_* | grep -q /usr/local/lib); then
+        echo "libwave SLAM library already installed"
+    else    
+        echo "Installing libwave SLAM library"
+        cd ~ 
+        # Install dependencies 
+        sudo apt-get install libboost-dev libyaml-cpp-dev libeigen3-dev \
+        build-essential cmake
+
+        # Clone the repository with submodules
+        # Ensure that Beam install scripts are installed
+        if [ -d libwave ]; then
+            echo "Libwave directory already installed"
+        else
+            echo "Cloning libwave into home directory"
+            git clone --recursive https://github.com/wavelab/libwave.git
+            echo "Success"
+        fi    
+
+
+        cd libwave
+        mkdir -p build
+        cd build
+        cmake ..
+        make -j8
+
+        # Install libwave
+        sudo make install
+
+        cd ~
+        sudo rm -rf libwave
+        
+    fi
 }
