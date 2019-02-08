@@ -268,4 +268,7 @@ install_libwave()
         sudo rm -rf libwave
         
     fi
+    # wave_spatial_utils not inluded in libwave github repo
+    # install dep for wave_spatial_utils
+    sudo apt-get install ros-kinetic-tf2-geometry-msgs
 }
