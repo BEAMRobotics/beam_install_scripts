@@ -11,7 +11,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 main()
 {
     install_ximea_deps
-    update_edev
+    update_udev
     install_gps
     install_um7
     install_flir_blackfly
