@@ -117,3 +117,5 @@ install_ez_publisher()
 {
     sudo apt-get install ros-kinetic-rqt-ez-publisher
 }
+
+main
