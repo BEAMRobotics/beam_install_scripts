@@ -19,6 +19,7 @@ main()
     install_libpcap
     install_husky_packages
     enable_passwordless_sudo
+    install_chrony_deps
     catkin_build
 }
 
@@ -26,6 +27,12 @@ catkin_build()
 {
     cd /home/"$USER"/catkin_ws
     catkin build
+}
+
+install_chony_deps()
+{
+    echo "installing chrony and its dependencies"
+    sudo apt-get install gpsd gpsd-clients chrony
 }
 
 clone_ros_drivers()
