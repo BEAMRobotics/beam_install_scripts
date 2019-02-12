@@ -18,7 +18,6 @@ main()
     install_libpcap
     install_husky_packages
     enable_passwordless_sudo
-    install_ex_publisher
 }
 
 
@@ -110,11 +109,6 @@ install_husky_packages()
 enable_passwordless_sudo()
 {
     echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers 
-}
-
-install_ez_publisher()
-{
-    sudo apt-get install ros-kinetic-rqt-ez-publisher
 }
 
 main
