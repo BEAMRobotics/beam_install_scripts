@@ -107,7 +107,6 @@ install_husky_packages()
     ros-kinetic-diff-drive-controller   
 }
 
-main
 enable_passwordless_sudo()
 {
     echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers 
