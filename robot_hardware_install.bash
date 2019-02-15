@@ -88,19 +88,7 @@ update_udev()
 
 install_gps()
 {
-    echo "installing piksi gps dependencies.."
-    cd ~/
-    mkdir -p software
-    cd software # cd to a directory where you will download and build libsbp
-    git clone https://github.com/swift-nav/libsbp 
-    cd libsbp/c
-    mkdir build
-    cd build
-    cmake ..
-    make
-    sudo make install # install headers and libraries into /usr/local
-    
-    bash /home/"$USER"/catkin_ws/src/ros_drivers/ethz_piksi_ros/piksi_multi_rtk_ros/install/install_piksi_multi.sh
+    source $INSTALL_SCRIPTS/install_piksi_deps.bash
 }
 
 install_um7()
