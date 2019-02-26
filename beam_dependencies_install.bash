@@ -258,7 +258,7 @@ install_libwave()
         cd libwave
         mkdir -p build
         cd build
-        cmake ..
+        cmake -DBUILD_TESTS=OFF ..
         make -j8
 
         # Install libwave
