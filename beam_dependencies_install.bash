@@ -259,7 +259,7 @@ install_libwave()
         mkdir -p build
         cd build
         cmake -DBUILD_TESTS=OFF ..
-        make -j8
+        make -j$(nproc)
 
         # Install libwave
         sudo make install
