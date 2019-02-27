@@ -18,4 +18,5 @@ matrix:
 # Check installation script
 script:
   - cd $CI_SOURCE_PATH
+  - ls
   - bash ./install.bash
