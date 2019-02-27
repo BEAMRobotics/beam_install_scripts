@@ -14,6 +14,9 @@ matrix:
       env: ROS_DISTRO=kinetic
 
 ################################################################################
+env:
+  global:
+    - CI_SOURCE_PATH=$(pwd)
 
 # Check installation script
 script:
