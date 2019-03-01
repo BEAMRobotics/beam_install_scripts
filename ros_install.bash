@@ -14,7 +14,13 @@ sudo apt-get -qq install python-rosinstall python-catkin-pkg python-rosdep pytho
 sudo apt-get -qq install ros-$ROS_DISTRO-pcl-ros ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins ros-$ROS_DISTRO-libg2o > /dev/null
 sudo apt-get install ros-kinetic-tf2-geometry-msgs
 
+# ROS environment setup
+echo "Setting up ROS environment..."
 source /opt/ros/$ROS_DISTRO/setup.bash
+echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/kinetic/share:/$ROS_PACKAGE_PATH" >> ~/.bashrc
+
 
 # Prepare rosdep to install dependencies.
 echo "Updating rosdep ..."
