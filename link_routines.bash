@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+# This script contains functions to add/remove a symlink repo from catkin_ws/src
 
 link_routine()
 {
