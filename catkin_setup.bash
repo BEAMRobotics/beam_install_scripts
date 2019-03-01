@@ -6,6 +6,7 @@ set -e
 create_catkin_ws()
 {
     # Check if workspace exists
+    install_catkin_tools
     if [ -e "$CATKIN_DIR/.catkin_workspace" ] || [ -d "$CATKIN_DIR/.catkin_tools" ]; then
         echo "Catkin workspace detected at $CATKIN_DIR"
     else
