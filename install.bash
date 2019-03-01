@@ -24,16 +24,16 @@ install_routine()
 {
     sudo -v
 
-    cd "$SCRIPTS_DIR"
+    # source catkin setup script
+    source $INSTALL_SCRIPTS/catkin_setup.bash
 
     # submodule_init
 
     bash $INSTALL_SCRIPTS/ros_install.bash
-    bash $INSTALL_SCRIPTS/create_catkin_workspace.bash
+    create_catkin_ws
 
     bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
-    env_setup
 
     # Import functions to install required dependencies
     source $INSTALL_SCRIPTS/beam_dependencies_install.bash
@@ -71,33 +71,6 @@ install_routine()
     
     # Echo success
     echo "Beam robotics installation scripts successfully tested."
-}
-
-
-compile()
-{
-    cd "$CATKIN_DIR"
-    source /opt/ros/$ROS_DISTRO/setup.bash
-    if [ -z "$CONTINUOUS_INTEGRATION" ]; then
-        catkin build
-    else
-        if [ -n "$CIRCLECI" ]; then
-            # Build libwave by itself first, since the job is so large
-            catkin build --no-status -j2 libwave
-            catkin build --no-status --mem-limit 6G
-        else
-            catkin build --no-status
-        fi
-    fi
-}
-
-env_setup()
-{
-    # ROS environment setup
-    echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
-    source /opt/ros/kinetic/setup.bash
-    echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-    echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/kinetic/share:/$ROS_PACKAGE_PATH" >> ~/.bashrc
 }
 
 
