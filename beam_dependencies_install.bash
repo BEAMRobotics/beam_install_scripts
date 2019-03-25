@@ -279,7 +279,7 @@ install_catch2()
       mkdir -p "$HOME/software"
   fi
 
-  if [ ! -d "$HOME/software/Catch2" ]
+  if [ ! -d "$HOME/software/Catch2" ]; then
     git clone https://github.com/catchorg/Catch2.git $HOME/software/Catch2
   fi
   cd $HOME/software/Catch2
