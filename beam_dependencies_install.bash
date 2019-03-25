@@ -237,10 +237,10 @@ install_libwave()
 {
     if (find /usr/local/lib -name libwave_* | grep -q /usr/local/lib); then
         echo "libwave SLAM library already installed"
-    else    
+    else
         echo "Installing libwave SLAM library"
-        cd ~ 
-        # Install dependencies 
+        cd ~
+        # Install dependencies
         sudo apt-get install libboost-dev libyaml-cpp-dev libeigen3-dev \
         build-essential cmake
 
@@ -252,7 +252,7 @@ install_libwave()
             echo "Cloning libwave into home directory"
             git clone --recursive https://github.com/wavelab/libwave.git
             echo "Success"
-        fi    
+        fi
 
 
         cd libwave
@@ -266,9 +266,26 @@ install_libwave()
 
         cd ~
         sudo rm -rf libwave
-        
+
     fi
     # wave_spatial_utils not inluded in libwave github repo
     # install dep for wave_spatial_utils
     sudo apt-get install ros-kinetic-tf2-geometry-msgs
+}
+
+install_catch2()
+{
+  if [ ! -d "$HOME/software" ]; then
+      mkdir -p "$HOME/software"
+  fi
+
+  if [ ! -d "$HOME/software/Catch2" ]
+    git clone https://github.com/catchorg/Catch2.git $HOME/software/Catch2
+  fi
+  cd $HOME/software/Catch2
+  mkdir build
+  cd build
+  cmake ..
+  sudo make -j8 install
+  echo "Success"
 }

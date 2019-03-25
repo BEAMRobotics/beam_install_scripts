@@ -42,6 +42,7 @@ install_routine()
     # Ensure wget is available
     sudo apt-get install -qq wget  > /dev/null
     # Install dependencies
+    install_catch2
     #install_ceres
     #install_pcl
     #install_geographiclib
@@ -68,7 +69,7 @@ install_routine()
         echo "Catkin Directory not created"
         exit
     fi
-    
+
     # Echo success
     echo "Beam robotics installation scripts successfully tested."
 }
