@@ -65,7 +65,8 @@ install_ceres()
         git checkout -q 1.11.0
         mkdir -p build
         cd build
-        cmake -DBUILD_SHARED_LIBS=ON .. > /dev/null
+        CERES_CMAKE_ARGS="-DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DBUILD_BENCHMARKS=OFF -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DCMAKE_CXX_STANDARD=11"
+        cmake .. ${CERES_CMAKE_ARGS} > /dev/null
         echo "Building Ceres"
         make_with_progress -j$(nproc)
         TEST_ARGS="-E 'bundle_adjustment|covariance|rotation'" # Skip the slowest tests
