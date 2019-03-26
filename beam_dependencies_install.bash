@@ -141,7 +141,7 @@ install_pcl()
             -DWITH_DSSDK=OFF -DWITH_ENSENSO=OFF -DWITH_FZAPI=OFF \
             -DWITH_LIBUSB=OFF -DWITH_OPENGL=OFF -DWITH_OPENNI=OFF \
             -DWITH_OPENNI2=OFF -DWITH_QT=OFF -DWITH_RSSDK=OFF \
-            -DBUILD_CUDA=OFF -DBUILD_GPU=OFF -DBUILD_surface=OFF \
+            -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
             -DBUILD_tracking=OFF"
         fi
 
