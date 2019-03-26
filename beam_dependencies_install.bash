@@ -286,7 +286,7 @@ install_catch2()
     git clone https://github.com/catchorg/Catch2.git $HOME/software/Catch2
   fi
   cd $HOME/software/Catch2
-  mkdir build
+  mkdir -p build
   cd build
   cmake ..
   sudo make -j8 install
