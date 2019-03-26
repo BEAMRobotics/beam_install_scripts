@@ -77,7 +77,7 @@ install_protobuf()
 
 install_pcl()
 {
-    sudo apt-get install libflann1.8 libflann-dev
+    sudo apt-get install libflann*
     sudo apt-get install libvtk6* libboost1.58* libproj-dev libqhull* > /dev/null
     PCL_VERSION='1.8.0'
     PCL_FILE="pcl-$PCL_VERSION"
