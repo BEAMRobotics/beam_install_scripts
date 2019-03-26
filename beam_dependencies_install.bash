@@ -111,7 +111,7 @@ install_protobuf()
 
 install_pcl()
 {
-    sudo apt-get install libvtk6* libboost1.58* > /dev/null
+    sudo apt-get install libvtk6* libboost1.58* libproj-dev > /dev/null
     PCL_VERSION='1.8.0'
     PCL_FILE="pcl-$PCL_VERSION"
     PCL_DIR="pcl-$PCL_FILE"
