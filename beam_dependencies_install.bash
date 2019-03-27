@@ -39,40 +39,8 @@ install_ceres()
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
         sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev libeigen3-dev > /dev/null
-        # not needed for xenial, the PPA does not have a release for xenial
-        if [ $UBUNTU_CODENAME == "trusty" ]; then
-            sudo add-apt-repository -y ppa:bzindovic/suitesparse-bugfix-1319687
-            sudo apt-get -qq update
-        fi
-        sudo apt-get -qq install libsuitesparse-dev > /dev/null
+        sudo apt-get install libceres-dev > /dev/null
 
-        if [[ ! -d "gflags" ]]; then
-            git clone -q https://github.com/gflags/gflags.git
-        fi
-        cd gflags
-        git checkout -q v2.1.2
-        mkdir -p build
-        cd build
-        cmake -DBUILD_SHARED_LIBS=ON .. > /dev/null
-        echo "Building gflags"
-        make_with_progress -j$(nproc)
-        sudo make install > /dev/null
-        cd "$DEPS_DIR"
-        if [[ ! -d "ceres-solver" ]]; then
-            git clone -q https://ceres-solver.googlesource.com/ceres-solver
-        fi
-        cd ceres-solver
-        git checkout -q 1.11.0
-        mkdir -p build
-        cd build
-        cmake -DBUILD_SHARED_LIBS=ON .. > /dev/null
-        echo "Building Ceres"
-        make_with_progress -j$(nproc)
-        TEST_ARGS="-E 'bundle_adjustment|covariance|rotation'" # Skip the slowest tests
-        make test ARGS="$TEST_ARGS" > /dev/null
-        sudo make install > /dev/null
-        sudo ldconfig # refresh shared library cache.
-        echo "Ceres successfully installed."
     fi
 }
 
@@ -109,6 +77,8 @@ install_protobuf()
 
 install_pcl()
 {
+    sudo apt-get install libflann*
+    sudo apt-get install libvtk6* libboost1.58* libproj-dev libqhull* > /dev/null
     PCL_VERSION='1.8.0'
     PCL_FILE="pcl-$PCL_VERSION"
     PCL_DIR="pcl-$PCL_FILE"
@@ -138,7 +108,7 @@ install_pcl()
             -DWITH_DSSDK=OFF -DWITH_ENSENSO=OFF -DWITH_FZAPI=OFF \
             -DWITH_LIBUSB=OFF -DWITH_OPENGL=OFF -DWITH_OPENNI=OFF \
             -DWITH_OPENNI2=OFF -DWITH_QT=OFF -DWITH_RSSDK=OFF \
-            -DBUILD_CUDA=OFF -DBUILD_GPU=OFF -DBUILD_surface=OFF \
+            -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
             -DBUILD_tracking=OFF"
         fi
 
@@ -283,7 +253,7 @@ install_catch2()
     git clone https://github.com/catchorg/Catch2.git $HOME/software/Catch2
   fi
   cd $HOME/software/Catch2
-  mkdir build
+  mkdir -p build
   cd build
   cmake ..
   sudo make -j8 install
