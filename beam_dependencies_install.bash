@@ -277,3 +277,20 @@ install_cmake()
   fi
 
 }
+
+install_eigen3()
+{
+  if [ -d "$DEPS_DIR/eigen*"]; then
+    echo "eigen version already up to date"
+  else
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
+    wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
+    tar xjf 3.3.7.tar.bz2
+    cd eigen-eigen-323c052e1731
+    mkdir -p build
+    cd build
+    cmake ..
+    make
+    sudo make -j$(nproc) install
+}
