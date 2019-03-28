@@ -275,7 +275,7 @@ install_cmake()
     ./configure --prefix=/opt/cmake
     make
     sudo make -j$(nproc) install
-    cd ..
+    cd $DEPS_DIR
     sudo rm -rf cmake-3.14.0
     sudo rm cmake-3.14.0.tar.gz
     echo "Success"
