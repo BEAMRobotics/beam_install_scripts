@@ -256,7 +256,7 @@ install_catch2()
     cd build
     cmake ..
     sudo make -j$(nproc) install
-    sudo rm -rf Catch2
+    # sudo rm -rf Catch2
     echo "Success"
   fi
 }
