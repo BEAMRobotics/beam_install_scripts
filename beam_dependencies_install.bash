@@ -297,4 +297,5 @@ install_eigen3()
     cmake ..
     make
     sudo make -j$(nproc) install
+  fi
 }
