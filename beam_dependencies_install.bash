@@ -277,6 +277,7 @@ install_cmake()
     sudo make -j$(nproc) install
     cd ..
     sudo rm -rf cmake-3.14.0
+    sudo rm cmake-3.14.0.tar.gz
     echo "Success"
   fi
 
@@ -297,5 +298,7 @@ install_eigen3()
     cmake ..
     make
     sudo make -j$(nproc) install
+    cd $DEPS_DIR
+    sudo rm 3.3.7.tar.bz2
   fi
 }
