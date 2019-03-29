@@ -250,7 +250,9 @@ install_catch2()
   else
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
-    git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
+    if [ -d "$DEPS_DIR/Catch2" ]; then
+      git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
+    fi
     cd Catch2
     mkdir -p build
     cd build
