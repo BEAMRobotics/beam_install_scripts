@@ -304,3 +304,8 @@ install_eigen3()
     sudo rm 3.3.7.tar.bz2
   fi
 }
+
+install_gflags()
+{
+  sudo apt-get install libgflags-dev 
+}
