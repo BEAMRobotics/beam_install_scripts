@@ -159,11 +159,13 @@ install_gtsam()
     #if (ldconfig -p | grep -q libgtsam.so); then
         echo "GTSAM version $GTSAM_VERSION is already installed."
     else
-        echo "Installing GTSAM version $GTSAM_VERSION ..."
+      echo "Installing GTSAM version $GTSAM_VERSION ..."
+      if [ ! -d "$DEPS_DIR/gtsam" ]; then
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-
         git clone $GTSAM_URL
+      fi
+        cd $DEPS_DIR
         cd $GTSAM_DIR
         git checkout $GTSAM_VERSION
         mkdir -p build
