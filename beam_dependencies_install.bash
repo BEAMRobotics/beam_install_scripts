@@ -320,6 +320,6 @@ install_gflags()
     cd build
     cmake ..
     make
-    make install
+    sudo make -j$(nproc) install
   fi
 }
