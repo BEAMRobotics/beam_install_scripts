@@ -307,5 +307,17 @@ install_eigen3()
 
 install_gflags()
 {
-  sudo apt-get install libgflags-dev 
+  if [ -d "$DEPS_DIR/gflags" ]; then
+    echo "gflags installation exists"
+  else
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
+    git clone https://github.com/gflags/gflags.git
+    cd gflags
+    mkdir build
+    cd build
+    cmake ..
+    make
+    make install
+  fi
 }
