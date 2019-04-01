@@ -97,26 +97,31 @@ install_pcl()
             rm -rf "$PCL_FILE.tar.gz"
         fi
         cd "$PCL_DIR"
-        mkdir -p build
-        cd build
 
-        PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
-        if [ -n "$CONTINUOUS_INTEGRATION" ]; then
-            # Disable everything unneeded for a faster build
-            PCL_CMAKE_ARGS="${PCL_CMAKE_ARGS} \
-            -DWITH_CUDA=OFF -DWITH_DAVIDSDK=OFF -DWITH_DOCS=OFF \
-            -DWITH_DSSDK=OFF -DWITH_ENSENSO=OFF -DWITH_FZAPI=OFF \
-            -DWITH_LIBUSB=OFF -DWITH_OPENGL=OFF -DWITH_OPENNI=OFF \
-            -DWITH_OPENNI2=OFF -DWITH_QT=OFF -DWITH_RSSDK=OFF \
-            -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
-            -DBUILD_tracking=OFF"
+        if [ ! -d "build" ]; then
+          mkdir -p build
+          cd build
+
+          PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
+          if [ -n "$CONTINUOUS_INTEGRATION" ]; then
+              # Disable everything unneeded for a faster build
+              PCL_CMAKE_ARGS="${PCL_CMAKE_ARGS} \
+              -DWITH_CUDA=OFF -DWITH_DAVIDSDK=OFF -DWITH_DOCS=OFF \
+              -DWITH_DSSDK=OFF -DWITH_ENSENSO=OFF -DWITH_FZAPI=OFF \
+              -DWITH_LIBUSB=OFF -DWITH_OPENGL=OFF -DWITH_OPENNI=OFF \
+              -DWITH_OPENNI2=OFF -DWITH_QT=OFF -DWITH_RSSDK=OFF \
+              -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
+              -DBUILD_tracking=OFF"
+          fi
+
+          cmake .. ${PCL_CMAKE_ARGS} > /dev/null
+
+          echo "Building $PCL_FILE"
+          make_with_progress -j$(nproc)
+
         fi
 
-        cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-
-        echo "Building $PCL_FILE"
-        make_with_progress -j$(nproc)
-
+        cd $DEPS_DIR/$PCL_DIR/build
         sudo make install > /dev/null
         echo "PCL installed successfully"
     fi
@@ -139,12 +144,16 @@ install_geographiclib()
         rm -rf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
 
         cd "$GEOGRAPHICLIB_DIR"
-        mkdir -p BUILD
-        cd BUILD
-        cmake ..
+        if [ ! -d "build" ]; then
+          mkdir -p build
+          cd build
+          cmake ..
 
-        make_with_progress -j$(nproc)
-        make test
+          make_with_progress -j$(nproc)
+          make test
+        fi
+        
+        cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/build
         sudo make install > /dev/null
     fi
 }
@@ -256,11 +265,16 @@ install_catch2()
       git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
     fi
     cd Catch2
-    mkdir -p build
-    cd build
-    cmake ..
+    
+    if [ ! -d "build"]; then
+      mkdir -p build
+      cd build
+      cmake ..
+      make -j$(nproc)
+    fi
+
+    cd $DEPS_DIR/Catch2/build
     sudo make -j$(nproc) install
-    # sudo rm -rf Catch2
     echo "Success"
   fi
 }
