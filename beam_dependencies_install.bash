@@ -266,7 +266,7 @@ install_catch2()
     fi
     cd Catch2
     
-    if [ ! -d "build"]; then
+    if [ ! -d "build" ]; then
       mkdir -p build
       cd build
       cmake ..
