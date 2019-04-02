@@ -39,13 +39,13 @@ install_ceres()
         echo "Installing Ceres 1.14.0 ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        if [ ! -d "ceres-solver-1.14.0"]; then
+        if [ ! -d "ceres-solver-1.14.0" ]; then
           wget http://ceres-solver.org/ceres-solver-1.14.0.tar.gz
           tar zxf ceres-solver-1.14.0.tar.gz
           rm -rf ceres-solver-1.14.0.tar.gz
         fi
         cd ceres-solver-1.14.0
-        if [ ! -d "build"]; then
+        if [ ! -d "build" ]; then
           mkdir -p build
           cd build
           cmake ..
