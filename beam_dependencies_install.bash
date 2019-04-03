@@ -187,18 +187,21 @@ install_gtsam()
         cd "$DEPS_DIR"
         git clone $GTSAM_URL
       fi
-        cd $DEPS_DIR
-        cd $GTSAM_DIR
-        git checkout $GTSAM_VERSION
+      cd $DEPS_DIR
+      cd $GTSAM_DIR
+      git checkout $GTSAM_VERSION
+      if [ ! -d "build" ]; then
         mkdir -p build
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release \
         -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=OFF -DGTSAM_BUILD_WRAP=OFF \
         -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF  -DGTSAM_BUILD_DOCS=OFF
-
         make -j$(nproc)
-        sudo make install > /dev/null
-        echo "GTSAM installed successfully"
+      fi
+      
+      cd $DEPS_DIR/$GTSAME_DIR/build
+      sudo make install > /dev/null
+      echo "GTSAM installed successfully"
     fi
 }
 
@@ -233,38 +236,33 @@ install_libwave()
         echo "libwave SLAM library already installed"
     else
         echo "Installing libwave SLAM library"
-        cd ~
         # Install dependencies
-        sudo apt-get install libboost-dev libyaml-cpp-dev libeigen3-dev \
+        sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs\
         build-essential cmake
 
+        cd $DEPS_DIR
         # Clone the repository with submodules
         # Ensure that Beam install scripts are installed
-        if [ -d libwave ]; then
-            echo "Libwave directory already installed"
+        if [ -d "libwave" ]; then
+            echo "Libwave directory already cloned"
         else
             echo "Cloning libwave into home directory"
             git clone --recursive https://github.com/wavelab/libwave.git
             echo "Success"
         fi
-
-
+        
         cd libwave
-        mkdir -p build
-        cd build
-        cmake -DBUILD_TESTS=OFF ..
-        make -j$(nproc)
+        if [ -d "build" ]; then
+          mkdir -p build
+          cd build
+          cmake -DBUILD_TESTS=OFF ..
+          make -j$(nproc)
+        fi
 
+        cd $DEPS_DIR/libwave/build
         # Install libwave
-        sudo make install
-
-        cd ~
-        sudo rm -rf libwave
-
+        sudo make -j$(nproc) install
     fi
-    # wave_spatial_utils not inluded in libwave github repo
-    # install dep for wave_spatial_utils
-    sudo apt-get install ros-kinetic-tf2-geometry-msgs
 }
 
 install_catch2()
@@ -321,16 +319,22 @@ install_eigen3()
   else
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
-    wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
-    tar xjf 3.3.7.tar.bz2
+    if [ ! -d "eigen-eigen-323c052e1731" ]; then
+      wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
+      tar xjf 3.3.7.tar.bz2
+      rm -rf 3.3.7.tar.bz2
+    fi
     cd eigen-eigen-323c052e1731
-    mkdir -p build
-    cd build
-    cmake ..
-    make
+    if [ ! -d "build" ]; then
+      mkdir -p build
+      cd build
+      cmake ..
+      make
+    fi
+    
+    cd $DEPS_DIR/eigen-eigen-323c052e1731/build
     sudo make -j$(nproc) install
-    cd $DEPS_DIR
-    sudo rm 3.3.7.tar.bz2
+    
   fi
 }
 
