@@ -345,12 +345,17 @@ install_gflags()
   else
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
-    git clone https://github.com/gflags/gflags.git
+    if [ ! -d "gflags" ]; then
+      git clone https://github.com/gflags/gflags.git
+    fi
     cd gflags
-    mkdir build
-    cd build
-    cmake ..
-    make
+    if [ ! -d "build"]
+      mkdir -p build
+      cd build
+      cmake ..
+      make
+    fi
+    cd $DEPS_DIR/gflags/build
     sudo make -j$(nproc) install
   fi
 }
