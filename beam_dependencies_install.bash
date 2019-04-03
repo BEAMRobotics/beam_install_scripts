@@ -269,27 +269,23 @@ install_libwave()
 
 install_catch2()
 {
-  if (find /usr/local/lib/cmake/ -name Catch*); then
-    echo "Catch2 already installed"
-  else
-    mkdir -p $DEPS_DIR
-    cd $DEPS_DIR
-    if [ ! -d "$DEPS_DIR/Catch2" ]; then
-      git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
-    fi
-    cd Catch2
-
-    if [ ! -d "build" ]; then
-      mkdir -p build
-      cd build
-      cmake ..
-      make -j$(nproc)
-    fi
-
-    cd $DEPS_DIR/Catch2/build
-    sudo make -j$(nproc) install
-    echo "Success"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+  if [ ! -d "$DEPS_DIR/Catch2" ]; then
+    git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
   fi
+  cd Catch2
+
+  if [ ! -d "build" ]; then
+    mkdir -p build
+    cd build
+    cmake ..
+    make -j$(nproc)
+  fi
+
+  cd $DEPS_DIR/Catch2/build
+  sudo make -j$(nproc) install
+  echo "Success"
 }
 
 install_cmake()
