@@ -332,17 +332,18 @@ install_eigen3()
 
 install_gflags()
 {
-  if [ -d "$DEPS_DIR/gflags" ]; then
-    echo "gflags installation exists"
-  else
-    mkdir -p $DEPS_DIR
-    cd $DEPS_DIR
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+  if [ ! -d "$DEPS_DIR/gflags" ]; then
     git clone https://github.com/gflags/gflags.git
+  fi
+  if [ ! -d "$DEPS_DIR/gflags/build" ]; then
     cd gflags
     mkdir build
     cd build
     cmake ..
     make
-    sudo make -j$(nproc) install
   fi
+  cd $DEPS_DIR/gflags/build
+  sudo make -j$(nproc) install
 }
