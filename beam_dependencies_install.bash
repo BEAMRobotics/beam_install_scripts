@@ -348,7 +348,7 @@ install_gflags()
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
-  if [ ! -d "gflags" ]; then
+  if [ ! -d "$GFLAGS_FIR" ]; then
     git clone https://github.com/gflags/gflags.git
   fi
   
