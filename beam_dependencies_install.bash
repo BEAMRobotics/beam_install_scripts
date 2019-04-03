@@ -31,16 +31,29 @@ make_with_progress()
 
 install_ceres()
 {
+    sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
     # this install script is for local machines.
     if (find /usr/local/lib -name libceres.so | grep -q /usr/local/lib); then
         echo "Ceres is already installed."
     else
-        echo "Installing Ceres 1.11.0 ..."
+        echo "Installing Ceres 1.14.0 ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev libeigen3-dev > /dev/null
-        sudo apt-get install libceres-dev > /dev/null
-
+        if [ ! -d "ceres-solver-1.14.0" ]; then
+          wget http://ceres-solver.org/ceres-solver-1.14.0.tar.gz
+          tar zxf ceres-solver-1.14.0.tar.gz
+          rm -rf ceres-solver-1.14.0.tar.gz
+        fi
+        cd ceres-solver-1.14.0
+        if [ ! -d "build" ]; then
+          mkdir -p build
+          cd build
+          cmake ..
+          make -j$(nproc)
+          make test
+        fi
+        cd $DEPS_DIR/ceres-solver-1.14.0/build
+        sudo make -j$(nproc) install
     fi
 }
 
@@ -152,7 +165,7 @@ install_geographiclib()
           make_with_progress -j$(nproc)
           make test
         fi
-        
+
         cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/build
         sudo make install > /dev/null
     fi
@@ -265,7 +278,7 @@ install_catch2()
       git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
     fi
     cd Catch2
-    
+
     if [ ! -d "build" ]; then
       mkdir -p build
       cd build
