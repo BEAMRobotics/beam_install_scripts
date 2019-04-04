@@ -353,7 +353,7 @@ install_gflags()
   fi
   
   cd $GFLAGS_DIR
-  if [ ! -d "$BUILD_DIR"]
+  if [ ! -d "$BUILD_DIR"]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
