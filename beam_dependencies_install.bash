@@ -31,6 +31,9 @@ make_with_progress()
 
 install_ceres()
 {
+    CERES_DIR="ceres-solver-1.14.0"
+    BUILD_DIR="build"
+    
     sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
     # this install script is for local machines.
     if (find /usr/local/lib -name libceres.so | grep -q /usr/local/lib); then
@@ -39,20 +42,23 @@ install_ceres()
         echo "Installing Ceres 1.14.0 ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        if [ ! -d "ceres-solver-1.14.0" ]; then
-          wget http://ceres-solver.org/ceres-solver-1.14.0.tar.gz
-          tar zxf ceres-solver-1.14.0.tar.gz
-          rm -rf ceres-solver-1.14.0.tar.gz
+        
+        if [ ! -d "$CERES_DIR" ]; then
+          wget "http://ceres-solver.org/$CERES_DIR.tar.gz"
+          tar zxf "$CERES_DIR.tar.gz"
+          rm -rf "$CERES_DIR.tar.gz"
         fi
-        cd ceres-solver-1.14.0
-        if [ ! -d "build" ]; then
-          mkdir -p build
-          cd build
+        
+        cd $CERES_DIR
+        if [ ! -d "$BUILD_DIR" ]; then
+          mkdir -p $BUILD_DIR
+          cd $BUILD_DIR
           cmake ..
           make -j$(nproc)
           make test
         fi
-        cd $DEPS_DIR/ceres-solver-1.14.0/build
+        
+        cd $DEPS_DIR/$CERES_DIR/$BUILD_DIR
         sudo make -j$(nproc) install
     fi
 }
@@ -96,6 +102,7 @@ install_pcl()
     PCL_FILE="pcl-$PCL_VERSION"
     PCL_DIR="pcl-$PCL_FILE"
     PCL_URL="https://github.com/PointCloudLibrary/pcl/archive/pcl-$PCL_VERSION.tar.gz"
+    BUILD_DIR="build"
 
     # TODO: find a better way to check if already installed from source
     if [ -e "/usr/local/lib/libpcl_2d.so.$PCL_VERSION" ]; then
@@ -104,17 +111,17 @@ install_pcl()
         echo "Installing PCL version $PCL_VERSION ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        if [[ ! -d "$PCL_DIR" ]]; then
+        
+        if [ ! -d "$PCL_DIR" ]; then
             wget "$PCL_URL"
             tar -xf "$PCL_FILE.tar.gz"
             rm -rf "$PCL_FILE.tar.gz"
         fi
+        
         cd "$PCL_DIR"
-
-        if [ ! -d "build" ]; then
-          mkdir -p build
-          cd build
-
+        if [ ! -d "$BUILD_DIR" ]; then
+          mkdir -p $BUILD_DIR
+          cd $BUILD_DIR
           PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
           if [ -n "$CONTINUOUS_INTEGRATION" ]; then
               # Disable everything unneeded for a faster build
@@ -126,16 +133,13 @@ install_pcl()
               -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
               -DBUILD_tracking=OFF"
           fi
-
           cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-
           echo "Building $PCL_FILE"
           make_with_progress -j$(nproc)
-
         fi
 
-        cd $DEPS_DIR/$PCL_DIR/build
-        sudo make install > /dev/null
+        cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
+        sudo make -j$(nproc) install > /dev/null
         echo "PCL installed successfully"
     fi
 }
@@ -145,6 +149,7 @@ install_geographiclib()
     GEOGRAPHICLIB_VERSION="1.49"
     GEOGRAPHICLIB_URL="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
     GEOGRAPHICLIB_DIR="GeographicLib-$GEOGRAPHICLIB_VERSION"
+    BUILD_DIR="build"
 
     if (ldconfig -p | grep -q libGeographic.so.17 ); then
         echo "GeographicLib version $GEOGRAPHICLIB_VERSION is already installed."
@@ -152,22 +157,24 @@ install_geographiclib()
         echo "Installing GeographicLib version $GEOGRAPHICLIB_VERSION ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        wget "$GEOGRAPHICLIB_URL"
-        tar -xf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
-        rm -rf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
-
+        
+        if [ ! -d "$GEOGRAPHICLIB_DIR" ]; then 
+          wget "$GEOGRAPHICLIB_URL"
+          tar -xf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
+          rm -rf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
+        fi
+        
         cd "$GEOGRAPHICLIB_DIR"
-        if [ ! -d "build" ]; then
-          mkdir -p build
-          cd build
+        if [ ! -d "$BUILD_DIR" ]; then
+          mkdir -p $BUILD_DIR
+          cd $BUILD_DIR
           cmake ..
-
           make_with_progress -j$(nproc)
           make test
         fi
 
-        cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/build
-        sudo make install > /dev/null
+        cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/$BUILD_DIR
+        sudo make -j$(nproc) install > /dev/null
     fi
 }
 
@@ -176,29 +183,34 @@ install_gtsam()
     GTSAM_VERSION="4.0.0-alpha2"
     GTSAM_URL="https://bitbucket.org/gtborg/gtsam.git"
     GTSAM_DIR="gtsam"
+    BUILD_DIR="build"
 
     if (find /usr/local/lib -name libgtsam.so | grep -q /usr/local/lib); then
     #if (ldconfig -p | grep -q libgtsam.so); then
         echo "GTSAM version $GTSAM_VERSION is already installed."
     else
       echo "Installing GTSAM version $GTSAM_VERSION ..."
-      if [ ! -d "$DEPS_DIR/gtsam" ]; then
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
+      mkdir -p "$DEPS_DIR"
+      cd "$DEPS_DIR"
+      
+      if [ ! -d "$GTSAM_DIR" ]; then
         git clone $GTSAM_URL
       fi
-        cd $DEPS_DIR
-        cd $GTSAM_DIR
-        git checkout $GTSAM_VERSION
-        mkdir -p build
-        cd build
+      
+      cd $GTSAM_DIR
+      git checkout $GTSAM_VERSION
+      if [ ! -d "$BUILD_DIR" ]; then
+        mkdir -p $BUILD_DIR
+        cd $BUILD_DIR
         cmake .. -DCMAKE_BUILD_TYPE=Release \
         -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=OFF -DGTSAM_BUILD_WRAP=OFF \
         -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF  -DGTSAM_BUILD_DOCS=OFF
-
         make -j$(nproc)
-        sudo make install > /dev/null
-        echo "GTSAM installed successfully"
+      fi
+      
+      cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
+      sudo make install > /dev/null
+      echo "GTSAM installed successfully"
     fi
 }
 
@@ -229,121 +241,125 @@ install_liquid-dsp()
 
 install_libwave()
 {
+    LIBWAVE_DIR="libwave"
+    BUILD_DIR="build"
+    
     if (find /usr/local/lib -name libwave_* | grep -q /usr/local/lib); then
         echo "libwave SLAM library already installed"
     else
         echo "Installing libwave SLAM library"
-        cd ~
         # Install dependencies
-        sudo apt-get install libboost-dev libyaml-cpp-dev libeigen3-dev \
+        sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs\
         build-essential cmake
 
-        # Clone the repository with submodules
-        # Ensure that Beam install scripts are installed
-        if [ -d libwave ]; then
-            echo "Libwave directory already installed"
+        cd $DEPS_DIR
+        if [ -d "$LIBWAVE_DIR" ]; then
+            echo "Libwave directory already cloned"
         else
             echo "Cloning libwave into home directory"
             git clone --recursive https://github.com/wavelab/libwave.git
             echo "Success"
         fi
+        
+        cd $LIBWAVE_DIR
+        if [ ! -d "$BUILD_DIR" ]; then
+          mkdir -p $BUILD_DIR
+          cd $BUILD_DIR
+          cmake -DBUILD_TESTS=OFF ..
+          make -j$(nproc)
+        fi
 
-
-        cd libwave
-        mkdir -p build
-        cd build
-        cmake -DBUILD_TESTS=OFF ..
-        make -j$(nproc)
-
-        # Install libwave
-        sudo make install
-
-        cd ~
-        sudo rm -rf libwave
-
+        cd $DEPS_DIR/$LIBWAVE_DIR/$BUILD_DIR
+        sudo make -j$(nproc) install
     fi
-    # wave_spatial_utils not inluded in libwave github repo
-    # install dep for wave_spatial_utils
-    sudo apt-get install ros-kinetic-tf2-geometry-msgs
 }
 
 install_catch2()
 {
+  CATCH2_DIR="Catch2"
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  if [ ! -d "$DEPS_DIR/Catch2" ]; then
+  
+  if [ ! -d "$DEPS_DIR/$CATCH2_DIR" ]; then
     git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
   fi
-  cd Catch2
-
-  if [ ! -d "build" ]; then
-    mkdir -p build
-    cd build
+  
+  cd $CATCH2_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
     cmake ..
     make -j$(nproc)
   fi
 
-  cd $DEPS_DIR/Catch2/build
+  cd $DEPS_DIR/$CATCH2_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
-  echo "Success"
 }
 
 install_cmake()
 {
-
-  if [ -d "$DEPS_DIR/cmake-3.14.0"]; then
-    echo "cmake version already up to date"
-  else
-    mkdir -p $DEPS_DIR
-    cd $DEPS_DIR
+  CMAKE_DIR="cmake-3.14.0"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+  
+  if [ ! -d "$CMAKE_DIR" ]; then
     wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
     tar xzf cmake-3.14.0.tar.gz
-    cd cmake-3.14.0
-    ./configure --prefix=/opt/cmake
-    make
-    sudo make -j$(nproc) install
-    cd $DEPS_DIR
-    sudo rm -rf cmake-3.14.0
-    sudo rm cmake-3.14.0.tar.gz
-    echo "Success"
+    rm -rf cmake-3.14.0.tar.gz
   fi
-
+  
+  cd $CMAKE_DIR
+  ./configure --prefix=/opt/cmake
+  make
+  sudo make -j$(nproc) install
 }
 
 install_eigen3()
 {
-  if [ -d "$DEPS_DIR/eigen*"]; then
-    echo "eigen version already up to date"
-  else
-    mkdir -p $DEPS_DIR
-    cd $DEPS_DIR
+  EIGEN_DIR="eigen-eigen-323c052e1731"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+  
+  if [ ! -d "$EIGEN_DIR" ]; then
     wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
     tar xjf 3.3.7.tar.bz2
-    cd eigen-eigen-323c052e1731
-    mkdir -p build
-    cd build
+    rm -rf 3.3.7.tar.bz2
+  fi
+  
+  cd $EIGEN_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
     cmake ..
     make
-    sudo make -j$(nproc) install
-    cd $DEPS_DIR
-    sudo rm 3.3.7.tar.bz2
   fi
+    
+  cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
+  sudo make -j$(nproc) install
 }
 
 install_gflags()
 {
+  GFLAGS_DIR="gflags"
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  if [ ! -d "$DEPS_DIR/gflags" ]; then
+  
+  if [ ! -d "$GFLAGS_FIR" ]; then
     git clone https://github.com/gflags/gflags.git
   fi
-  if [ ! -d "$DEPS_DIR/gflags/build" ]; then
-    cd gflags
-    mkdir build
-    cd build
+  
+  cd $GFLAGS_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
     cmake ..
     make
   fi
-  cd $DEPS_DIR/gflags/build
+  
+  cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
