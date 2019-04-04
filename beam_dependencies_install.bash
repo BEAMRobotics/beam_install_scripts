@@ -208,7 +208,7 @@ install_gtsam()
         make -j$(nproc)
       fi
       
-      cd $DEPS_DIR/$GTSAME_DIR/$BUILD_DIR
+      cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
       sudo make install > /dev/null
       echo "GTSAM installed successfully"
     fi
