@@ -31,8 +31,8 @@ make_with_progress()
 
 install_ceres()
 {
-    CERES_DIR = "ceres-solver-1.14.0"
-    BUILD_DIR = "build"
+    CERES_DIR="ceres-solver-1.14.0"
+    BUILD_DIR="build"
     
     sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
     # this install script is for local machines.
@@ -241,8 +241,8 @@ install_liquid-dsp()
 
 install_libwave()
 {
-    LIBWAVE_DIR = "libwave"
-    BUILD_DIR = "build"
+    LIBWAVE_DIR="libwave"
+    BUILD_DIR="build"
     
     if (find /usr/local/lib -name libwave_* | grep -q /usr/local/lib); then
         echo "libwave SLAM library already installed"
@@ -276,8 +276,8 @@ install_libwave()
 
 install_catch2()
 {
-  CATCH2_DIR = "Catch2"
-  BUILD_DIR = "build"
+  CATCH2_DIR="Catch2"
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
@@ -299,8 +299,8 @@ install_catch2()
 
 install_cmake()
 {
-  CMAKE_DIR = "cmake-3.14.0"
-  BUILD_DIR = "build"
+  CMAKE_DIR="cmake-3.14.0"
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
@@ -318,8 +318,8 @@ install_cmake()
 
 install_eigen3()
 {
-  EIGEN_DIR = "eigen-eigen-323c052e1731"
-  BUILD_DIR = "build"
+  EIGEN_DIR="eigen-eigen-323c052e1731"
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
@@ -343,8 +343,8 @@ install_eigen3()
 
 install_gflags()
 {
-  GFLAGS_DIR = "gflags"
-  BUILD_DIR = "build"
+  GFLAGS_DIR="gflags"
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
