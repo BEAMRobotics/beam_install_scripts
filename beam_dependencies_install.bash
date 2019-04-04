@@ -304,7 +304,7 @@ install_cmake()
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
-  if [ ! -d "$CMAKE_DIR"]; then
+  if [ ! -d "$CMAKE_DIR" ]; then
     wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
     tar xzf cmake-3.14.0.tar.gz
     rm -rf cmake-3.14.0.tar.gz
@@ -353,7 +353,7 @@ install_gflags()
   fi
   
   cd $GFLAGS_DIR
-  if [ ! -d "$BUILD_DIR"]; then
+  if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
