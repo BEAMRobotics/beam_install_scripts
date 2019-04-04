@@ -363,3 +363,26 @@ install_gflags()
   cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
+
+install_json()
+{
+  JSON_DIR="json"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+  
+  if [ ! -d "$JSON_DIR" ]; then
+    git clone -b v3.6.1 https://github.com/nlohmann/json.git
+  fi
+  
+  cd $JSON_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake ..
+    make -j$(nproc)
+  fi
+  
+  cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
+  sudo make -j$(nproc) install
+}

@@ -47,9 +47,10 @@ install_routine()
     install_eigen3
     install_ceres
     install_pcl
-    install_geographiclib
-    install_gtsam
-    install_libwave
+    #install_geographiclib
+    #install_gtsam
+    #install_libwave
+    install_json
 
 
     # check that ros installed correctly
