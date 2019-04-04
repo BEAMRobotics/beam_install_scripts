@@ -43,7 +43,7 @@ install_routine()
     sudo apt-get install -qq wget  > /dev/null
     # Install dependencies
     install_catch2
-    install_cmake
+    # install_cmake
     install_eigen3
     install_ceres
     install_pcl
