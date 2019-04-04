@@ -50,6 +50,7 @@ install_routine()
     install_geographiclib
     install_gtsam
     install_libwave
+    install_json
 
 
     # check that ros installed correctly
