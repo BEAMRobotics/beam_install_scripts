@@ -262,7 +262,7 @@ install_libwave()
         fi
         
         cd $LIBWAVE_DIR
-        if [ -d "$BUILD_DIR" ]; then
+        if [ ! -d "$BUILD_DIR" ]; then
           mkdir -p $BUILD_DIR
           cd $BUILD_DIR
           cmake -DBUILD_TESTS=OFF ..
