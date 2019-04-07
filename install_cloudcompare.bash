@@ -23,7 +23,13 @@ install_routine()
     sudo -v
 
     mkdir -p /tmp/beam_dependencies
-    sudo apt install -y libgeotiff2 libgeotiff-dev libjsoncpp-dev libpcl1.7* libpcl-dev cmake libproj-dev libgdal libqt5svg5-dev qttools5-*
+    sudo apt-get update
+    sudo apt-get install -y libpcl-dev
+    sudo apt-get install -y cmake libqt5svg5-dev qttools5-*
+    sudo apt-get install -y libgeotiff2 libgeotiff-dev libjsoncpp-dev
+    sudo apt-get install -y libproj-dev libgdal-dev
+    sudo apt-get install -y libcurlpp*
+
     cd /tmp/beam_dependencies
     git clone https://github.com/LASzip/LASzip.git
     cd LASzip && mkdir build && cd build
@@ -34,7 +40,7 @@ install_routine()
     git clone https://github.com/PDAL/PDAL.git
     cd PDAL && git checkout 1.8.0
     mkdir build && cd build
-    cmake .. && make -j99 && sudo make install
+    cmake -DWITH_TESTS=OFF .. && make && sudo make install
     echo "Finished installing PDAL v1.8.0."
     
     cd /tmp/beam_dependencies
@@ -43,7 +49,7 @@ install_routine()
     cd CloudCompare && git checkout v2.10.2
     mkdir build && cd build 
     cmake -DINSTALL_QPCL_PLUGIN=ON -DOPTION_PDAL_LAS=ON -DINSTALL_QANIMATION_PLUGIN=ON -DJSON_ROOT_DIR=/usr/include/jsoncpp ..
-    make -j99 && sudo make install
+    make -j2 && sudo make install
     echo "Finished installing CloudCompare v2.10.2."
     
     echo "Beam robotics installation scripts successfully tested."
