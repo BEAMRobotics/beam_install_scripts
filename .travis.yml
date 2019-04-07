@@ -26,4 +26,29 @@ env:
 # Check installation script
 script:
   - cd $CI_SOURCE_PATH
-  - bash ./install_cloudcompare.bash
+  - sudo -v
+    mkdir -p /tmp/beam_dependencies
+    sudo apt install -y libgeotiff2 libgeotiff-dev libjsoncpp-dev libpcl1.7* libpcl-dev cmake libproj-dev libgdal libqt5svg5-dev qttools5-*
+    cd /tmp/beam_dependencies
+    git clone https://github.com/LASzip/LASzip.git
+    cd LASzip && mkdir build && cd build
+    cmake .. && make -j99 && sudo make install
+    echo "Finished installing LASZip."
+
+    cd /tmp/beam_dependencies
+    git clone https://github.com/PDAL/PDAL.git
+    cd PDAL && git checkout 1.8.0
+    mkdir build && cd build
+    cmake .. && make -j99 && sudo make install
+    echo "Finished installing PDAL."
+
+    cd /tmp/beam_dependencies
+    git clone https://github.com/CloudCompare/CloudCompare.git
+    sudo ln -s /usr/lib/x86_64-linux-gnu/libvtkCommonCore-6.2.so /usr/lib/libvtkproj4.so
+    cd CloudCompare && git checkout v2.10.2
+    mkdir build && cd build 
+    cmake -DINSTALL_QPCL_PLUGIN=ON -DOPTION_PDAL_LAS=ON -DINSTALL_QANIMATION_PLUGIN=ON -DJSON_ROOT_DIR=/usr/include/jsoncpp ..
+    make -j99 && sudo make install
+    echo "Finished installing CloudCompare."
+
+    echo "Beam robotics installation scripts successfully tested."
