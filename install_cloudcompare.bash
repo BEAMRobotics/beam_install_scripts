@@ -35,7 +35,7 @@ install_routine()
     cd PDAL && git checkout 1.8.0
     mkdir build && cd build
     cmake .. && make -j99 && sudo make install
-    echo "Finished installing PDAL."
+    echo "Finished installing PDAL v1.8.0."
     
     cd /tmp/beam_dependencies
     git clone https://github.com/CloudCompare/CloudCompare.git
@@ -44,7 +44,7 @@ install_routine()
     mkdir build && cd build 
     cmake -DINSTALL_QPCL_PLUGIN=ON -DOPTION_PDAL_LAS=ON -DINSTALL_QANIMATION_PLUGIN=ON -DJSON_ROOT_DIR=/usr/include/jsoncpp ..
     make -j99 && sudo make install
-    echo "Finished installing CloudCompare."
+    echo "Finished installing CloudCompare v2.10.2."
     
     echo "Beam robotics installation scripts successfully tested."
 }
