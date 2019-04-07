@@ -26,7 +26,11 @@ env:
 before_install:
   - sudo -v
   - mkdir -p /tmp/beam_dependencies
-  - sudo apt install -y libgeotiff2 libgeotiff-dev libjsoncpp-dev libpcl1.7* libpcl-dev cmake libproj-dev libgdal libqt5svg5-dev qttools5-*
+  - sudo apt-get update
+  - sudo apt-get install -y libpcl1.7* libpcl-dev 
+  - sudo apt-get install -y cmake libqt5svg5-dev qttools5-*
+  - sudo apt-get install -y libproj-dev libgdal 
+  - sudo apt-get install -y libgeotiff2 libgeotiff-dev libjsoncpp-dev 
   - cd /tmp/beam_dependencies
   - git clone https://github.com/LASzip/LASzip.git
   - cd LASzip && mkdir build && cd build
