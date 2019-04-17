@@ -311,8 +311,15 @@ install_cmake()
   fi
   
   cd $CMAKE_DIR
-  ./configure --prefix=/opt/cmake
-  make
+  #./configure --prefix=/opt/cmake
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake ..
+    make
+  fi
+  
+  cd $DEPS_DIR/$CMAKE_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
 
