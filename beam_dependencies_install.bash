@@ -308,9 +308,9 @@ install_cmake()
   mkdir -p $TEMP_DIR
   cd $TEMP_DIR
   
-  wget "https://cmake.org/files/v$version/cmake-$version.$build-Linux-x86_64.sh"
+  wget "https://cmake.org/files/v$VERSION/cmake-$VERSION.$BUILD-Linux-x86_64.sh"
   sudo mkdir /opt/cmake
-  sudo sh cmake-$version.$build-Linux-x86_64.sh --prefix=/opt/cmake
+  sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake
   sudo ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
   
   cd $DEPS_DIR
