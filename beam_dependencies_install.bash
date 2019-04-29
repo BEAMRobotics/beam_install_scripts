@@ -299,28 +299,22 @@ install_catch2()
 
 install_cmake()
 {
-  CMAKE_DIR="cmake-3.14.0"
-  BUILD_DIR="build"
+  TEMP_DIR="tmp"
+  VERSION="3.14"
+  BUILD="1"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
   
-  if [ ! -d "$CMAKE_DIR" ]; then
-    wget https://github.com/Kitware/CMake/releases/download/v3.14.0/cmake-3.14.0.tar.gz
-    tar xzf cmake-3.14.0.tar.gz
-    rm -rf cmake-3.14.0.tar.gz
-  fi
+  mkdir -p $TEMP_DIR
+  cd $TEMP_DIR
   
-  cd $CMAKE_DIR
-  #./configure --prefix=/opt/cmake
-  if [ ! -d "$BUILD_DIR" ]; then
-    mkdir -p $BUILD_DIR
-    cd $BUILD_DIR
-    cmake ..
-    make
-  fi
+  wget "https://cmake.org/files/v$VERSION/cmake-$VERSION.$BUILD-Linux-x86_64.sh"
+  sudo mkdir /opt/cmake
+  yes | sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake > /dev/null
+  sudo ln -s /opt/cmake/bin/cmake /usr/local/bin/cmake
   
-  cd $DEPS_DIR/$CMAKE_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  cd $DEPS_DIR
+  sudo rm -rf $TEMP_DIR
 }
 
 install_eigen3()

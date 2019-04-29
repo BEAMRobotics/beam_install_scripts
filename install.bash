@@ -42,6 +42,7 @@ install_routine()
     # Ensure wget is available
     sudo apt-get install -qq wget  > /dev/null
     # Install dependencies
+    install_cmake
     install_catch2
     # install_cmake
     install_eigen3
