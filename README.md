@@ -14,4 +14,4 @@ Beam repo containing all required install scripts. For installation information 
 - JSON 3.6.1
 - libwave
 - Protobuf 3.1.0
-- PCL 1.8.0
+- PCL 1.8.1 (custom fork)
