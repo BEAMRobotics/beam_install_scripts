@@ -96,52 +96,30 @@ install_protobuf()
 
 install_pcl()
 {
-    sudo apt-get install libflann*
-    sudo apt-get install libvtk6* libboost1.58* libproj-dev libqhull* > /dev/null
-    PCL_VERSION='1.8.0'
-    PCL_FILE="pcl-$PCL_VERSION"
-    PCL_DIR="pcl-$PCL_FILE"
-    PCL_URL="https://github.com/PointCloudLibrary/pcl/archive/pcl-$PCL_VERSION.tar.gz"
-    BUILD_DIR="build"
-
-    # TODO: find a better way to check if already installed from source
-    if [ -e "/usr/local/lib/libpcl_2d.so.$PCL_VERSION" ]; then
-        echo "PCL version $PCL_VERSION already installed"
-    else
-        echo "Installing PCL version $PCL_VERSION ..."
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
-        
-        if [ ! -d "$PCL_DIR" ]; then
-            wget "$PCL_URL"
-            tar -xf "$PCL_FILE.tar.gz"
-            rm -rf "$PCL_FILE.tar.gz"
-        fi
-        
-        cd "$PCL_DIR"
-        if [ ! -d "$BUILD_DIR" ]; then
-          mkdir -p $BUILD_DIR
-          cd $BUILD_DIR
-          PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
-          if [ -n "$CONTINUOUS_INTEGRATION" ]; then
-              # Disable everything unneeded for a faster build
-              PCL_CMAKE_ARGS="${PCL_CMAKE_ARGS} \
-              -DWITH_CUDA=OFF -DWITH_DAVIDSDK=OFF -DWITH_DOCS=OFF \
-              -DWITH_DSSDK=OFF -DWITH_ENSENSO=OFF -DWITH_FZAPI=OFF \
-              -DWITH_LIBUSB=OFF -DWITH_OPENGL=OFF -DWITH_OPENNI=OFF \
-              -DWITH_OPENNI2=OFF -DWITH_QT=OFF -DWITH_RSSDK=OFF \
-              -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
-              -DBUILD_tracking=OFF"
-          fi
-          cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-          echo "Building $PCL_FILE"
-          make_with_progress -j$(nproc)
-        fi
-
-        cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-        sudo make -j$(nproc) install > /dev/null
-        echo "PCL installed successfully"
-    fi
+  PCL_VERSION="1.8.1"
+  PCL_DIR="pcl"
+  BUILD_DIR="build"
+  
+  cd $DEPS_DIR
+  
+  if [ -d 'pcl-pcl-1.8.0' ]; then
+    sudo rm -rf pcl-pcl-1.8.0
+  fi
+  
+  if [ ! -d "$PCL_DIR" ]; then
+    git clone git@github.com:BEAMRobotics/pcl.git
+  fi
+  
+  cd $PCL_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake ..
+    make -j$(nproc)
+  fi
+  
+  cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
+  sudo make -j$(nproc) install
 }
 
 install_geographiclib()
