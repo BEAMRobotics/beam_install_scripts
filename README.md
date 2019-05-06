@@ -12,6 +12,7 @@ Beam repo containing all required install scripts. For installation information 
 - gflags
 - gtsam 4.0.0-apha2
 - JSON 3.6.1
+- Ladybug SDK V1.16.3.48
 - libwave
 - Protobuf 3.1.0
 - PCL 1.8.1 (custom fork)

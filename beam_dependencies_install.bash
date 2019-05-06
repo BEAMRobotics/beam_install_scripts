@@ -365,3 +365,17 @@ install_json()
   cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
+
+install_ladybug_sdk()
+{
+    if (ldconfig -p | grep libladybug.so); then
+        echo "Ladybug SDK is already installed."
+        return
+    fi
+    echo "Downloading & installing the Ladybug SDK..."
+    wget https://www.dropbox.com/s/wf9oqw0xd8e454i/LaydbugSDK_1.16.3.48_amd64.tar
+    tar -xvf LaydbugSDK_1.16.3.48_amd64.tar
+    sudo apt-get -y install libraw1394-11 libgtkmm-2.4-1v5 libglademm-2.4-1v5 libgtkglextmm-x11-1.2-dev libgtkglextmm-x11-1.2 libusb-1.0-0
+    sudo dpkg -x ladybug-1.16.3.48_amd64.deb /usr/local/
+    echo "Ladybug SDK successfully installed in /usr/local/"
+}

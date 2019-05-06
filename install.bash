@@ -52,7 +52,7 @@ install_routine()
     #install_gtsam
     #install_libwave
     install_json
-
+    install_ladybug_sdk
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
