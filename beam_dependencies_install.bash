@@ -118,6 +118,7 @@ install_pcl()
     PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
     if [ -n "$CONTINUOUS_INTEGRATION" ]; then
               # Disable everything unneeded for a faster build
+              echo "Installing light build for CI"
               PCL_CMAKE_ARGS="${PCL_CMAKE_ARGS} \
               -DWITH_CUDA=OFF -DWITH_DAVIDSDK=OFF -DWITH_DOCS=OFF \
               -DWITH_DSSDK=OFF -DWITH_ENSENSO=OFF -DWITH_FZAPI=OFF \
