@@ -301,7 +301,7 @@ install_cmake()
     echo "CMAKE installation found in /usr/local/, deleting..."
     sudo rm -rf /usr/local/cmake*
   fi
-
+  echo $PATH
   TEMP_DIR="tmp"
   VERSION="3.14"
   BUILD="1"
@@ -319,6 +319,7 @@ install_cmake()
   cmake --version
   cd $DEPS_DIR
   sudo rm -rf $TEMP_DIR
+  export PATH="/usr/local/bin:$PATH"
 }
 
 install_eigen3()
