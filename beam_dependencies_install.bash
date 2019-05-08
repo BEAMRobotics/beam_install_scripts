@@ -291,6 +291,10 @@ install_catch2()
 
 install_cmake()
 {
+  #Remove existing cmake
+  sudo rm -rf /usr/local/cmake*
+  sudo rm -rf /usr/local/bin/cmake
+  
   TEMP_DIR="tmp"
   VERSION="3.14"
   BUILD="1"
