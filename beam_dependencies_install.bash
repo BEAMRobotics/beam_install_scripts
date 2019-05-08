@@ -315,7 +315,7 @@ install_cmake()
   sudo mkdir -p /opt/cmake
   yes | sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake > /dev/null
   sudo ln -s "/opt/cmake/cmake-$VERSION.$BUILD-Linux-x86_64/bin/cmake" /usr/local/bin/cmake
-  ./usr/local/bin/cmake --version
+  /usr/local/bin/cmake --version
   cmake --version
   cd $DEPS_DIR
   sudo rm -rf $TEMP_DIR
