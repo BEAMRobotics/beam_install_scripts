@@ -399,19 +399,19 @@ install_ladybug_sdk()
     LB_DIR="ladybug"
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
-    
+    sudo apt-get -y install libraw1394-11 libraw1394-dev libraw1394-tools libgtkmm-2.4-1v5 libglademm-2.4-1v5 libgtkglextmm-x11-1.2-dev libgtkglextmm-x11-1.2 libusb-1.0-0
+
     if [ ! -d "$LB_DIR" ]; then
         echo "Don't have Ladybug SDK Directory, creating & downloading SDK..."
         mkdir -p $LB_DIR
         cd $LB_DIR
         wget https://www.dropbox.com/s/wf9oqw0xd8e454i/LaydbugSDK_1.16.3.48_amd64.tar
         tar -xvf LaydbugSDK_1.16.3.48_amd64.tar
-        sudo apt-get -y install libraw1394-11 libgtkmm-2.4-1v5 libglademm-2.4-1v5 libgtkglextmm-x11-1.2-dev libgtkglextmm-x11-1.2 libusb-1.0-0
         sudo dpkg -x ladybug-1.16.3.48_amd64.deb .
         sudo cp -a usr/. /usr/local/
         echo "Ladybug SDK successfully installed in /usr/local/"
     else
-	    echo "Already have ladybug folder..."
+	echo "Already have ladybug folder..."
         cd $LB_DIR
         sudo dpkg -x ladybug-1.16.3.48_amd64.deb .
         sudo cp -a usr/. /usr/local/
