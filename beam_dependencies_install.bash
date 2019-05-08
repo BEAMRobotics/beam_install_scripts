@@ -297,9 +297,11 @@ install_catch2()
 install_cmake()
 {
   #Remove existing cmake
-  sudo rm -rf /usr/local/cmake*
-  sudo rm -rf /usr/local/bin/cmake
-  
+  if [ ! -d "/usr/local/cmake*" ]; then
+    echo "CMAKE installation found in /usr/local/, deleting..."
+    sudo rm -rf /usr/local/cmake*
+  fi
+
   TEMP_DIR="tmp"
   VERSION="3.14"
   BUILD="1"
@@ -313,7 +315,8 @@ install_cmake()
   sudo mkdir -p /opt/cmake
   yes | sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake > /dev/null
   sudo ln -s "/opt/cmake/cmake-$VERSION.$BUILD-Linux-x86_64/bin/cmake" /usr/local/bin/cmake
-  
+  ./usr/local/bin/cmake --version
+  cmake --version
   cd $DEPS_DIR
   sudo rm -rf $TEMP_DIR
 }
