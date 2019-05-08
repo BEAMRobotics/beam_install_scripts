@@ -103,15 +103,18 @@ install_pcl()
   cd $DEPS_DIR
   
   if [ -d 'pcl-pcl-1.8.0' ]; then
+    echo "Removing old version of pcl (pcl-1.8.0) from deps"
     sudo rm -rf pcl-pcl-1.8.0
   fi
   
   if [ ! -d "$PCL_DIR" ]; then
+    echo "pcl not found... cloning"
     git clone git@github.com:BEAMRobotics/pcl.git
   fi
   
   cd $PCL_DIR
   if [ ! -d "$BUILD_DIR" ]; then
+    echo "Existing build of PCL not found.. building from scratch"
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     
