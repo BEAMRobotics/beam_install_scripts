@@ -273,6 +273,7 @@ install_libwave()
 
 install_catch2()
 {
+  echo "Installing Catch2..."
   CATCH2_DIR="Catch2"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
