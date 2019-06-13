@@ -12,7 +12,7 @@ sudo apt-get -qq update
 echo "Installing ROS $ROS_DISTRO ..."
 sudo apt-get -qq install python-rosinstall python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop > /dev/null
 sudo apt-get -qq install ros-$ROS_DISTRO-pcl-ros ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins ros-$ROS_DISTRO-libg2o > /dev/null
-sudo apt-get install ros-kinetic-tf2-geometry-msgs
+sudo apt-get install ros-$ROS_DISTRO-tf2-geometry-msgs ros-$ROS_DISTRO-imu-transformer > /dev/null
 
 # ROS environment setup
 echo "Setting up ROS environment..."
