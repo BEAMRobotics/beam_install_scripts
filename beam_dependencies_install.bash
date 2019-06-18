@@ -287,7 +287,7 @@ install_catch2()
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
-    cmake ..
+    cmake -DCMAKE_CXX_STANDARD=11 ..
     make -j$(nproc)
   fi
 
