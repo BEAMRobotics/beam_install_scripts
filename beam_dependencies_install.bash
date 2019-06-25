@@ -406,7 +406,7 @@ install_ladybug_sdk()
         mkdir -p $LB_DIR
         cd $LB_DIR
         wget https://www.dropbox.com/s/8d67i2jxmkwa52n/LaydbugSDK_1.16.3.48_amd64.tar?dl=0
-        tar -xvf LaydbugSDK_1.16.3.48_amd64.tar
+        tar -xvf LaydbugSDK_1.16.3.48_amd64.tar?dl=0
         sudo dpkg -x ladybug-1.16.3.48_amd64.deb .
         sudo cp -a usr/. /usr/local/
         echo "Ladybug SDK successfully installed in /usr/local/"
