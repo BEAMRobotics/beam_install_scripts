@@ -11,7 +11,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 main()
 {
     clone_ros_drivers
-    # install_ximea_deps
+    install_ximea_deps
     update_udev
     install_gps
     install_um7
@@ -29,7 +29,7 @@ catkin_build()
     catkin build
 }
 
-install_chony_deps()
+install_chrony_deps()
 {
     echo "installing chrony and its dependencies"
     sudo apt-get install gpsd gpsd-clients chrony
