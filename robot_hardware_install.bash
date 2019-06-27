@@ -11,7 +11,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 main()
 {
     clone_ros_drivers
-    install_ximea_deps
+    # install_ximea_deps
     update_udev
     install_gps
     install_um7
@@ -80,8 +80,8 @@ install_ximea_deps()
 
 update_udev()
 {
-    # copy udev rules from inspector_gadget 
-    echo "copying udev rules..."  
+    # copy udev rules from inspector_gadget
+    echo "copying udev rules..."
     sudo cp ~/catkin_ws/src/ros_drivers/udev/* /etc/udev/rules.d/
     sudo udevadm control --reload-rules && sudo service udev restart && sudo udevadm trigger
 }
@@ -121,12 +121,12 @@ install_husky_packages()
     ros-kinetic-ur-description \
     ros-kinetic-joint-state-publisher \
     ros-kinetic-joint-state-controller \
-    ros-kinetic-diff-drive-controller   
+    ros-kinetic-diff-drive-controller
 }
 
 enable_passwordless_sudo()
 {
-    #sudo echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers 
+    #sudo echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
     echo "robot ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 }
 
