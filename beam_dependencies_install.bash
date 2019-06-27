@@ -33,7 +33,7 @@ install_ceres()
 {
     CERES_DIR="ceres-solver-1.14.0"
     BUILD_DIR="build"
-    
+
     sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
     # this install script is for local machines.
     if (find /usr/local/lib -name libceres.so | grep -q /usr/local/lib); then
@@ -42,13 +42,13 @@ install_ceres()
         echo "Installing Ceres 1.14.0 ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        
+
         if [ ! -d "$CERES_DIR" ]; then
           wget "http://ceres-solver.org/$CERES_DIR.tar.gz"
           tar zxf "$CERES_DIR.tar.gz"
           rm -rf "$CERES_DIR.tar.gz"
         fi
-        
+
         cd $CERES_DIR
         if [ ! -d "$BUILD_DIR" ]; then
           mkdir -p $BUILD_DIR
@@ -57,7 +57,7 @@ install_ceres()
           make -j$(nproc)
           make test
         fi
-        
+
         cd $DEPS_DIR/$CERES_DIR/$BUILD_DIR
         sudo make -j$(nproc) install
     fi
@@ -99,25 +99,25 @@ install_pcl()
   PCL_VERSION="1.8.1"
   PCL_DIR="pcl"
   BUILD_DIR="build"
-  
+
   cd $DEPS_DIR
-  
+
   if [ -d 'pcl-pcl-1.8.0' ]; then
     echo "Removing old version of pcl (pcl-1.8.0) from deps"
     sudo rm -rf pcl-pcl-1.8.0
   fi
-  
+
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
     git clone git@github.com:BEAMRobotics/pcl.git
   fi
-  
+
   cd $PCL_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     echo "Existing build of PCL not found.. building from scratch"
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
-    
+
     PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
     if [ -n "$CONTINUOUS_INTEGRATION" ]; then
               # Disable everything unneeded for a faster build
@@ -132,11 +132,11 @@ install_pcl()
               -DBUILD_stereo=OFF -DBUILD_simulation=OFF -DBUILD_apps=OFF \
               -DBUILD_examples=OFF -DBUILD_tools=OFF -DBUILD_visualization=ON"
     fi
-    
+
     cmake .. ${PCL_CMAKE_ARGS} > /dev/null
     make -j$(nproc)
   fi
-  
+
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
@@ -154,13 +154,13 @@ install_geographiclib()
         echo "Installing GeographicLib version $GEOGRAPHICLIB_VERSION ..."
         mkdir -p "$DEPS_DIR"
         cd "$DEPS_DIR"
-        
-        if [ ! -d "$GEOGRAPHICLIB_DIR" ]; then 
+
+        if [ ! -d "$GEOGRAPHICLIB_DIR" ]; then
           wget "$GEOGRAPHICLIB_URL"
           tar -xf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
           rm -rf "GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
         fi
-        
+
         cd "$GEOGRAPHICLIB_DIR"
         if [ ! -d "$BUILD_DIR" ]; then
           mkdir -p $BUILD_DIR
@@ -189,11 +189,11 @@ install_gtsam()
       echo "Installing GTSAM version $GTSAM_VERSION ..."
       mkdir -p "$DEPS_DIR"
       cd "$DEPS_DIR"
-      
+
       if [ ! -d "$GTSAM_DIR" ]; then
         git clone $GTSAM_URL
       fi
-      
+
       cd $GTSAM_DIR
       git checkout $GTSAM_VERSION
       if [ ! -d "$BUILD_DIR" ]; then
@@ -204,7 +204,7 @@ install_gtsam()
         -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF  -DGTSAM_BUILD_DOCS=OFF
         make -j$(nproc)
       fi
-      
+
       cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
       sudo make install > /dev/null
       echo "GTSAM installed successfully"
@@ -240,7 +240,7 @@ install_libwave()
 {
     LIBWAVE_DIR="libwave"
     BUILD_DIR="build"
-    
+
     if (find /usr/local/lib -name libwave_* | grep -q /usr/local/lib); then
         echo "libwave SLAM library already installed"
     else
@@ -257,7 +257,7 @@ install_libwave()
             git clone --recursive https://github.com/wavelab/libwave.git
             echo "Success"
         fi
-        
+
         cd $LIBWAVE_DIR
         if [ ! -d "$BUILD_DIR" ]; then
           mkdir -p $BUILD_DIR
@@ -278,11 +278,11 @@ install_catch2()
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  
+
   if [ ! -d "$DEPS_DIR/$CATCH2_DIR" ]; then
     git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
   fi
-  
+
   cd $CATCH2_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
@@ -308,10 +308,10 @@ install_cmake()
   BUILD="1"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  
+
   mkdir -p $TEMP_DIR
   cd $TEMP_DIR
-  
+
   wget "https://cmake.org/files/v$VERSION/cmake-$VERSION.$BUILD-Linux-x86_64.sh"
   sudo mkdir -p /opt/cmake
   yes | sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake > /dev/null
@@ -329,13 +329,13 @@ install_eigen3()
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  
+
   if [ ! -d "$EIGEN_DIR" ]; then
     wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.bz2
     tar xjf 3.3.7.tar.bz2
     rm -rf 3.3.7.tar.bz2
   fi
-  
+
   cd $EIGEN_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
@@ -343,7 +343,7 @@ install_eigen3()
     cmake ..
     make
   fi
-    
+
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
@@ -354,11 +354,11 @@ install_gflags()
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  
+
   if [ ! -d "$GFLAGS_DIR" ]; then
     git clone https://github.com/gflags/gflags.git
   fi
-  
+
   cd $GFLAGS_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
@@ -366,7 +366,7 @@ install_gflags()
     cmake ..
     make
   fi
-  
+
   cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
@@ -377,11 +377,11 @@ install_json()
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
-  
+
   if [ ! -d "$JSON_DIR" ]; then
     git clone -b v3.6.1 https://github.com/nlohmann/json.git
   fi
-  
+
   cd $JSON_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
@@ -389,7 +389,7 @@ install_json()
     cmake ..
     make -j$(nproc)
   fi
-  
+
   cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }

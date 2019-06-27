@@ -11,11 +11,12 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 main()
 {
     clone_ros_drivers
-    install_ximea_deps
+    # install_ximea_deps
     update_udev
     install_gps
     install_um7
-    install_flir_blackfly
+    # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
+    install_spinnaker_sdk
     install_libpcap
     install_husky_packages
     enable_passwordless_sudo
@@ -128,6 +129,32 @@ enable_passwordless_sudo()
 {
     #sudo echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
     echo "robot ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
+}
+
+install_spinnaker_sdk()
+{
+    LB_DIR="spinnaker"
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
+    sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 libusb-1.0-0 libgtkmm-2.4-dev
+
+    if [ ! -d "$LB_DIR" ]; then
+        echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
+        mkdir -p $LB_DIR
+        cd $LB_DIR
+        wget https://www.dropbox.com/s/4mdyatl3du0fh7w/spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
+        tar -xvf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
+        rm -rf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
+        cd spinnaker-1.21.0.61-amd64/
+        sudo sh install_spinnaker.sh
+        echo "Spinnaker SDK successfully installed."
+    else
+	echo "Already have spinnaker folder..."
+        cd $LB_DIR
+        cd spinnaker-1.21.0.61-amd64/
+        sudo sh install_spinnaker.sh
+        echo "Spinnaker SDK successfully installed."
+    fi
 }
 
 main
