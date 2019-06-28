@@ -89,7 +89,7 @@ update_udev()
 
 install_gps()
 {
-    source $INSTALL_SCRIPTS/install_piksi_deps.bash
+    yes | source $INSTALL_SCRIPTS/install_piksi_deps.bash
 }
 
 install_um7()
