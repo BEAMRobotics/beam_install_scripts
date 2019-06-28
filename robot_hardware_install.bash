@@ -17,7 +17,7 @@ main()
     install_gps
     install_um7
     # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
-    install_spinnaker_sdk
+    # install_spinnaker_sdk
     install_libpcap
     install_husky_packages
     enable_passwordless_sudo
