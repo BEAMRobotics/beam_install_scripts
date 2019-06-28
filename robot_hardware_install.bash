@@ -6,6 +6,7 @@ set -e
 # Specify location of installation scripts
 INSTALL_SCRIPTS=$"$HOME/software/beam_install_scripts"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DEPS_DIR="/tmp/beam_dependencies"
 
 
 main()
@@ -89,6 +90,7 @@ update_udev()
 
 install_gps()
 {
+    echo "installing GPS piksi deps..."
     yes | source $INSTALL_SCRIPTS/install_piksi_deps.bash
 }
 
@@ -133,6 +135,7 @@ enable_passwordless_sudo()
 
 install_spinnaker_sdk()
 {
+    echo "Installing spinnaker SDK..."
     LB_DIR="spinnaker"
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
