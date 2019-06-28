@@ -10,7 +10,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 main()
 {
-    clone_ros_drivers
+    # clone_ros_drivers
     # install_ximea_deps
     update_udev
     install_gps
