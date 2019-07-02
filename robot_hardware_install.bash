@@ -17,11 +17,11 @@ main()
     install_gps
     install_um7
     # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
-    # install_spinnaker_sdk
+    install_spinnaker_sdk
     install_libpcap
     install_husky_packages
     enable_passwordless_sudo
-    install_chrony_deps
+    #install_chrony_deps
     catkin_build
 }
 
@@ -141,7 +141,8 @@ install_spinnaker_sdk()
     LB_DIR="spinnaker"
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
-    sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 libusb-1.0-0 libgtkmm-2.4-dev
+    sudo apt-get install libusb-1.0-0 libgtkmm-2.4-dev
+    # sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 
 
     if [ ! -d "$LB_DIR" ]; then
         echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
