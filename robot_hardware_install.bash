@@ -34,6 +34,7 @@ catkin_build()
 install_chrony_deps()
 {
     echo "installing chrony and its dependencies"
+    sudo dpkg --configure -a
     sudo apt-get update
     sudo apt-get install gpsd gpsd-clients chrony
 }
