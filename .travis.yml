@@ -28,4 +28,5 @@ script:
   - cd $CI_SOURCE_PATH
   - bash ./install.bash
   - cd $CI_SOURCE_PATH
+  - ls
   - bash ./robot_hardware_install.bash
