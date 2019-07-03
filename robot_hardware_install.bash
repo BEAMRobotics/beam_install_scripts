@@ -13,12 +13,12 @@ main()
 {
     # clone_ros_drivers
     # install_ximea_deps
-    update_udev
-    install_gps
-    install_um7
+    #update_udev
+    #install_gps
+    #install_um7
     # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
-    install_spinnaker_sdk
-    install_libpcap
+    #install_spinnaker_sdk
+    #install_libpcap
     install_husky_packages
     install_robot_upstart
     #install_chrony_deps
