@@ -8,9 +8,6 @@ INSTALL_SCRIPTS=$"$HOME/software/beam_install_scripts"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DEPS_DIR="/tmp/beam_dependencies"
 
-# get UBUNTU_CODENAME, ROS_DISTRO, CATKIN_DIR
-source $INSTALL_SCRIPTS/identify_environment.bash
-
 main()
 {
     # clone_ros_drivers
@@ -162,7 +159,7 @@ install_spinnaker_sdk()
 install_robot_upstart()
 {
     echo "Installing robot upstart..."
-    source /opt/ros/$ROS_DISTRO/setup.bash
+    source /opt/ros/kinetic/setup.bash
     rosrun robot_upstart install husky_base/launch/base.launch
     echo "Robot upstart successfully installed"
 }
