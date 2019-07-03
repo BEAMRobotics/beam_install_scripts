@@ -152,13 +152,13 @@ install_spinnaker_sdk()
         tar -xvf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
         rm -rf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
         cd spinnaker-1.21.0.61-amd64/
-        echo "y n" | sudo sh install_spinnaker.sh
+        printf "y\nn\n" | sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     else
 	echo "Already have spinnaker folder..."
         cd $LB_DIR
         cd spinnaker-1.21.0.61-amd64/
-        sudo sh install_spinnaker.sh
+        printf "y\nn\n" sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     fi
 }
