@@ -20,6 +20,7 @@ main()
     install_spinnaker_sdk
     install_libpcap
     install_husky_packages
+    install_robot_upstart
     #install_chrony_deps
     catkin_build
 }
