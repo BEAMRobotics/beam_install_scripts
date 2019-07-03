@@ -27,3 +27,4 @@ env:
 script:
   - cd $CI_SOURCE_PATH
   - bash ./install.bash
+  - bash ./robot_hardware_install.bash
