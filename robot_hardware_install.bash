@@ -20,7 +20,6 @@ main()
     install_spinnaker_sdk
     install_libpcap
     install_husky_packages
-    enable_passwordless_sudo
     #install_chrony_deps
     catkin_build
 }
@@ -129,12 +128,6 @@ install_husky_packages()
     ros-kinetic-diff-drive-controller
 }
 
-enable_passwordless_sudo()
-{
-    #sudo echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-    echo "robot ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
-}
-
 install_spinnaker_sdk()
 {
     echo "Installing spinnaker SDK..."
@@ -162,5 +155,13 @@ install_spinnaker_sdk()
         echo "Spinnaker SDK successfully installed."
     fi
 }
+
+install_robot_upstart
+{
+    echo "Installing robot upstart..."
+    rosrun robot_upstart install husky_base/launch/base.launch
+    echo "Robot upstart successfully installed"
+}
+
 
 main
