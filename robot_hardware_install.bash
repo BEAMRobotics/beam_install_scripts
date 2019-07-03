@@ -157,7 +157,7 @@ install_spinnaker_sdk()
     fi
 }
 
-install_robot_upstart
+install_robot_upstart()
 {
     echo "Installing robot upstart..."
     rosrun robot_upstart install husky_base/launch/base.launch
