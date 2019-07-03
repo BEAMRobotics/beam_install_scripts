@@ -23,6 +23,9 @@ main()
     enable_passwordless_sudo
     #install_chrony_deps
     catkin_build
+    echo "Robot hardware successfully installed"
+    echo "See Beam Robotics wiki for information on how to manually install additional tools:"
+    echo "robot_upstart"
 }
 
 catkin_build()
