@@ -16,3 +16,6 @@ Beam repo containing all required install scripts. For installation information 
 - libwave
 - Protobuf 3.1.0
 - PCL 1.8.1 (custom fork)
+
+## Depenedencies and Versions (Robot only install)
+- Libsbp 2.6.3 (for use with GPS firmware 2.3.17)
