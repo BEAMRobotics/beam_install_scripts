@@ -43,6 +43,7 @@ sudo apt install python-pip
 sudo pip install tox
 sudo pip install -r requirements.txt
 sudo pip install markupsafe
+sudo pip install numba
 sudo python setup.py install
 # Build package.
 cd ..
