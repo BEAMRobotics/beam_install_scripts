@@ -20,4 +20,4 @@ env:
 # Check installation script
 install:
   - cd $CI_SOURCE_PATH
-  - travis_wait 120 bash ./scripts/libbeam_install_test.bash
+  - travis_wait 120 bash ./libbeam_install_test.bash
