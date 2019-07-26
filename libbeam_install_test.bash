@@ -5,5 +5,5 @@ cd $HOME
 
 git clone git@github.com:BEAMRobotics/libbeam.git
 cd libbeam
-git chekcout testing_travis
+git checkout testing_travis
 bash ./scripts/install.bash
