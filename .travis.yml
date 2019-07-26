@@ -1,4 +1,9 @@
+# Specify xenial linux distribution and minimal language support
 sudo: required
+language: minimal
+dist: xenial
+
+# Setup build cache
 cache:
   apt: true
   ccache: true
@@ -6,24 +11,13 @@ cache:
     - $HOME/.ccache
     - /tmp/beam_dependencies
 
-# Specify what combinations of Ubuntu/ROS we want to build
-# Limited to what is available on Travis VMs.
-language: generic
-matrix:
-  allow_failures:
-    - env: CHECK_COMMIT_FORMAT=ON
-  include:
-    - name: "Xenial kinetic"
-      dist: xenial
-      env: ROS_DISTRO=kinetic
-
-################################################################################
+# Set global variables
 env:
   global:
     - CI_SOURCE_PATH=$(pwd)
-    - CONTINUOUS_INTEGRATION='true'
+    - CONTINUOUS_INTEGRATION='True'
 
 # Check installation script
-script:
+install:
   - cd $CI_SOURCE_PATH
-  - bash ./install.bash
+  - travis_wait 120 bash ./scripts/libbeam_install_test.bash
