@@ -128,7 +128,7 @@ install_pcl()
               -DWITH_LIBUSB=OFF -DWITH_OPENGL=OFF -DWITH_OPENNI=OFF \
               -DWITH_OPENNI2=OFF -DWITH_QT=OFF -DWITH_RSSDK=OFF \
               -DBUILD_CUDA=OFF -DBUILD_GPU=OFF \
-              -DBUILD_tracking=OFF -DBUILD_people=OFF \
+              -DBUILD_tracking=OFF -DBUILD_people=OFF -DBUILD_features=OFF \
               -DBUILD_stereo=OFF -DBUILD_simulation=OFF -DBUILD_apps=OFF \
               -DBUILD_examples=OFF -DBUILD_tools=OFF -DBUILD_visualization=ON"
     fi
