@@ -19,7 +19,7 @@ echo "Setting up ROS environment..."
 source /opt/ros/$ROS_DISTRO/setup.bash
 echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
 echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/kinetic/share:/$ROS_PACKAGE_PATH" >> ~/.bashrc
+echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/kinetic/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
 
 echo "Installing rosserial..."
 sudo apt-get install ros-kinetic-rosserial-arduino
