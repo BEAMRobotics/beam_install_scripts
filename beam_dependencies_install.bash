@@ -29,6 +29,13 @@ make_with_progress()
     echo "done"
 }
 
+install_gcc7()
+{
+    sudo add-apt-repository ppa:jonathonf/gcc-7.1
+    sudo apt-get update
+    sudo apt-get install gcc-7 g++-7
+}
+
 install_ceres()
 {
     CERES_DIR="ceres-solver-1.14.0"
