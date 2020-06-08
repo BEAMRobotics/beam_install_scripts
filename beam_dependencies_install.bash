@@ -31,9 +31,9 @@ make_with_progress()
 
 install_gcc7()
 {
-  sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   sudo apt-get update
-  sudo apt-get install gcc-7 g++-7
+  sudo apt-get -y install gcc-7 g++-7
   sudo rm /usr/bin/gcc
   sudo rm /usr/bin/g++
   sudo ln -s /usr/bin/gcc-7 /usr/bin/gcc
