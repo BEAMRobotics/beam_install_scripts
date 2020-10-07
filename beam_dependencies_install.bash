@@ -325,7 +325,7 @@ install_cmake()
 
 install_eigen3()
 {
-  EIGEN_DIR="eigen-eigen-323c052e1731"
+  EIGEN_DIR="eigen-3.3.7"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
