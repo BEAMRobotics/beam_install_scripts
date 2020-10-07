@@ -332,8 +332,8 @@ install_eigen3()
 
   if [ ! -d "$EIGEN_DIR" ]; then
     wget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.bz2
-    tar xjf 3.3.7.tar.bz2
-    rm -rf 3.3.7.tar.bz2
+    tar xjf eigen-3.3.7.tar.bz2
+    rm -rf eigen-3.3.7.tar.bz2
   fi
 
   cd $EIGEN_DIR
