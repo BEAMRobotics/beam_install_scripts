@@ -291,7 +291,7 @@ install_catch2()
   cd $DEPS_DIR
 
   if [ ! -d "$DEPS_DIR/$CATCH2_DIR" ]; then
-    git clone https://github.com/catchorg/Catch2.git $DEPS_DIR/Catch2
+    git clone https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/Catch2
   fi
 
   cd $CATCH2_DIR
