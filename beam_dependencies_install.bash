@@ -422,13 +422,13 @@ install_ladybug_sdk()
 
 install_dbow3()
 {
-  DBOW_DIR="DBoW3"
+  DBOW_DIR="DBow3"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
   if [ ! -d "$DBOW_DIR" ]; then
-    git clone git@github.com:rmsalinas/DBow3.git
+    git clone git@github.com:BEAMRobotics/DBow3.git
   fi
 
   cd $DBOW_DIR
