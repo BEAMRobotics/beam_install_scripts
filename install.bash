@@ -53,6 +53,7 @@ install_routine()
     #install_libwave
     install_json
     install_ladybug_sdk
+    install_dbow3
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
