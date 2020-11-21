@@ -361,6 +361,11 @@ install_eigen3()
 
 install_gflags()
 {
+  sudo apt-get install libgflags-dev
+}
+
+install_gflags_from_source()
+{
   GFLAGS_DIR="gflags"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
