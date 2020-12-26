@@ -52,6 +52,7 @@ install_routine()
     install_json
     install_ladybug_sdk
     install_dbow3
+    install_pytorch
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
