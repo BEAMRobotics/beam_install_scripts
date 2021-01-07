@@ -313,6 +313,14 @@ install_cmake()
     echo "CMAKE installation found in /usr/local/, deleting..."
     sudo rm -rf /usr/local/cmake*
   fi
+
+  # remove cmake symlink if it exists. This is necessary if doing a re-install
+  CMAKE_SYMLINK_PATH="/usr/local/bin/cmake"
+  if [[ -h "$CMAKE_SYMLINK_PATH" ]]; then
+    echo "Removing existing CMAKE symbolic link: $CMAKE_SYMLINK_PATH"
+    sudo rm $CMAKE_SYMLINK_PATH  
+  fi
+
   echo $PATH
   TEMP_DIR="tmp"
   VERSION="3.14"
