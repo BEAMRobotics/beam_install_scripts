@@ -291,7 +291,7 @@ install_catch2()
   cd $DEPS_DIR
 
   if [ ! -d "$DEPS_DIR/$CATCH2_DIR" ]; then
-    git clone https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/Catch2
+    git clone https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/$CATCH2_DIR
   fi
 
   cd $CATCH2_DIR
@@ -458,3 +458,77 @@ install_dbow3()
   cd $DEPS_DIR/$DBOW_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
+
+install_cuda()
+{
+  echo "installing cuda..."
+  sudo apt-get purge nvidia-cuda*
+  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-ubuntu1604.pin
+  sudo mv cuda-ubuntu1604.pin /etc/apt/preferences.d/cuda-repository-pin-600
+  wget https://developer.download.nvidia.com/compute/cuda/11.2.0/local_installers/cuda-repo-ubuntu1604-11-2-local_11.2.0-460.27.04-1_amd64.deb
+  sudo dpkg -i cuda-repo-ubuntu1604-11-2-local_11.2.0-460.27.04-1_amd64.deb
+  sudo apt-key add /var/cuda-repo-ubuntu1604-11-2-local/7fa2af80.pub
+  sudo apt-get update
+  sudo apt-get -y install cuda
+}
+
+install_pytorch()
+{
+    if test -f "/usr/bin/python3.7"; then
+        echo "Python version 3.7 found."
+    else
+        echo "Installing python3.7..."
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt-get update
+        sudo apt-get install python3.7-dev  
+    fi
+
+  echo "Installing pytorch..."
+  PYTORCH_DIR="pytorch"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  if [ ! -d "$DEPS_DIR/$PYTORCH_DIR" ]; then
+    git clone -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
+  fi
+
+  cd $PYTORCH_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON_EXECUTABLE:PATH=/usr/bin/python3.7 -DPYTHON_LIBRARY:PATH=/usr/lib/python3.7 -DPYTHON_INCLUDE_DIR:PATH=/usr/include/python3.7 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -DUSE_CUDA:BOOL=OFF ..
+    sudo cmake --build . --target install
+  fi
+}
+
+install_pytorch_cuda()
+{
+  if test -f "/usr/bin/python3.7"; then
+      echo "Python version 3.7 found."
+  else
+      echo "Installing python3.7..."
+      sudo add-apt-repository ppa:deadsnakes/ppa
+      sudo apt-get update
+      sudo apt-get install python3.7-dev  
+  fi
+
+  echo "Installing pytorch..."
+  PYTORCH_DIR="pytorch"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  if [ ! -d "$DEPS_DIR/$PYTORCH_DIR" ]; then
+    git clone -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
+  fi
+
+  cd $PYTORCH_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON_EXECUTABLE:PATH=/usr/bin/python3.7 -DPYTHON_LIBRARY:PATH=/usr/lib/python3.7 -DPYTHON_INCLUDE_DIR:PATH=/usr/include/python3.7 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -DUSE_CUDA:BOOL=ON ..
+    sudo cmake --build . --target install
+  fi
+}
+
