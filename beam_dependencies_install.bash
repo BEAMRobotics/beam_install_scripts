@@ -540,3 +540,28 @@ install_pytorch_cuda()
   fi
 }
 
+install_manif()
+{
+  MANIF_DIR="Manif"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  apt-get install libeigen3-dev
+  if [ ! -d "$MANIF_DIR" ]; then
+    git clone https://github.com/artivis/manif.git $DEPS_DIR/$MANIF_DIR
+  fi
+
+  cd $MANIF_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake ..
+    make install
+  fi
+
+  cd $DEPS_DIR/$MANIF_DIR/$BUILD_DIR
+  sudo make install
+}
+
+}
