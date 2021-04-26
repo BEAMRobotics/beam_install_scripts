@@ -107,7 +107,7 @@ install_protobuf()
 
 install_pcl()
 {
-  PCL_VERSION="1.8.1"
+  PCL_VERSION="1.11.1"
   PCL_DIR="pcl"
   BUILD_DIR="build"
 
@@ -115,6 +115,11 @@ install_pcl()
 
   if [ -d 'pcl-pcl-1.8.0' ]; then
     echo "Removing old version of pcl (pcl-1.8.0) from deps"
+    sudo rm -rf pcl-pcl-1.8.0
+  fi
+
+  if [ -d 'pcl-pcl-1.8.1' ]; then
+    echo "Removing old version of pcl (pcl-1.8.1) from deps"
     sudo rm -rf pcl-pcl-1.8.0
   fi
 
@@ -562,6 +567,30 @@ install_manif()
 
   cd $DEPS_DIR/$MANIF_DIR/$BUILD_DIR
   sudo make install
+}
+
+install_teaserpp()
+{
+  TEASERPP_DIR="TEASER-plusplus"
+  BUILD_DIR="build"
+
+  cd $DEPS_DIR
+
+  if [ ! -d "$TEASERPP_DIR" ]; then
+    echo "teaserpp not found... cloning"
+    git clone https://github.com/BEAMRobotics/TEASER-plusplus
+  fi
+
+  cd $TEASERPP_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake .. > /dev/null
+    make -j$(nproc)
+  fi
+
+  cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
+  sudo make -j$(nproc) install
 }
 
 }
