@@ -400,6 +400,11 @@ install_gflags_from_source()
   sudo make -j$(nproc) install
 }
 
+install_pcap()
+{
+  sudo apt-get install libpcap-dev
+}
+
 install_json()
 {
   JSON_DIR="json"
@@ -447,7 +452,6 @@ install_ladybug_sdk()
         echo "Ladybug SDK successfully installed in /usr/local/"
     fi
 }
-
 
 install_dbow3()
 {
@@ -591,6 +595,4 @@ install_teaserpp()
 
   cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
-}
-
 }
