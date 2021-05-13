@@ -549,19 +549,20 @@ install_pytorch_cuda()
   fi
 }
 
-install_manif()
+install_sophus()
 {
-  MANIF_DIR="Manif"
-  BUILD_DIR="build"
+  SOPHUS_DIR="Sophus"
+  BUILD_DIR="build" 
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
-  apt-get install libeigen3-dev
-  if [ ! -d "$MANIF_DIR" ]; then
-    git clone https://github.com/artivis/manif.git $DEPS_DIR/$MANIF_DIR
+  apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
+  if [ ! -d "$SOPHUS_DIR" ]; then
+    git clone https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
+    git checkout 936265f # required by basalt
   fi
 
-  cd $MANIF_DIR
+  cd $SOPHUS_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
@@ -569,7 +570,7 @@ install_manif()
     make install
   fi
 
-  cd $DEPS_DIR/$MANIF_DIR/$BUILD_DIR
+  cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
   sudo make install
 }
 
