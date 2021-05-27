@@ -567,7 +567,7 @@ install_sophus()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make install
+    make -j$(nproc)
   fi
 
   cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
