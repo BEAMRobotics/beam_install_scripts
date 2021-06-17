@@ -150,11 +150,11 @@ install_pcl()
     fi
 
     cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-    make -j$(nproc)
+    make -j2
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make install
 }
 
 install_geographiclib()
