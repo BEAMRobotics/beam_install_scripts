@@ -42,7 +42,6 @@ install_routine()
     # Install dependencies
     install_cmake
     install_catch2
-    # install_cmake
     install_eigen3
     install_ceres
     install_pcl
@@ -60,7 +59,7 @@ install_routine()
     else
         echo $ROS_CHECK
         echo $ROS_DISTRO
-        echo "Ros not installed"
+        echo "ROS not installed"
         exit
     fi
 

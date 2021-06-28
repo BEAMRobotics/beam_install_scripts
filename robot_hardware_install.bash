@@ -21,6 +21,7 @@ main()
     install_libpcap
     install_husky_packages
     enable_passwordless_sudo
+    install_rosserial
     #install_chrony_deps
     catkin_build
     echo "Robot hardware successfully installed"
@@ -164,6 +165,14 @@ install_spinnaker_sdk()
         printf "y\nn\n" | sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     fi
+}
+
+install_rosserial()
+{
+    echo "Installing rosserial..."
+    sudo apt-get install ros-kinetic-rosserial-arduino
+    sudo apt-get install ros-kinetic-rosserial
+    echo "Done."
 }
 
 main

@@ -107,7 +107,7 @@ install_protobuf()
 
 install_pcl()
 {
-  PCL_VERSION="1.8.1"
+  PCL_VERSION="1.10.1"
   PCL_DIR="pcl"
   BUILD_DIR="build"
 
@@ -118,9 +118,15 @@ install_pcl()
     sudo rm -rf pcl-pcl-1.8.0
   fi
 
+  if [ -d 'pcl-pcl-1.8.1' ]; then
+    echo "Removing old version of pcl (pcl-1.8.1) from deps"
+    sudo rm -rf pcl-pcl-1.8.1
+  fi
+
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
-    git clone git@github.com:BEAMRobotics/pcl.git
+    git clone https://github.com/PointCloudLibrary/pcl.git
+    git checkout pcl-$PCL_VERSION
   fi
 
   cd $PCL_DIR
@@ -129,7 +135,7 @@ install_pcl()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
 
-    PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
+    PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++14"
     if [ -n "$CONTINUOUS_INTEGRATION" ]; then
               # Disable everything unneeded for a faster build
               echo "Installing light build for CI"
