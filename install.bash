@@ -50,7 +50,8 @@ install_routine()
     #install_libwave
     install_json
     install_dbow3
-
+    install_opencv4
+    
     if [ $UBUNTU_CODENAME = xenial ]; then
         echo "Installing ladybug sdk"
         install_ladybug_sdk

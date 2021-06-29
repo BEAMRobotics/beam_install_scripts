@@ -464,3 +464,40 @@ install_dbow3()
   cd $DEPS_DIR/$DBOW_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
 }
+
+install_opencv4()
+{
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  # first, get opencv_contrib
+  OPENCV_CONTRIB_DIR="opencv_contrib"
+  BUILD_DIR="build"
+  VERSION="4.5.2"
+
+  if [ ! -d "$OPENCV_CONTRIB_DIR" ]; then
+    git clone https://github.com/opencv/opencv_contrib.git
+  fi
+
+  cd $OPENCV_CONTRIB_DIR
+  git checkout $VERSION
+
+  # next, install opencv and link to opencv_contrib
+  cd $DEPS_DIR
+  OPENCV_DIR="opencv"
+  VERSION="4.5.2"
+
+  if [ ! -d "$OPENCV_DIR" ]; then
+    git clone https://github.com/opencv/opencv.git
+  fi
+
+  cd $OPENCV_DIR
+  git checkout $VERSION
+
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
+    make -j$(nproc)
+  fi
+}
