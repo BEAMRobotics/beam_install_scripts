@@ -105,6 +105,13 @@ install_protobuf()
     fi
 }
 
+install_libpcap()
+{
+    # for velodyne driver
+    echo "installing velodyne driver dependencies..."
+    sudo apt-get install libpcap-dev
+}
+
 install_pcl()
 {
   PCL_VERSION="1.11.1"
@@ -120,12 +127,13 @@ install_pcl()
 
   if [ -d 'pcl-pcl-1.8.1' ]; then
     echo "Removing old version of pcl (pcl-1.8.1) from deps"
-    sudo rm -rf pcl-pcl-1.8.0
+    sudo rm -rf pcl-pcl-1.8.1
   fi
 
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
-    git clone git@github.com:BEAMRobotics/pcl.git
+    git clone https://github.com/PointCloudLibrary/pcl.git
+    git checkout pcl-$PCL_VERSION
   fi
 
   cd $PCL_DIR
@@ -134,7 +142,7 @@ install_pcl()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
 
-    PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++11"
+    PCL_CMAKE_ARGS="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-std=c++14"
     if [ -n "$CONTINUOUS_INTEGRATION" ]; then
               # Disable everything unneeded for a faster build
               echo "Installing light build for CI"
@@ -474,6 +482,43 @@ install_dbow3()
 
   cd $DEPS_DIR/$DBOW_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
+}
+
+install_opencv4()
+{
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  # first, get opencv_contrib
+  OPENCV_CONTRIB_DIR="opencv_contrib"
+  BUILD_DIR="build"
+  VERSION="4.5.2"
+
+  if [ ! -d "$OPENCV_CONTRIB_DIR" ]; then
+    git clone https://github.com/opencv/opencv_contrib.git
+  fi
+
+  cd $OPENCV_CONTRIB_DIR
+  git checkout $VERSION
+
+  # next, install opencv and link to opencv_contrib
+  cd $DEPS_DIR
+  OPENCV_DIR="opencv"
+  VERSION="4.5.2"
+
+  if [ ! -d "$OPENCV_DIR" ]; then
+    git clone https://github.com/opencv/opencv.git
+  fi
+
+  cd $OPENCV_DIR
+  git checkout $VERSION
+
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
+    make -j$(nproc)
+  fi
 }
 
 install_cuda()

@@ -42,18 +42,21 @@ install_routine()
     # Install dependencies
     install_cmake
     install_catch2
-    # install_cmake
     install_eigen3
     install_ceres
     install_pcl
     install_geographiclib
-    install_gflags_from_source
-    install_pcap
+    install_libpcap
     #install_gtsam
     #install_libwave
     install_json
-    install_ladybug_sdk
     install_dbow3
+    install_opencv4
+    
+    if [ $UBUNTU_CODENAME = xenial ]; then
+        echo "Installing ladybug sdk"
+        install_ladybug_sdk
+    fi   
     install_pytorch
 
     # check that ros installed correctly
@@ -63,7 +66,7 @@ install_routine()
     else
         echo $ROS_CHECK
         echo $ROS_DISTRO
-        echo "Ros not installed"
+        echo "ROS not installed"
         exit
     fi
 

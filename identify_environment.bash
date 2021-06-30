@@ -9,7 +9,9 @@ case $UBUNTU_CODENAME in
     export ROS_DISTRO=indigo;;
   xenial)
     export ROS_DISTRO=kinetic;;
+  bionic)
+    export ROS_DISTRO=melodic;;  
   *)
-    echo "Unsupported version of Ubuntu detected. Only trusty (14.04.*) and xenial (16.04.*) are currently supported."
-    exit 1
+    echo "Unsupported version of Ubuntu detected. Only trusty (14.04.*) , xenial (16.04.*) and bionic (18.04.*) are currently supported."
+    exit       1
 esac

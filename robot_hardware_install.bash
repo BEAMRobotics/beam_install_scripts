@@ -18,9 +18,9 @@ main()
     install_um7
     # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
     install_spinnaker_sdk
-    install_libpcap
     install_husky_packages
     enable_passwordless_sudo
+    install_rosserial
     #install_chrony_deps
     catkin_build
     echo "Robot hardware successfully installed"
@@ -112,13 +112,6 @@ install_flir_blackfly()
     sudo bash /home/"$USER"/catkin_ws/src/ros_drivers/flir_camera_driver/spin-conf
 }
 
-install_libpcap()
-{
-    # for velodyne driver
-    echo "installing velodyne driver dependencies..."
-    sudo apt-get install libpcap-dev
-}
-
 install_husky_packages()
 {
     echo "installing husky dependencies..."
@@ -164,6 +157,14 @@ install_spinnaker_sdk()
         printf "y\nn\n" | sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     fi
+}
+
+install_rosserial()
+{
+    echo "Installing rosserial..."
+    sudo apt-get install ros-kinetic-rosserial-arduino
+    sudo apt-get install ros-kinetic-rosserial
+    echo "Done."
 }
 
 main
