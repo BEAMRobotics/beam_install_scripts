@@ -18,7 +18,6 @@ main()
     install_um7
     # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
     install_spinnaker_sdk
-    install_libpcap
     install_husky_packages
     enable_passwordless_sudo
     install_rosserial
@@ -111,13 +110,6 @@ install_flir_blackfly()
 {
     echo "configuring spinnaker driver..."
     sudo bash /home/"$USER"/catkin_ws/src/ros_drivers/flir_camera_driver/spin-conf
-}
-
-install_libpcap()
-{
-    # for velodyne driver
-    echo "installing velodyne driver dependencies..."
-    sudo apt-get install libpcap-dev
 }
 
 install_husky_packages()

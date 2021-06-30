@@ -45,7 +45,8 @@ install_routine()
     install_eigen3
     install_ceres
     install_pcl
-    #install_geographiclib
+    install_geographiclib
+    install_libpcap
     #install_gtsam
     #install_libwave
     install_json

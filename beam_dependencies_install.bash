@@ -105,6 +105,13 @@ install_protobuf()
     fi
 }
 
+install_libpcap()
+{
+    # for velodyne driver
+    echo "installing velodyne driver dependencies..."
+    sudo apt-get install libpcap-dev
+}
+
 install_pcl()
 {
   PCL_VERSION="1.10.1"
@@ -497,7 +504,7 @@ install_opencv4()
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
-    cmake -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
+    cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
     make -j$(nproc)
   fi
 }
