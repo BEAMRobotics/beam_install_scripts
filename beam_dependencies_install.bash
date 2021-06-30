@@ -114,7 +114,7 @@ install_libpcap()
 
 install_pcl()
 {
-  PCL_VERSION="1.10.1"
+  PCL_VERSION="1.11.1"
   PCL_DIR="pcl"
   BUILD_DIR="build"
 
@@ -304,7 +304,7 @@ install_catch2()
   cd $DEPS_DIR
 
   if [ ! -d "$DEPS_DIR/$CATCH2_DIR" ]; then
-    git clone https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/Catch2
+    git clone https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/$CATCH2_DIR
   fi
 
   cd $CATCH2_DIR
@@ -326,6 +326,14 @@ install_cmake()
     echo "CMAKE installation found in /usr/local/, deleting..."
     sudo rm -rf /usr/local/cmake*
   fi
+
+  #Remove CMake symlink if it exists. This is necessary if doing a re-install
+  CMAKE_SYMLINK_PATH="/usr/local/bin/cmake"
+  if [[ -h "$CMAKE_SYMLINK_PATH" ]]; then
+    echo "Removing existing CMAKE symbolic link: $CMAKE_SYMLINK_PATH"
+    sudo rm $CMAKE_SYMLINK_PATH  
+  fi
+
   echo $PATH
   TEMP_DIR="tmp"
   VERSION="3.14"
@@ -400,6 +408,11 @@ install_gflags_from_source()
   sudo make -j$(nproc) install
 }
 
+install_pcap()
+{
+  sudo apt-get install libpcap-dev
+}
+
 install_json()
 {
   JSON_DIR="json"
@@ -447,7 +460,6 @@ install_ladybug_sdk()
         echo "Ladybug SDK successfully installed in /usr/local/"
     fi
 }
-
 
 install_dbow3()
 {
@@ -507,4 +519,126 @@ install_opencv4()
     cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
     make -j$(nproc)
   fi
+}
+
+install_cuda()
+{
+  echo "installing cuda..."
+  sudo apt-get purge nvidia-cuda*
+  wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-ubuntu1604.pin
+  sudo mv cuda-ubuntu1604.pin /etc/apt/preferences.d/cuda-repository-pin-600
+  wget https://developer.download.nvidia.com/compute/cuda/11.2.0/local_installers/cuda-repo-ubuntu1604-11-2-local_11.2.0-460.27.04-1_amd64.deb
+  sudo dpkg -i cuda-repo-ubuntu1604-11-2-local_11.2.0-460.27.04-1_amd64.deb
+  sudo apt-key add /var/cuda-repo-ubuntu1604-11-2-local/7fa2af80.pub
+  sudo apt-get update
+  sudo apt-get -y install cuda
+}
+
+install_pytorch()
+{
+    if test -f "/usr/bin/python3.7"; then
+        echo "Python version 3.7 found."
+    else
+        echo "Installing python3.7..."
+        sudo add-apt-repository ppa:deadsnakes/ppa
+        sudo apt-get update
+        sudo apt-get install python3.7-dev  
+    fi
+
+  echo "Installing pytorch..."
+  PYTORCH_DIR="pytorch"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  if [ ! -d "$DEPS_DIR/$PYTORCH_DIR" ]; then
+    git clone -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
+  fi
+
+  cd $PYTORCH_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON_EXECUTABLE:PATH=/usr/bin/python3.7 -DPYTHON_LIBRARY:PATH=/usr/lib/python3.7 -DPYTHON_INCLUDE_DIR:PATH=/usr/include/python3.7 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -DUSE_CUDA:BOOL=OFF ..
+    sudo cmake --build . --target install
+  fi
+}
+
+install_pytorch_cuda()
+{
+  if test -f "/usr/bin/python3.7"; then
+      echo "Python version 3.7 found."
+  else
+      echo "Installing python3.7..."
+      sudo add-apt-repository ppa:deadsnakes/ppa
+      sudo apt-get update
+      sudo apt-get install python3.7-dev  
+  fi
+
+  echo "Installing pytorch..."
+  PYTORCH_DIR="pytorch"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  if [ ! -d "$DEPS_DIR/$PYTORCH_DIR" ]; then
+    git clone -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
+  fi
+
+  cd $PYTORCH_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake -DBUILD_SHARED_LIBS:BOOL=ON -DCMAKE_BUILD_TYPE:STRING=Release -DPYTHON_EXECUTABLE:PATH=/usr/bin/python3.7 -DPYTHON_LIBRARY:PATH=/usr/lib/python3.7 -DPYTHON_INCLUDE_DIR:PATH=/usr/include/python3.7 -DCMAKE_INSTALL_PREFIX:PATH=/usr/local/ -DUSE_CUDA:BOOL=ON ..
+    sudo cmake --build . --target install
+  fi
+}
+
+install_sophus()
+{
+  SOPHUS_DIR="Sophus"
+  BUILD_DIR="build" 
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
+  if [ ! -d "$SOPHUS_DIR" ]; then
+    git clone https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
+    git checkout 936265f # required by basalt
+  fi
+
+  cd $SOPHUS_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake ..
+    make -j$(nproc)
+  fi
+
+  cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
+  sudo make install
+}
+
+install_teaserpp()
+{
+  TEASERPP_DIR="TEASER-plusplus"
+  BUILD_DIR="build"
+
+  cd $DEPS_DIR
+
+  if [ ! -d "$TEASERPP_DIR" ]; then
+    echo "teaserpp not found... cloning"
+    git clone https://github.com/BEAMRobotics/TEASER-plusplus
+  fi
+
+  cd $TEASERPP_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake .. > /dev/null
+    make -j$(nproc)
+  fi
+
+  cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
+  sudo make -j$(nproc) install
 }

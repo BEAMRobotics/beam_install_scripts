@@ -57,6 +57,7 @@ install_routine()
         echo "Installing ladybug sdk"
         install_ladybug_sdk
     fi   
+    install_pytorch
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
