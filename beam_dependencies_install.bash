@@ -133,10 +133,10 @@ install_pcl()
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
     git clone https://github.com/PointCloudLibrary/pcl.git
+    cd $PCL_DIR
     git checkout pcl-$PCL_VERSION
   fi
-
-  cd $PCL_DIR
+  
   if [ ! -d "$BUILD_DIR" ]; then
     echo "Existing build of PCL not found.. building from scratch"
     mkdir -p $BUILD_DIR
