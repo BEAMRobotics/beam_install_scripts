@@ -22,6 +22,23 @@ main()
 install_routine()
 {
     sudo -v
+
+    # Proccess command line flags
+    ROBOT=''
+
+    print_usage() {
+      printf "Usage: ..."
+      printf "   -r: specify name of robot if installing software on robot"
+    }
+
+    while getopts 'r' flag; do
+      case "${flag}" in
+        r) ROBOT="${OPTARG}";;
+        *) print_usage
+          exit 1 ;;
+      esac
+    done
+
     # Import functions to install required dependencies
     source $INSTALL_SCRIPTS/beam_dependencies_install.bash
     install_gcc7
@@ -29,8 +46,7 @@ install_routine()
     # source catkin setup script
     source $INSTALL_SCRIPTS/catkin_setup.bash
 
-    # submodule_init
-
+    # Install ROS
     bash $INSTALL_SCRIPTS/ros_install.bash
     create_catkin_ws
 
@@ -56,28 +72,30 @@ install_routine()
         echo "Installing ladybug sdk"
         install_ladybug_sdk
     fi   
-    
+
     # Install robot dependencies if flagged
-    getopts r: flag
-    if [${flag} = 'ig2']; then
-      echo 'Installing drivers for ig2'
+    if [ROBOT != '']; then
+      $DRIVER_DIR = 'ros_drivers'
+      echo 'Installing drivers ...'
       cd $REPO_DIR
-      if [ -d 'ig2_ros_drivers' ]; then
-        echo 'pulling most recent master'
-        cd ig2_ros_drivers
+      if [ -d $DRIVER_DIR ]; then
+        echo 'pulling most recent master ...'
+        cd $DRIVER_DIR
         git pull origin master
         cd ..
       else
-        echo "cloning Beam install scripts"
-        git clone git@github.com:BEAMRobotics/ig2_ros_drivers.git
+        echo "cloning $DRIVER_DIR"
+        git clone git@github.com:BEAMRobotics/ros_drivers.git
       fi
-      echo 'TEMP: INSTALL DRIVERS'
-      #source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      # install_velodyne
-      # install_FLIR
-      # install_Spinnaker
-      # install_Xsens
-      # install_ROS_Serial
+      source $INSTALL_SCRIPTS/robot_dependencies_install.bash
+
+      if [ROBOT = 'ig2']; then
+        # install_velodyne (this comes with beam_robotics)
+        install_flir_blackfly
+        install_spinnaker_sdk
+        # install_Xsens
+        install_rosserial
+      fi
     fi
 
     # check that ros installed correctly
