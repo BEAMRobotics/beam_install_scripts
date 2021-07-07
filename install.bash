@@ -14,7 +14,6 @@ export REPO_DIR=$SCRIPT_DIR
 source $INSTALL_SCRIPTS/identify_environment.bash
 
 
-
 main()
 {
     install_routine $1
@@ -39,7 +38,8 @@ install_routine()
 
     # Ensure wget is available
     sudo apt-get install -qq wget  > /dev/null
-    # Install dependencies
+
+    # Install development machine dependencies
     install_cmake
     install_catch2
     install_eigen3
@@ -47,17 +47,38 @@ install_routine()
     install_pcl
     install_geographiclib
     install_libpcap
-    #install_gtsam
-    #install_libwave
     install_json
     install_dbow3
     install_opencv4
-    
+    install_pytorch
+
     if [ $UBUNTU_CODENAME = xenial ]; then
         echo "Installing ladybug sdk"
         install_ladybug_sdk
     fi   
-    install_pytorch
+    
+    # Install robot dependencies if flagged
+    getopts r: flag
+    if [${flag} = 'ig2']; then
+      echo 'Installing drivers for ig2'
+      cd $REPO_DIR
+      if [ -d 'ig2_ros_drivers' ]; then
+        echo 'pulling most recent master'
+        cd ig2_ros_drivers
+        git pull origin master
+        cd ..
+      else
+        echo "cloning Beam install scripts"
+        git clone git@github.com:BEAMRobotics/ig2_ros_drivers.git
+      fi
+      echo 'TEMP: INSTALL DRIVERS'
+      #source $INSTALL_SCRIPTS/robot_dependencies_install.bash
+      # install_velodyne
+      # install_FLIR
+      # install_Spinnaker
+      # install_Xsens
+      # install_ROS_Serial
+    fi
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
