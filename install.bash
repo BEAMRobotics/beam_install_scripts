@@ -13,6 +13,12 @@ export REPO_DIR=$SCRIPT_DIR
 # get UBUNTU_CODENAME, ROS_DISTRO, CATKIN_DIR
 source $INSTALL_SCRIPTS/identify_environment.bash
 
+print_usage() {
+  printf "Usage: \n"
+  printf "   -p: install pytorch \n"
+  printf "   -r: install software on a specific beam robot \n"
+  printf "       options: ig2 \n"
+}
 
 main()
 {
@@ -25,19 +31,12 @@ install_routine()
 
     # Proccess command line flags
     PYTORCH=false
-    ROBOT=''
+    ROBOT=""
     
-    print_usage() {
-      printf "Usage: ..."
-      printf "   -p: install pytorch"
-      printf "   -r: install software on a specific beam robot"
-      printf "       options: ig2"
-    }
-
-    while getopts 'pr' flag; do
-      case "${flag}" in
+    while getopts "pr" flag; do
+      case ${flag} in
         p) PYTORCH=true;;
-        r) ROBOT="${OPTARG}";;
+        r) ROBOT=${OPTARG};;
         *) print_usage
           exit 1 ;;
       esac
@@ -63,15 +62,15 @@ install_routine()
     install_cmake
     install_catch2
     install_eigen3
-    install_ceres
-    install_pcl
-    install_geographiclib
-    install_libpcap
-    install_json
-    install_dbow3
-    install_opencv4
-    
-    if [$PYTORCH]; then
+#    install_ceres
+#    install_pcl
+#    install_geographiclib
+#    install_libpcap
+#    install_json
+#    install_dbow3
+#    install_opencv4
+    echo $PYTORCH
+    if $PYTORCH; then
       echo "Installing pytorch"
       install_pytorch
     fi
@@ -82,22 +81,22 @@ install_routine()
     fi   
 
     # Install robot dependencies if flagged
-    if [ROBOT != '']; then
-      $DRIVER_DIR = 'ros_drivers'
+    echo $ROBOT
+    if ["$ROBOT" != ""]; then
+      DRIVER_DIR="ros_drivers"
       echo "Downloading drivers required for beam robots..."
-      cd $REPO_DIR
+      cd "$CATKIN_DIR/src"
       if [ -d $DRIVER_DIR ]; then
         echo "Recursively pull most recent master/main branch for all submodules..."
         cd $DRIVER_DIR
         git pull --recurse-submodules
         cd ..
       else
-        echo "Cloning $DRIVER_DIR..."
         git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
       fi
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-
-      if [ROBOT = 'ig2']; then
+      echo "install ig2"
+      if ["$ROBOT" = "ig2"]; then
         echo "Installing drivers for ig2"
         # install_velodyne (this comes with beam_robotics)
         install_flir_blackfly
