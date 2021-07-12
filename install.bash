@@ -24,15 +24,19 @@ install_routine()
     sudo -v
 
     # Proccess command line flags
+    PYTORCH=false
     ROBOT=''
-
+    
     print_usage() {
       printf "Usage: ..."
-      printf "   -r: specify name of robot if installing software on robot"
+      printf "   -p: install pytorch"
+      printf "   -r: install software on a specific beam robot"
+      printf "       options: ig2"
     }
 
-    while getopts 'r' flag; do
+    while getopts 'pr' flag; do
       case "${flag}" in
+        p) PYTORCH=true;;
         r) ROBOT="${OPTARG}";;
         *) print_usage
           exit 1 ;;
@@ -66,30 +70,35 @@ install_routine()
     install_json
     install_dbow3
     install_opencv4
-    install_pytorch
+    
+    if [$PYTORCH]; then
+      echo "Installing pytorch"
+      install_pytorch
+    fi
 
     if [ $UBUNTU_CODENAME = xenial ]; then
-        echo "Installing ladybug sdk"
-        install_ladybug_sdk
+      echo "Installing ladybug sdk"
+      install_ladybug_sdk
     fi   
 
     # Install robot dependencies if flagged
     if [ROBOT != '']; then
       $DRIVER_DIR = 'ros_drivers'
-      echo 'Installing drivers ...'
+      echo "Downloading drivers required for beam robots..."
       cd $REPO_DIR
       if [ -d $DRIVER_DIR ]; then
-        echo 'pulling most recent master ...'
+        echo "Recursively pull most recent master/main branch for all submodules..."
         cd $DRIVER_DIR
-        git pull origin master
+        git pull --recurse-submodules
         cd ..
       else
-        echo "cloning $DRIVER_DIR"
-        git clone git@github.com:BEAMRobotics/ros_drivers.git
+        echo "Cloning $DRIVER_DIR..."
+        git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
       fi
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
 
       if [ROBOT = 'ig2']; then
+        echo "Installing drivers for ig2"
         # install_velodyne (this comes with beam_robotics)
         install_flir_blackfly
         install_spinnaker_sdk
