@@ -17,6 +17,24 @@ install_chrony_deps()
     sudo apt-get install gpsd gpsd-clients chrony
 }
 
+clone_ros_drivers()
+{
+    if [ ! -d /home/"$USER"/projects ]; then
+    	mkdir /home/"$USER"/projects
+    fi
+    if [ -d /home/"$USER"/projects/ros_drivers ]; then
+        echo "ros_drivers already installed in /home/"$USER"/projects/"
+        echo "make sure there is a symlink in catkin_ws"
+    fi
+    if [ ! -d /home/"$USER"/projects/ros_drivers ]; then
+        cd /home/"$USER"/projects
+        echo "installing ros_drivers to /home/"$USER"/projects"
+        git clone --recursive https://github.com/BEAMRobotics/ros_drivers.git
+        echo "creating link in /home/"$USER"/catkin_ws/src/ to /home/"$USER"/projects"
+        ln -s /home/"$USER"/projects/ros_drivers /home/"$USER"/catkin_ws/src/
+    fi
+}
+
 install_ximea_deps()
 {
     echo "installing ximea dependencies..."
