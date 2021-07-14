@@ -13,34 +13,55 @@ export REPO_DIR=$SCRIPT_DIR
 # get UBUNTU_CODENAME, ROS_DISTRO, CATKIN_DIR
 source $INSTALL_SCRIPTS/identify_environment.bash
 
-print_usage() {
-  printf "Usage: \n"
-  printf "   -p: install pytorch \n"
-  printf "   -r: install software on a specific beam robot \n"
-  printf "       options: ig2 \n"
-}
-
-main()
+main() 
 {
-    install_routine $1
+    parse_arguments $@
+    install_routine
 }
 
-install_routine()
+parse_arguments()
+{
+  # defaults
+  PYTORCH=false
+  ROBOT=""
+
+  echo "Parsing any optional commandline arguments..."
+  while getopts ":pr:" arg; do
+    case $arg in
+      p) PYTORCH=true; echo "-p) Pytorch option <$PYTORCH> selected...";;
+      r) ROBOT="$OPTARG"; verify_robot;;
+      \?) print_usage;;
+    esac
+  done
+}
+
+verify_robot() 
+{
+  declare -a robot_list=("ig2")
+  if printf '%s\n' "${robot_list[@]}" | grep -P "$ROBOT" > /dev/null; then
+    echo "-r) Robot option <$ROBOT> selected..."
+  else
+    echo "-r) Robot option <$ROBOT> not available..."
+    print_usage
+  fi
+}
+
+print_usage() 
+{
+  echo "Usage:"
+  echo "   -p: install pytorch"
+  echo "   -r: install software on a specific beam robot"
+  printf "       options: "
+  for val in ${robot_list[@]}; do
+    printf "$val "
+  done
+  printf "\n"
+  exit 1
+}
+
+install_routine() 
 {
     sudo -v
-
-    # Proccess command line flags
-    PYTORCH=false
-    ROBOT=""
-    
-    while getopts "pr" flag; do
-      case ${flag} in
-        p) PYTORCH=true;;
-        r) ROBOT=${OPTARG};;
-        *) print_usage
-          exit 1 ;;
-      esac
-    done
 
     # Import functions to install required dependencies
     source $INSTALL_SCRIPTS/beam_dependencies_install.bash
@@ -69,35 +90,26 @@ install_routine()
 #    install_json
 #    install_dbow3
 #    install_opencv4
-    echo $PYTORCH
-    if $PYTORCH; then
-      echo "Installing pytorch"
+
+    if [ "$PYTORCH" = true ]; then
+      echo "Installing pytorch..."
       install_pytorch
     fi
 
     if [ $UBUNTU_CODENAME = xenial ]; then
-      echo "Installing ladybug sdk"
+      echo "Installing ladybug sdk..."
       install_ladybug_sdk
     fi   
 
-    # Install robot dependencies if flagged
     echo $ROBOT
-    if ["$ROBOT" != ""]; then
-      DRIVER_DIR="ros_drivers"
-      echo "Downloading drivers required for beam robots..."
-      cd "$CATKIN_DIR/src"
-      if [ -d $DRIVER_DIR ]; then
-        echo "Recursively pull most recent master/main branch for all submodules..."
-        cd $DRIVER_DIR
-        git pull --recurse-submodules
-        cd ..
-      else
-        git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
-      fi
+    if [ ! -z "$ROBOT" ]; then
+      echo "HERE"
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      echo "install ig2"
-      if ["$ROBOT" = "ig2"]; then
-        echo "Installing drivers for ig2"
+      echo "now here 1"
+      clone_ros_drivers   
+      echo "now here 2"
+      if [ "$ROBOT" = "ig2" ]; then
+        echo "Installing drivers for $ROBOT..."
         # install_velodyne (this comes with beam_robotics)
         install_flir_blackfly
         install_spinnaker_sdk
@@ -129,5 +141,4 @@ install_routine()
     echo "Beam robotics installation scripts successfully tested."
 }
 
-
-main $1
+main $@
