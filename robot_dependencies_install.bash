@@ -19,19 +19,21 @@ install_chrony_deps()
 
 clone_ros_drivers()
 {
-    if [ ! -d /home/"$USER"/projects ]; then
-    	mkdir /home/"$USER"/projects
+    PROJECTS_DIR="/home/$USER/projects"
+
+    if [ ! -d "$PROJECTS_DIR" ]; then
+    	mkdir $PROJECTS_DIR
     fi
-    if [ -d /home/"$USER"/projects/ros_drivers ]; then
-        echo "ros_drivers already installed in /home/"$USER"/projects/"
-        echo "make sure there is a symlink in catkin_ws"
-    fi
-    if [ ! -d /home/"$USER"/projects/ros_drivers ]; then
-        cd /home/"$USER"/projects
-        echo "installing ros_drivers to /home/"$USER"/projects"
-        git clone --recursive https://github.com/BEAMRobotics/ros_drivers.git
-        echo "creating link in /home/"$USER"/catkin_ws/src/ to /home/"$USER"/projects"
-        ln -s /home/"$USER"/projects/ros_drivers /home/"$USER"/catkin_ws/src/
+ 
+    if [ -d $PROJECTS_DIR/ros_drivers ]; then
+        echo "ros_drivers already installed in $PROJECTS_DIR"
+        echo "ensure there is a symlink in catkin_ws"
+    else
+        cd $PROJECTS_DIR
+        echo "cloning ros_drivers to $PROJECTS_DIR..."
+        git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
+        echo "creating link in /home/"$USER"/catkin_ws/src/ to $PROJECTS_DIR"
+        ln -s $PROJECTS_DIR/ros_drivers /home/"$USER"/catkin_ws/src/
     fi
 }
 
