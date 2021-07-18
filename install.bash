@@ -15,8 +15,29 @@ source $INSTALL_SCRIPTS/identify_environment.bash
 
 main() 
 {
+    menu
     parse_arguments $@
     install_routine
+}
+
+menu()
+{
+    echo "Running this script will delete your /build /devel and /logs folders in your $CATKIN_DIR directory and re-build them."
+    echo "Also, this script assumes the following things:"
+    echo "  - Your ROS version is $ROS_DISTRO"
+    echo "  - Your catkin workspace is located at: $CATKIN_DIR"
+    echo "  - Catkin tools is installed"
+    echo "  - Your bashrc sources $CATKIN_DIR/devel/setup.bash"
+    echo "If any of the above assumptions are not true, the following script will make them so."
+    echo "Do you wish to continue? (y/n):"
+
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
 }
 
 parse_arguments()
