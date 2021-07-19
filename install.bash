@@ -3,7 +3,6 @@ set -e
 # This script is for testing the automatic installation process of ros and the creation of a catkin workspace
 
 # Specify location of installation scripts
-
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 INSTALL_SCRIPTS=$SCRIPT_DIR
 
@@ -58,11 +57,16 @@ parse_arguments()
 
 verify_robot() 
 {
+  if [ "$ROS_DISTRO" != "kinetic" ]; then
+    echo "current installation for beam robots requires ROS kinetic. Exiting."
+    exit 1
+  fi
+
   declare -a robot_list=("ig2")
   if printf '%s\n' "${robot_list[@]}" | grep -P "$ROBOT" > /dev/null; then
     echo "-r) Robot option <$ROBOT> selected..."
   else
-    echo "-r) Robot option <$ROBOT> not available..."
+    echo "-r) Robot option <$ROBOT> not available. Exiting."
     print_usage
   fi
 }
@@ -104,13 +108,13 @@ install_routine()
     install_cmake
     install_catch2
     install_eigen3
-#    install_ceres
-#    install_pcl
-#    install_geographiclib
-#    install_libpcap
-#    install_json
-#    install_dbow3
-#    install_opencv4
+    install_ceres
+    install_pcl
+    install_geographiclib
+    install_libpcap
+    install_json
+    install_dbow3
+    install_opencv4
 
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
@@ -122,19 +126,12 @@ install_routine()
       install_ladybug_sdk
     fi   
 
-    echo $ROBOT
     if [ ! -z "$ROBOT" ]; then
-      echo "HERE"
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      echo "now here 1"
       clone_ros_drivers   
-      echo "now here 2"
       if [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
-        # install_velodyne (this comes with beam_robotics)
-        install_flir_blackfly
         install_spinnaker_sdk
-        # install_Xsens
         install_rosserial
       fi
     fi

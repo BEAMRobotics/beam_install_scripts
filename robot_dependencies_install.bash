@@ -85,7 +85,7 @@ install_um7()
 install_flir_blackfly()
 {
     echo "configuring spinnaker driver..."
-    sudo bash /home/"$USER"/catkin_ws/src/ros_drivers/flir_camera_driver/spin-conf
+    #sudo bash /home/"$USER"/catkin_ws/src/ros_drivers/flir_camera_driver/spin-conf
 }
 
 install_husky_packages()
@@ -120,16 +120,17 @@ install_spinnaker_sdk()
         echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
         mkdir -p $LB_DIR
         cd $LB_DIR
-        wget https://www.dropbox.com/s/4mdyatl3du0fh7w/spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
-        tar -xvf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
-        rm -rf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
-        cd spinnaker-1.21.0.61-amd64/
+        # Eventually replace with a better link
+        wget https://www.dropbox.com/s/8rw5g4lad1ibngb/spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0        
+        tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
+        rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz        
+        cd spinnaker-2.0.0.146-amd64/
         printf "y\nn\n" | sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     else
 	echo "Already have spinnaker folder..."
         cd $LB_DIR
-        cd spinnaker-1.21.0.61-amd64/
+        cd spinnaker-2.0.0.146-amd64/
         printf "y\nn\n" | sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     fi
