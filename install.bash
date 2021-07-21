@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-# This script is for testing the automatic installation process of ros and the creation of a catkin workspace
+# This script is called by install.bash in beam_robotics/scripts
 
 # Specify location of installation scripts
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
