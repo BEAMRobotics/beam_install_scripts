@@ -106,15 +106,15 @@ install_routine()
 
     # Install development machine dependencies
     install_cmake
-    # install_catch2
-    # install_eigen3
-    # install_ceres
-    # install_pcl
-    # install_geographiclib
-    # install_libpcap
-    # install_json
-    # install_dbow3
-    # install_opencv4
+    install_catch2
+    install_eigen3
+    install_ceres
+    install_pcl
+    install_geographiclib
+    install_libpcap
+    install_json
+    install_dbow3
+    install_opencv4
 
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
