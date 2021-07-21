@@ -120,15 +120,15 @@ install_spinnaker_sdk()
         echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
         mkdir -p $LB_DIR
         cd $LB_DIR
-        # Eventually replace with a better link
+        # Eventually replace with a better link. Currently in adthoms Dropbox
         wget https://www.dropbox.com/s/8rw5g4lad1ibngb/spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0        
-        tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
-        rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz        
+        tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
+        rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
         cd spinnaker-2.0.0.146-amd64/
         printf "y\nn\n" | sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     else
-	echo "Already have spinnaker folder..."
+	      echo "Already have spinnaker folder..."
         cd $LB_DIR
         cd spinnaker-2.0.0.146-amd64/
         printf "y\nn\n" | sudo sh install_spinnaker.sh
