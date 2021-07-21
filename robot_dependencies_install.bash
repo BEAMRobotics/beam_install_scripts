@@ -82,12 +82,6 @@ install_um7()
     sudo apt-get install ros-kinetic-geographic-msgs
 }
 
-install_flir_blackfly()
-{
-    echo "configuring spinnaker driver..."
-    #sudo bash /home/"$USER"/catkin_ws/src/ros_drivers/flir_camera_driver/spin-conf
-}
-
 install_husky_packages()
 {
     echo "installing husky dependencies..."
