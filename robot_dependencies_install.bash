@@ -1,32 +1,7 @@
 #!/bin/bash
 set -e
 
-# Installation necessary when using hardware on the husky robot
-
-# Specify location of installation scripts
-INSTALL_SCRIPTS=$"$HOME/software/beam_install_scripts"
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DEPS_DIR="/tmp/beam_dependencies"
-
-
-main()
-{
-    # clone_ros_drivers
-    # install_ximea_deps
-    update_udev
-    install_gps
-    install_um7
-    # install_flir_blackfly # this has been replaced with install_spinnaker_sdk
-    install_spinnaker_sdk
-    install_husky_packages
-    enable_passwordless_sudo
-    install_rosserial
-    #install_chrony_deps
-    catkin_build
-    echo "Robot hardware successfully installed"
-    echo "See Beam Robotics wiki for information on how to manually install additional tools:"
-    echo "robot_upstart"
-}
+# This script contains a series of functions to install dependencies for beam robots.
 
 catkin_build()
 {
@@ -44,22 +19,23 @@ install_chrony_deps()
 
 clone_ros_drivers()
 {
-    if [ ! -d /home/"$USER"/projects ]; then
-    	mkdir /home/"$USER"/projects
+    PROJECTS_DIR="/home/$USER/projects"
+
+    if [ ! -d "$PROJECTS_DIR" ]; then
+    	mkdir $PROJECTS_DIR
     fi
-    if [ -d /home/"$USER"/projects/ros_drivers ]; then
-        echo "ros_drivers already installed in /home/"$USER"/projects/"
-        echo "make sure there is a symlink in catkin_ws"
-    fi
-    if [ ! -d /home/"$USER"/projects/ros_drivers ]; then
-        cd /home/"$USER"/projects
-        echo "installing ros_drivers to /home/"$USER"/projects"
-        git clone --recursive https://github.com/BEAMRobotics/ros_drivers.git
-        echo "creating link in /home/"$USER"/catkin_ws/src/ to /home/"$USER"/projects"
-        ln -s /home/"$USER"/projects/ros_drivers /home/"$USER"/catkin_ws/src/
+ 
+    if [ -d $PROJECTS_DIR/ros_drivers ]; then
+        echo "ros_drivers already installed in $PROJECTS_DIR"
+        echo "ensure there is a symlink in catkin_ws"
+    else
+        cd $PROJECTS_DIR
+        echo "cloning ros_drivers to $PROJECTS_DIR..."
+        git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
+        echo "creating link in /home/"$USER"/catkin_ws/src/ to $PROJECTS_DIR"
+        ln -s $PROJECTS_DIR/ros_drivers /home/"$USER"/catkin_ws/src/
     fi
 }
-
 
 install_ximea_deps()
 {
@@ -106,12 +82,6 @@ install_um7()
     sudo apt-get install ros-kinetic-geographic-msgs
 }
 
-install_flir_blackfly()
-{
-    echo "configuring spinnaker driver..."
-    sudo bash /home/"$USER"/catkin_ws/src/ros_drivers/flir_camera_driver/spin-conf
-}
-
 install_husky_packages()
 {
     echo "installing husky dependencies..."
@@ -144,17 +114,18 @@ install_spinnaker_sdk()
         echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
         mkdir -p $LB_DIR
         cd $LB_DIR
-        wget https://www.dropbox.com/s/4mdyatl3du0fh7w/spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
-        tar -xvf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
-        rm -rf spinnaker-1.21.0.61-amd64-Ubuntu16.04-pkg.tar.gz?dl=0
-        cd spinnaker-1.21.0.61-amd64/
-        printf "y\nn\n" | sudo sh install_spinnaker.sh
+        # Eventually replace with a better link. Currently in adthoms Dropbox
+        wget https://www.dropbox.com/s/8rw5g4lad1ibngb/spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0        
+        tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
+        rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
+        cd spinnaker-2.0.0.146-amd64/
+        sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     else
-	echo "Already have spinnaker folder..."
+	      echo "Already have spinnaker folder..."
         cd $LB_DIR
-        cd spinnaker-1.21.0.61-amd64/
-        printf "y\nn\n" | sudo sh install_spinnaker.sh
+        cd spinnaker-2.0.0.146-amd64/
+        sudo sh install_spinnaker.sh
         echo "Spinnaker SDK successfully installed."
     fi
 }
@@ -166,5 +137,3 @@ install_rosserial()
     sudo apt-get install ros-kinetic-rosserial
     echo "Done."
 }
-
-main

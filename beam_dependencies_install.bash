@@ -6,7 +6,7 @@ source $SCRIPT_DIR/identify_environment.bash
 
 DEPS_DIR="/tmp/beam_dependencies"
 
-# This script contains a series of functions to install 'other' dependencies for beam.
+# This script contains a series of functions to install 'other' dependencies for development machines.
 
 install_dataspeed()
 {

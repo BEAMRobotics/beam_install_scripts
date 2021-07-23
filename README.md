@@ -3,19 +3,19 @@
 
 Beam repo containing all required install scripts. For installation information please refer to the [Beam Installation Guide](https://github.com/BEAMRobotics/beam_robotics/wiki/Beam-Robotics-Installation-Guide).
 
-## Dependencies and Versions
-- Catch2
+## Dependencies and Versions (Development Machine)
+- Catch2 2.13.2
 - Ceres 1.14.0
 - cmake 3.14.1
+- DBow3
 - Eigen 3.3.7
 - Geographiclib 1.49
 - gflags
-- gtsam 4.0.0-apha2
 - JSON 3.6.1
-- Ladybug SDK V1.16.3.48
-- libwave
+- Ladybug SDK 1.16.3.48
+- OpenCV 4.5.2
 - Protobuf 3.1.0
-- PCL 1.8.1 (custom fork)
+- PCL 1.11.1
 
-## Depenedencies and Versions (Robot only install)
-- Libsbp 2.6.3 (for use with GPS firmware 2.3.17)
+## Depenedencies and Versions (Beam Robots)
+- Spinnaker 2.0.0.146
