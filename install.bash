@@ -55,9 +55,6 @@ install_routine()
     install_ladybug_sdk
     install_dbow3
     install_pytorch
-    # remove error inducing gtest and gmock (should just exist is /usr/include)
-    sudo rm -r /usr/local/include/gtest
-    sudo rm -r /usr/local/include/gmock
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
     if [ "$ROS_CHECK" == "$ROS_DISTRO" ]; then

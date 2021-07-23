@@ -398,6 +398,9 @@ install_gflags_from_source()
 
   cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
   sudo make -j$(nproc) install
+  # remove error inducing gtest and gmock (should just exist is /usr/include)
+  sudo rm -r /usr/local/include/gtest
+  sudo rm -r /usr/local/include/gmock
 }
 
 install_pcap()
