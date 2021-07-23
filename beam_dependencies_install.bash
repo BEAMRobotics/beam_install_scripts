@@ -150,7 +150,7 @@ install_pcl()
     fi
 
     cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-    make -j2
+    make -j$(nproc)
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
