@@ -55,6 +55,7 @@ install_routine()
     install_ladybug_sdk
     install_dbow3
     install_pytorch
+
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
     if [ "$ROS_CHECK" == "$ROS_DISTRO" ]; then
