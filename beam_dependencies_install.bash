@@ -164,7 +164,7 @@ install_pcl()
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-  sudo make install
+  sudo make -j$(nproc) install
 }
 
 install_geographiclib()
