@@ -111,6 +111,7 @@ install_routine()
     install_ceres
     install_pcl
     install_geographiclib
+    install_gflags
     install_libpcap
     install_json
     install_dbow3
