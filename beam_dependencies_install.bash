@@ -34,8 +34,17 @@ install_gcc7()
   sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
   sudo apt-get update
   sudo apt-get -y install gcc-7 g++-7
-  sudo rm /usr/bin/gcc
-  sudo rm /usr/bin/g++
+
+  GCC_PATH="/usr/bin/gcc"
+  GPP_PATH="/usr/bin/g++"
+  if test -f $GCC_PATH; then
+    sudo rm -r $GCC_PATH
+  fi
+
+  if test -f $GPP_PATH; then
+    sudo rm -r $GPP_PATH
+  fi
+
   sudo ln -s /usr/bin/gcc-7 /usr/bin/gcc
   sudo ln -s /usr/bin/g++-7 /usr/bin/g++
 }
@@ -410,8 +419,8 @@ install_gflags_from_source()
   sudo make -j$(nproc) install
 
   # remove error inducing gtest and gmock (should just exist in /usr/include)
-  GTEST_PATH = "/usr/local/include/gtest"
-  GMOCK_PATH = "/usr/local/include/gmock"
+  GTEST_PATH="/usr/local/include/gtest"
+  GMOCK_PATH="/usr/local/include/gmock"
   if test -f $GTEST_PATH; then
     sudo rm -r $GTEST_PATH
   fi
@@ -532,6 +541,9 @@ install_opencv4()
     cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
     make -j$(nproc)
   fi
+  
+  cd $DEPS_DIR/$OPENCV_DIR/$BUILD_DIR
+  sudo make -j$(nproc) install 
 }
 
 install_cuda()
