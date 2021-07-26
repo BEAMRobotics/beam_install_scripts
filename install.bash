@@ -132,7 +132,7 @@ install_routine()
       clone_ros_drivers   
       if [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
-        sudo apt-get install ros-$ROS_DISTRO-pointgrey-camera-driver
+        install_point_grey_camera
         install_spinnaker_sdk
         install_rosserial
       fi
