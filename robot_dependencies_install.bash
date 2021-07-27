@@ -153,14 +153,3 @@ install_rosserial()
   sudo apt-get install ros-$ROS_DISTRO-rosserial
   echo "Done."
 }
-
-install_point_grey_camera()
-{
-  sudo apt-get install ros-$ROS_DISTRO-pointgrey-camera-driver
-
-  # remove flycapture libray to avoid collision with ladybug
-  FLYCAP_PATH="/opt/ros/kinetic/lib/libflycapture.so.2"
-  if test -f $FLYCAP_PATH; then
-    sudo rm -r $FLYCAP_PATH
-  fi
-}
