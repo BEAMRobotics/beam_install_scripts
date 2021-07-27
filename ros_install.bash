@@ -14,7 +14,6 @@ sudo apt-get -qq install python-rosinstall python-catkin-pkg python-rosdep pytho
 sudo apt-get -qq install ros-$ROS_DISTRO-pcl-ros ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins ros-$ROS_DISTRO-libg2o > /dev/null
 sudo apt-get install ros-$ROS_DISTRO-geographic-msgs
 sudo apt-get install ros-$ROS_DISTRO-tf2-geometry-msgs
-sudo apt-get install ros-$ROS_DISTRO-pointgrey-camera-driver
 
 # ROS environment setup
 echo "Setting up ROS environment..."
