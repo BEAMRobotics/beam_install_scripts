@@ -149,8 +149,8 @@ install_spinnaker_sdk()
 install_rosserial()
 {
   echo "Installing rosserial..."
-  sudo apt-get install ros-kinetic-rosserial-arduino
-  sudo apt-get install ros-kinetic-rosserial
+  sudo apt-get install ros-$ROS_DISTRO-rosserial-arduino
+  sudo apt-get install ros-$ROS_DISTRO-rosserial
   echo "Done."
 }
 
