@@ -26,14 +26,14 @@ clone_ros_drivers()
   fi
 
   if [ -d $PROJECTS_DIR/ros_drivers ]; then
-      echo "ros_drivers already installed in $PROJECTS_DIR"
-      echo "ensure there is a symlink in catkin_ws"
+    echo "ros_drivers already installed in $PROJECTS_DIR"
+    echo "ensure there is a symlink in catkin_ws"
   else
-      cd $PROJECTS_DIR
-      echo "cloning ros_drivers to $PROJECTS_DIR..."
-      git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
-      echo "creating link in /home/"$USER"/catkin_ws/src/ to $PROJECTS_DIR"
-      ln -s $PROJECTS_DIR/ros_drivers /home/"$USER"/catkin_ws/src/
+    cd $PROJECTS_DIR
+    echo "cloning ros_drivers to $PROJECTS_DIR..."
+    git clone --recursive git@github.com:BEAMRobotics/ros_drivers.git
+    echo "creating link in /home/"$USER"/catkin_ws/src/ to $PROJECTS_DIR"
+    ln -s $PROJECTS_DIR/ros_drivers /home/"$USER"/catkin_ws/src/
   fi
 }
 
