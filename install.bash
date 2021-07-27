@@ -132,7 +132,6 @@ install_routine()
       clone_ros_drivers   
       if [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
-        install_point_grey_camera
         install_spinnaker_sdk
         install_rosserial
       fi

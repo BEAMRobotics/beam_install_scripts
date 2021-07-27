@@ -108,6 +108,9 @@ install_spinnaker_sdk()
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
     sudo apt-get install libusb-1.0-0 libgtkmm-2.4-dev
+    sudo apt-get install ros-$ROS_DISTRO-camera-info-manager
+    sudo apt-get install ros-$ROS_DISTRO-image-exposure-msgs
+    sudo apt-get install ros-$ROS_DISTRO-wfov-camera-msgs    
     # sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 
 
     if [ ! -d "$LB_DIR" ]; then
