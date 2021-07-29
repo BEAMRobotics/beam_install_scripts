@@ -123,25 +123,23 @@ install_spinnaker_sdk()
       tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
       rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64/
-      sudo sh install_spinnaker.sh
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      wget https://www.dropbox.com/s/t48ly4oa5u31ad3/spinnaker-2.4.0.143-Ubuntu18.04-arm64-pkg.tar.gz?dl=0        
-      tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-arm64-pkg.tar.gz?dl=0
-      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-arm64-pkg.tar.gz?dl=0      
-      cd spinnaker-2.4.0.143-arm64/
-      sudo sh install_spinnaker_arm.sh
+      wget https://www.dropbox.com/s/v7lyllpvd7cche6/spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0        
+      tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0
+      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
+      cd spinnaker-2.4.0.143-amd64/
     fi
+    sudo sh install_spinnaker.sh
     echo "Spinnaker SDK successfully installed."
   else
     echo "Already have spinnaker folder..."
     cd $LB_DIR
     if [ "$ROS_DISTRO" = "kinetic" ]; then
       cd spinnaker-2.0.0.146-amd64/
-      sudo sh install_spinnaker.sh
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      cd spinnaker-2.4.0.143-arm64/
-      sudo sh install_spinnaker_arm.sh
+      cd spinnaker-2.4.0.143-amd64/
     fi
+    sudo sh install_spinnaker.sh
     echo "Spinnaker SDK successfully installed."
   fi
 }
