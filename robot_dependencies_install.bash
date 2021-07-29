@@ -177,7 +177,7 @@ install_dt100()
       echo "Importing virtual machine..."
       wget https://www.dropbox.com/s/4ijrlmou0y2oluw/Windows_XP_32_DT100.ova?dl=0
       mv Windows_XP_32_DT100.ova?dl=0 Windows_XP_32_DT100.ova
-      VboxManage import Windows_XP_32_DT100.ova
+      vboxmanage import Windows_XP_32_DT100.ova
     else 
       echo "virtual machine has already been imported."
     fi
