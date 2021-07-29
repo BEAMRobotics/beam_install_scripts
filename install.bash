@@ -129,6 +129,7 @@ install_routine()
         echo "Installing drivers for $ROBOT..."
         install_spinnaker_sdk
         install_rosserial
+        install_dt100
       fi
     fi
 
