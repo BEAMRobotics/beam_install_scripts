@@ -123,25 +123,23 @@ install_spinnaker_sdk()
       tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
       rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64/
-      sudo sh install_spinnaker.sh
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      wget https://www.dropbox.com/s/t48ly4oa5u31ad3/spinnaker-2.4.0.143-Ubuntu18.04-arm64-pkg.tar.gz?dl=0        
-      tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-arm64-pkg.tar.gz?dl=0
-      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-arm64-pkg.tar.gz?dl=0      
-      cd spinnaker-2.4.0.143-arm64/
-      sudo sh install_spinnaker_arm.sh
+      wget https://www.dropbox.com/s/v7lyllpvd7cche6/spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0        
+      tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0
+      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
+      cd spinnaker-2.4.0.143-amd64/
     fi
+    sudo sh install_spinnaker.sh
     echo "Spinnaker SDK successfully installed."
   else
     echo "Already have spinnaker folder..."
     cd $LB_DIR
     if [ "$ROS_DISTRO" = "kinetic" ]; then
       cd spinnaker-2.0.0.146-amd64/
-      sudo sh install_spinnaker.sh
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      cd spinnaker-2.4.0.143-arm64/
-      sudo sh install_spinnaker_arm.sh
+      cd spinnaker-2.4.0.143-amd64/
     fi
+    sudo sh install_spinnaker.sh
     echo "Spinnaker SDK successfully installed."
   fi
 }
@@ -151,5 +149,38 @@ install_rosserial()
   echo "Installing rosserial..."
   sudo apt-get install ros-$ROS_DISTRO-rosserial-arduino
   sudo apt-get install ros-$ROS_DISTRO-rosserial
-  echo "Done."
+  echo "rosserial successfully installed."
+}
+
+install_virtual_box()
+{
+  echo "Installing Virtual Box..."
+  wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
+  wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
+  echo "deb [arch=amd64] http://download.virtualbox.org/virtualbox/debian $(lsb_release -sc) contrib" | sudo tee /etc/apt/sources.list.d/virtualbox.list
+  sudo apt update
+  sudo apt-get install virtualbox-6.1
+  echo "Virtual Box successfully installed."
+}
+
+install_dt100()
+{
+  echo "Installing dt100 dependencies..."
+  install_virtual_box
+
+  VM_DIR="/home/$USER/virtual_machines/"
+  mkdir -p $VM_DIR
+
+  cd $VM_DIR
+  if [ ! -d "/home/$USER/VirtualBox\ VMs/Windows_XP_32_DT100" ]; then
+    if [ ! -f "Windows_XP_32_DT100.ova" ]; then
+      echo "Importing virtual machine..."
+      wget https://www.dropbox.com/s/4ijrlmou0y2oluw/Windows_XP_32_DT100.ova?dl=0
+      mv Windows_XP_32_DT100.ova?dl=0 Windows_XP_32_DT100.ova
+      vboxmanage import Windows_XP_32_DT100.ova
+    else 
+      echo "virtual machine has already been imported."
+    fi
+  fi
+  echo "dt100 dependencies successfully installed."
 }

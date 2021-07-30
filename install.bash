@@ -57,11 +57,6 @@ parse_arguments()
 
 verify_robot() 
 {
-  if [ "$ROS_DISTRO" != "kinetic" ]; then
-    echo "current installation for beam robots requires ROS kinetic. Exiting."
-    exit 1
-  fi
-
   declare -a robot_list=("ig2")
   if printf '%s\n' "${robot_list[@]}" | grep -P "$ROBOT" > /dev/null; then
     echo "-r) Robot option <$ROBOT> selected..."
@@ -134,6 +129,7 @@ install_routine()
         echo "Installing drivers for $ROBOT..."
         install_spinnaker_sdk
         install_rosserial
+        install_dt100
       fi
     fi
 
