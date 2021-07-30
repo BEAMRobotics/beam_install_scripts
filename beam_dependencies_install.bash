@@ -684,7 +684,8 @@ install_docker()
       gnupg \
       lsb-release
 
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+  sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
   echo \
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
@@ -694,12 +695,9 @@ install_docker()
   sudo apt-get update
   sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-  # versions should be periodically updated, though these versions have been observed stable
-  if [ $UBUNTU_CODENAME = xenial ]; then
-    sudo apt-get install docker-ce=5:20.10.7~3-0~ubuntu-xenial docker-ce-cli=5:20.10.7~3-0~ubuntu-xenial containerd.io
-  elif [ $UBUNTU_CODENAME = bionic ]; then 
-    sudo apt-get install docker-ce=5:20.10.7~3-0~ubuntu-bionic docker-ce-cli=5:20.10.7~3-0~ubuntu-bionic containerd.io
-  fi   
+  # versions 5:20.10.7~3-0 is stabl on xenial and bionic
+  sudo apt-get install docker-ce=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME \
+  docker-ce-cli=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME containerd.io
 
   # test install
   sudo docker run hello-world 
