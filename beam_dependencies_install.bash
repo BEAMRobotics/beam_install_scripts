@@ -672,10 +672,10 @@ install_docker()
 {
   # installation process follows https://docs.docker.com/engine/install/ubuntu/
 
-  # Uninstall old versions
+  # uninstall old versions
   sudo apt-get remove docker docker-engine docker.io containerd runc
 
-  # Set up the repository
+  # set up the repository
   sudo apt-get update
   sudo apt-get install \
       apt-transport-https \
@@ -691,11 +691,11 @@ install_docker()
   "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-  # Install Docker Engine
+  # install Docker Engine
   sudo apt-get update
   sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-  # versions 5:20.10.7~3-0 is stabl on xenial and bionic
+  # version 5:20.10.7~3-0 is stable on xenial and bionic
   sudo apt-get install docker-ce=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME \
   docker-ce-cli=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME containerd.io
 
