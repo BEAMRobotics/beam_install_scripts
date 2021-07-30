@@ -111,6 +111,7 @@ install_routine()
     install_json
     install_dbow3
     install_opencv4
+    install_docker
 
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
@@ -154,8 +155,9 @@ install_routine()
 
     compile
 
-    # Echo success
-    echo "Beam robotics installation completed. Please open a new terminal to re-source environment variables."
+    # Resource bash and echo success
+    source ~/.bashrc
+    echo "Beam robotics installation completed."
 }
 
 main $@
