@@ -153,11 +153,10 @@ install_routine()
         exit
     fi
 
+    # Compile and echo success
+    echo "Beam robotics installation completed. Compiling catkin workspace ..."
     compile
-
-    # Resource bash and echo success
-    source ~/.bashrc
-    echo "Beam robotics installation completed."
+    echo "Catkin workspace successfully compiled. Please open a new terminal to re-source environment variables."
 }
 
 main $@
