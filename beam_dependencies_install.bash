@@ -411,7 +411,7 @@ install_gflags_from_source()
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
-    cmake ..
+    cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE=true
     make
   fi
 
