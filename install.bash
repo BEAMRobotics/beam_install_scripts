@@ -111,6 +111,7 @@ install_routine()
     install_json
     install_dbow3
     install_opencv4
+    install_docker
 
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
@@ -152,10 +153,12 @@ install_routine()
         exit
     fi
 
+    # Compile 
+    echo "Beam robotics installation completed. Compiling catkin workspace..."
     compile
 
     # Echo success
-    echo "Beam robotics installation completed. Please open a new terminal to re-source environment variables."
+    echo "Catkin workspace successfully compiled. Please open a new terminal to re-source environment variables."
 }
 
 main $@
