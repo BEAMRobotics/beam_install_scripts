@@ -703,5 +703,5 @@ install_docker()
   sudo docker run hello-world 
 
   # pull docker images required for beam robotics 
-  docker pull stereolabs/kalibr
+  sudo docker pull stereolabs/kalibr
 }
