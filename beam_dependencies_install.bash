@@ -169,11 +169,11 @@ install_pcl()
     fi
 
     cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-    make -j4
+    make -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-  sudo make -j4 install
+  sudo make -j$NUM_PROCESSORS install
 }
 
 install_geographiclib()
@@ -539,11 +539,11 @@ install_opencv4()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
-    make -j4
+    make -j$NUM_PROCESSORS
   fi
   
   cd $DEPS_DIR/$OPENCV_DIR/$BUILD_DIR
-  sudo make -j4 install 
+  sudo make -j$NUM_PROCESSORS install 
 }
 
 install_cuda()
