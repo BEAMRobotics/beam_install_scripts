@@ -64,7 +64,7 @@ compile()
     cd "$CATKIN_DIR"
     source /opt/ros/$ROS_DISTRO/setup.bash
     if [ -z "$CONTINUOUS_INTEGRATION" ]; then
-        catkin build
+        catkin build -j$NUM_PROCESSORS
     else
         if [ -n "$CIRCLECI" ]; then
             # Build libwave by itself first, since the job is so large

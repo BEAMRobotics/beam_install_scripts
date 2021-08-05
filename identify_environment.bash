@@ -3,6 +3,7 @@ set -e
 # The default catkin workspace
 : ${CATKIN_DIR:="$HOME/catkin_ws"}
 
+# get release of Ubuntu
 export UBUNTU_CODENAME=$(lsb_release -s -c)
 case $UBUNTU_CODENAME in
   xenial)
@@ -10,6 +11,14 @@ case $UBUNTU_CODENAME in
   bionic)
     export ROS_DISTRO=melodic;;  
   *)
-    echo "Unsupported version of Ubuntu detected. Only xenial (16.04.*) and bionic (18.04.*) are currently supported."
-    exit       1
+    echo "Unsupported version of Ubuntu detected. Only xenial (16.04.*) and bionic (18.04.*) are supported. Exiting."
+    exit  1
 esac
+
+# get number of processors for high-load installs
+if [ $(nproc) -lt 2 ]; then
+  echo "A minimum of 2 processors is required for installation. Exiting."
+  exit  1
+else
+  export NUM_PROCESSORS=$(( $(nproc) / 2 ))
+fi
