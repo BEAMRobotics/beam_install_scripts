@@ -101,6 +101,7 @@ install_routine()
 
     # Install development machine dependencies
     install_cmake
+    install_qwt
     install_catch2
     install_eigen3
     install_ceres

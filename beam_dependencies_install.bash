@@ -705,3 +705,8 @@ install_docker()
   # pull docker images required for beam robotics 
   sudo docker pull stereolabs/kalibr
 }
+
+install_qwt()
+{
+  sudo apt-get install libqwt-dev
+}
