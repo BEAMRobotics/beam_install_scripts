@@ -17,6 +17,14 @@ install_chrony_deps()
   sudo apt-get install gpsd gpsd-clients chrony
 }
 
+clone_ig2_ros_drivers()
+{
+  sudo apt-get install ros-melodic-velodyne
+  cd /home/"$USER"/catkin_ws/src/
+  git clone https://github.com/BEAMRobotics/ig_handle.git
+  sudo apt-get install sharutils
+}
+
 clone_ros_drivers()
 {
   PROJECTS_DIR="/home/$USER/projects"
@@ -69,6 +77,15 @@ update_udev()
   sudo udevadm control --reload-rules && sudo service udev restart && sudo udevadm trigger
 }
 
+update_udev_ig2()
+{
+  # copy udev rules from inspector_gadget
+  echo "copying udev rules..."
+  sudo cp ~/catkin_ws/src/ig_hangle/config/99-ig2_udev.rules /etc/udev/rules.d/
+  sudo udevadm control --reload-rules && sudo service udev restart && sudo udevadm trigger
+  sudo cp ~/catkin_ws/src/ig_hangle/config/01-ig2_netplan.yaml /etc/netplan/
+}
+
 install_gps()
 {
   echo "installing GPS piksi deps..."
@@ -78,21 +95,21 @@ install_gps()
 install_um7()
 {
   echo "installing um7 driver..."
-  sudo apt-get install ros-kinetic-um7 #install ros driver
-  sudo apt-get install ros-kinetic-geographic-msgs
+  sudo apt-get install ros-$ROS_DISTRO-um7 #install ros driver
+  sudo apt-get install ros-$ROS_DISTRO-geographic-msgs
 }
 
 install_husky_packages()
 {
   echo "installing husky dependencies..."
-  sudo apt-get install ros-kinetic-controller-manager* \
-  ros-kinetic-teleop-* \
-  ros-kinetic-twist-mux* \
-  ros-kinetic-lms1xx \
-  ros-kinetic-ur-description \
-  ros-kinetic-joint-state-publisher \
-  ros-kinetic-joint-state-controller \
-  ros-kinetic-diff-drive-controller
+  sudo apt-get install ros-$ROS_DISTRO-controller-manager* \
+  ros-$ROS_DISTRO-teleop-* \
+  ros-$ROS_DISTRO-twist-mux* \
+  ros-$ROS_DISTRO-lms1xx \
+  # ros-$ROS_DISTRO-ur-description \
+  ros-$ROS_DISTRO-joint-state-publisher \
+  ros-$ROS_DISTRO-joint-state-controller \
+  ros-$ROS_DISTRO-diff-drive-controller
 }
 
 enable_passwordless_sudo()
