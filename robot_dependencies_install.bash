@@ -107,7 +107,7 @@ install_husky_packages()
   ros-$ROS_DISTRO-twist-mux* \
   ros-$ROS_DISTRO-lms1xx \
   # ros-$ROS_DISTRO-ur-description \
-  ros-$ROS_DISTRO-joint-state-publisher \
+  # ros-$ROS_DISTRO-joint-state-publisher \
   ros-$ROS_DISTRO-joint-state-controller \
   ros-$ROS_DISTRO-diff-drive-controller
 }
