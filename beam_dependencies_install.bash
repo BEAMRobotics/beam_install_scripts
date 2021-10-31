@@ -212,7 +212,7 @@ install_geographiclib()
 
 install_gtsam()
 {
-    GTSAM_VERSION="4.0.0-alpha2"
+    GTSAM_VERSION="4.0.2"
     GTSAM_URL="https://bitbucket.org/gtborg/gtsam.git"
     GTSAM_DIR="gtsam"
     BUILD_DIR="build"
@@ -709,4 +709,30 @@ install_docker()
 install_qwt()
 {
   sudo apt-get install libqwt-dev
+}
+
+install_gazebo()
+{
+  # tested with ros melodic
+  sudo apt-get install libgazebo9 ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
+  sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control
+  curl -sSL http://get.gazebosim.org | sh
+
+  ## rviz plugins
+  sudo apt-get install ros-$ROS_DISTRO-rviz-imu-plugin
+
+  # needed for clear-path accessories
+  sudo apt-get install ros-$ROS_DISTRO-lms1xx
+  sudo apt-get install ros-$ROS_DISTRO-realsense2-camera
+  sudo apt-get install ros-$ROS_DISTRO-velodyne-description
+
+  # other
+  sudo apt-get install ros-$ROS_DISTRO-interactive-marker-twist-server
+  sudo apt-get install ros-$ROS_DISTRO-twist-mux
+  sudo apt-get install ros-$ROS_DISTRO-twist-joy
+  sudo apt-get install ros-$ROS_DISTRO-twist-keyboard
+  sudo apt-get install ros-$ROS_DISTRO-uuv-simulator
+  sudo apt-get install ros-$ROS_DISTRO-gazebo-plugins
+  sudo apt-get install ros-$ROS_DISTRO-tools
+  sudo apt-get install ros-$ROS_DISTRO-heron-controller
 }

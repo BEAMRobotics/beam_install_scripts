@@ -105,14 +105,15 @@ install_routine()
     install_catch2
     install_eigen3
     install_ceres
+    install_gtsam
     install_pcl
     install_geographiclib
-    install_gflags_from_source
     install_libpcap
     install_json
     install_dbow3
     install_opencv4
     install_docker
+    install_gazebo
 
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
@@ -120,7 +121,8 @@ install_routine()
     fi
 
     if [ $UBUNTU_CODENAME = xenial ]; then
-      echo "Installing ladybug sdk..."
+      echo "Installing gflags and ladybug sdk..."
+      install_gflags_from_source
       install_ladybug_sdk
     fi   
 
