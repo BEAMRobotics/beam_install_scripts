@@ -713,7 +713,6 @@ install_qwt()
 install_gazebo()
 {
   # tested with ros melodic
-  sudo apt-get install libgazebo9 
   sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $UBUNTU_CODENAME main" > /etc/apt/sources.list.d/gazebo-stable.list'
   wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
   sudo apt update
