@@ -4,7 +4,7 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
 source $SCRIPT_DIR/identify_environment.bash
 
-sudo sh -c "echo "deb http://packages.ros.org/ros/ubuntu $UBUNTU_CODENAME main" > /etc/apt/sources.list.d/ros-latest.list"
+sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 
 case $UBUNTU_CODENAME in
   xenial)

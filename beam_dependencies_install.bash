@@ -713,7 +713,7 @@ install_qwt()
 install_gazebo()
 {
   # tested with ros melodic
-  sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $UBUNTU_CODENAME main" > /etc/apt/sources.list.d/gazebo-stable.list'
+  sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
   wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
   sudo apt update
   sudo apt upgrade
@@ -724,10 +724,17 @@ install_gazebo()
 
   # heron install
   sudo apt-get install ros-$ROS_DISTRO-heron-description ros-$ROS_DISTRO-heron-viz ros-$ROS_DISTRO-heron-desktop
-  sudo apt-get install ros-kinetic-uuv-*
+  sudo apt-get install ros-$ROS_DISTRO-uuv-*
+
   cd $CATKIN_DIR/src
-  git clone https://github.com/heron/heron_simulator 
-  git clone git@github.com:heron/heron.git --branch $ROS_DISTRO-devel
+  if [ ! -d "heron_simulator" ]; then
+      echo "cloning heron_simulator..." 
+      git clone https://github.com/heron/heron_simulator 
+  fi
+  if [ ! -d "heron" ]; then
+      echo "cloning heron..." 
+      git clone git@github.com:heron/heron.git --branch $ROS_DISTRO-devel
+  fi
   cd .. 
   rosdep install --from-paths src --ignore-src
 
