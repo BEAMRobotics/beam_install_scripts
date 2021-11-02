@@ -713,9 +713,15 @@ install_qwt()
 install_gazebo()
 {
   # tested with ros melodic
-  sudo apt-get install libgazebo11 libgazebo9 ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
-  sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control
-  curl -sSL http://get.gazebosim.org | sh
+  sudo apt-get install libgazebo9 
+  sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $UBUNTU_CODENAME main" > /etc/apt/sources.list.d/gazebo-stable.list'
+  wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+  sudo apt update
+  sudo apt upgrade
+  sudo apt install gazebo11-common
+  sudo apt install libgazebo11
+  sudo apt-get install ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
+  sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control  
 
   ## rviz plugins
   sudo apt-get install ros-$ROS_DISTRO-rviz-imu-plugin
