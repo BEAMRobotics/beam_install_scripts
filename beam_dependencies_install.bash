@@ -31,9 +31,8 @@ make_with_progress()
 
 install_gcc7()
 {
-  sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  sudo apt-get update
-  sudo apt-get -y install gcc-7 g++-7
+  sudo apt update
+  sudo apt install build-essential
 
   GCC_PATH="/usr/bin/gcc"
   GPP_PATH="/usr/bin/g++"
@@ -213,7 +212,7 @@ install_geographiclib()
 install_gtsam()
 {
     GTSAM_VERSION="4.0.2"
-    GTSAM_URL="https://bitbucket.org/gtborg/gtsam.git"
+    GTSAM_URL="git@github.com:borglab/gtsam.git"
     GTSAM_DIR="gtsam"
     BUILD_DIR="build"
 
@@ -230,7 +229,7 @@ install_gtsam()
       fi
 
       cd $GTSAM_DIR
-      git checkout $GTSAM_VERSION
+      git checkout -b $GTSAM_VERSION
       if [ ! -d "$BUILD_DIR" ]; then
         mkdir -p $BUILD_DIR
         cd $BUILD_DIR
@@ -714,7 +713,7 @@ install_qwt()
 install_gazebo()
 {
   # tested with ros melodic
-  sudo apt-get install libgazebo9 ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
+  sudo apt-get install libgazebo11 libgazebo9 ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
   sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control
   curl -sSL http://get.gazebosim.org | sh
 
@@ -729,10 +728,20 @@ install_gazebo()
   # other
   sudo apt-get install ros-$ROS_DISTRO-interactive-marker-twist-server
   sudo apt-get install ros-$ROS_DISTRO-twist-mux
-  sudo apt-get install ros-$ROS_DISTRO-twist-joy
-  sudo apt-get install ros-$ROS_DISTRO-twist-keyboard
+  sudo apt-get install ros-$ROS_DISTRO-teleop-twist-joy
+  sudo apt-get install ros-$ROS_DISTRO-teleop-twist-keyboard
   sudo apt-get install ros-$ROS_DISTRO-uuv-simulator
-  sudo apt-get install ros-$ROS_DISTRO-gazebo-plugins
-  sudo apt-get install ros-$ROS_DISTRO-tools
+  sudo apt-get install ros-$ROS_DISTRO-gazebo-plugins # redundant
+  sudo apt-get install ros-$ROS_DISTRO-imu-tools
   sudo apt-get install ros-$ROS_DISTRO-heron-controller
+
+  # clear-path
+  sudo apt-get install ros-melodic-husky-desktop
+
+  # repos
+  cd $CATKIN_DIR/src
+  git clone https://github.com/heron/heron_simulator
+
+  cd ..
+  rosdep install --from-paths src --ignore-src
 }
