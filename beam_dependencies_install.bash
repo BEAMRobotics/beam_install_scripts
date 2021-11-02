@@ -723,31 +723,24 @@ install_gazebo()
   sudo apt-get install ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
   sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control  
 
-  ## rviz plugins
-  sudo apt-get install ros-$ROS_DISTRO-rviz-imu-plugin
+  # heron install
+  sudo apt-get install ros-$ROS_DISTRO-heron-description ros-$ROS_DISTRO-heron-viz ros-$ROS_DISTRO-heron-desktop
+  sudo apt-get install ros-kinetic-uuv-*
+  cd $CATKIN_DIR/src
+  git clone https://github.com/heron/heron_simulator 
+  git clone git@github.com:heron/heron.git --branch $ROS_DISTRO-devel
+  cd .. 
+  rosdep install --from-paths src --ignore-src
 
-  # needed for clear-path accessories
-  sudo apt-get install ros-$ROS_DISTRO-lms1xx
-  sudo apt-get install ros-$ROS_DISTRO-realsense2-camera
-  sudo apt-get install ros-$ROS_DISTRO-velodyne-description
+  # husky 
+  sudo apt-get install ros-$ROS_DISTRO-husky-description ros-$ROS_DISTRO-husky-viz ros-$ROS_DISTRO-husky-desktop
+  sudo apt-get install ros-$ROS_DISTRO-husky-simulator
 
-  # other
-  sudo apt-get install ros-$ROS_DISTRO-interactive-marker-twist-server
-  sudo apt-get install ros-$ROS_DISTRO-twist-mux
+  # jackal
+  sudo apt-get install ros-$ROS_DISTRO-jackal-desktop ros-$ROS_DISTRO-jackal-navigation
+  sudo apt-get install ros-$ROS_DISTRO-jackal-simulator 
+
+  # teleop
   sudo apt-get install ros-$ROS_DISTRO-teleop-twist-joy
   sudo apt-get install ros-$ROS_DISTRO-teleop-twist-keyboard
-  sudo apt-get install ros-$ROS_DISTRO-uuv-simulator
-  sudo apt-get install ros-$ROS_DISTRO-gazebo-plugins # redundant
-  sudo apt-get install ros-$ROS_DISTRO-imu-tools
-  sudo apt-get install ros-$ROS_DISTRO-heron-controller
-
-  # clear-path
-  sudo apt-get install ros-melodic-husky-desktop
-
-  # repos
-  cd $CATKIN_DIR/src
-  git clone https://github.com/heron/heron_simulator
-
-  cd ..
-  rosdep install --from-paths src --ignore-src
 }
