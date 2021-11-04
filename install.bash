@@ -104,6 +104,7 @@ install_routine()
     install_qwt
     install_catch2
     install_eigen3
+    install_sophus
     install_ceres
     install_gtsam
     install_pcl

@@ -746,6 +746,16 @@ install_gazebo()
   sudo apt-get install ros-$ROS_DISTRO-jackal-desktop ros-$ROS_DISTRO-jackal-navigation
   sudo apt-get install ros-$ROS_DISTRO-jackal-simulator 
 
+  cd $CATKIN_DIR/src
+  if [ ! -d "roben_description" ]; then
+      echo "cloning roben_description..." 
+      git clone git@github.com:BEAMRobotics/roben_description.git 
+  fi
+  if [ ! -d "roben_simulation" ]; then
+      echo "cloning roben_simulation..." 
+      git clone git@github.com:BEAMRobotics/roben_simulation.git
+  fi  
+
   # teleop
   sudo apt-get install ros-$ROS_DISTRO-teleop-twist-joy
   sudo apt-get install ros-$ROS_DISTRO-teleop-twist-keyboard
