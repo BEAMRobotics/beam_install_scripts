@@ -4,11 +4,13 @@ set -e  # exit on first error
 update_rosdep()
 {
     # Prepare rosdep to install dependencies.
-    echo "Updating rosdep ..."
     if [ ! -d /etc/ros/rosdep ]; then
+        echo "Initializing rosdep ..."
         sudo rosdep init > /dev/null
     fi
+    echo "Updating rosdep ..."
     rosdep update > /dev/null
+    echo "Done updating rosdep."
 }
 
 config_bashrc()
