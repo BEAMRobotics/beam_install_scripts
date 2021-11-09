@@ -22,7 +22,7 @@ config_bashrc()
 
     while read ans; do
         case "$ans" in
-            y) echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc; echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc;
+            y) echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc; echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc; break;;
             n) break;;
             *) echo "Invalid input (y/n):";;
         esac
@@ -50,7 +50,7 @@ echo "(If you have already added it manually or in previous install, enter n)"
 
 while read ans; do
     case "$ans" in
-        y) config_bashrc; update_rosdep;;
+        y) config_bashrc; update_rosdep; break;;
         n) update_rosdep; break;;
         *) echo "Invalid input (y/n):";;
     esac
