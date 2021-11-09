@@ -35,7 +35,7 @@ sudo sh -c "echo \"deb http://packages.ros.org/ros/ubuntu $UBUNTU_CODENAME main\
 wget -qO - http://packages.ros.org/ros.key | sudo apt-key add -
 
 echo "Updating package lists ..."
-sudo apt-get -qq update
+sudo apt-get update
 
 echo "Installing ROS $ROS_DISTRO ..."
 sudo apt-get -qq install python-rosinstall python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop > /dev/null
