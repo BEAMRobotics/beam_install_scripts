@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
-source $SCRIPT_DIR/identify_environment.bash
-
 ROSPACKAGES_DIR="$REPO_DIR/rospackages"
 
 # Add Dataspeed packages

@@ -41,9 +41,16 @@ menu()
 install_routine() 
 {
     sudo -v
+    
+    # Ensure wget is available
+    sudo apt-get install -qq wget
+    
+    # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
+    source $INSTALL_SCRIPTS/identify_environment.bash
 
     # Import functions to install required dependencies
     source $INSTALL_SCRIPTS/beam_dependencies_install.bash
+    
     install_gcc7
 
     # source catkin setup script
@@ -54,9 +61,6 @@ install_routine()
     create_catkin_ws
 
     bash $INSTALL_SCRIPTS/rosdeps_install.bash
-
-    # Ensure wget is available
-    sudo apt-get install -qq wget
 
     # Install development machine dependencies
     install_cmake
