@@ -13,29 +13,19 @@ update_rosdep()
     echo "Done updating rosdep."
 }
 
-add_to_bashrc()
-{
-    echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
-    echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
-}
-
 config_bashrc()
 {
     echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
-    echo "Would you like to add the following to your bashrc? "
-    echo "(If your code is in a different workspace enter n and add manually)"
-    echo "  source ~/catkin_ws/devel/setup.bash"
-    echo "  ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH"
+    echo "Enter the path to your catkin workspace (e.g., /home/user/catkin_ws)"
+    read ans
+    echo "adding the following to your bashrc:"
+    echo "  source $ans/devel/setup.bash"
+    echo "  ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH"
 
-    while read ans; do
-        case "$ans" in
-            y) add_to_bashrc; break;;
-            n) break;;
-            *) echo "Invalid input (y/n):";;
-        esac
-    done
-
+    echo "  source $ans/devel/setup.bash" >> ~/.bashrc
+    echo "  ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
+    
     echo "Done configuring bashrc."
 }
 
