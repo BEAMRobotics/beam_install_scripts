@@ -13,6 +13,12 @@ update_rosdep()
     echo "Done updating rosdep."
 }
 
+add_to_bashrc()
+{
+    echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc
+    echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
+}
+
 config_bashrc()
 {
     echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
@@ -24,11 +30,13 @@ config_bashrc()
 
     while read ans; do
         case "$ans" in
-            y) echo "source ~/catkin_ws/devel/setup.bash" >> ~/.bashrc; echo "ROS_PACKAGE_PATH=/home/$USER/catkin_ws/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc; break;;
+            y) add_to_bashrc; break;;
             n) break;;
             *) echo "Invalid input (y/n):";;
         esac
     done
+
+    echo "Done configuring bashrc."
 }
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -49,7 +57,7 @@ ros-$ROS_DISTRO-tf2-geometry-msgs > /dev/null
 echo "Setting up ROS environment..."
 source /opt/ros/$ROS_DISTRO/setup.bash
 
-echo "Would you like to configure your bashrc to automatically source setup files and set ROS_PACKAGE_PATH?"
+echo "Would you like to configure your bashrc to automatically source setup files and set ROS_PACKAGE_PATH? (y/n)"
 echo "(If you have already added it manually or in previous install, enter n)"
 
 while read ans; do
