@@ -23,8 +23,8 @@ config_bashrc()
     echo "  source $ans/devel/setup.bash"
     echo "  ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH"
 
-    echo "  source $ans/devel/setup.bash" >> ~/.bashrc
-    echo "  ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
+    echo "source $ans/devel/setup.bash" >> ~/.bashrc
+    echo "ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
     
     echo "Done configuring bashrc."
 }
