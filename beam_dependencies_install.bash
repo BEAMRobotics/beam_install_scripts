@@ -80,12 +80,11 @@ install_ceres()
         mkdir -p $BUILD_DIR
         cd $BUILD_DIR
         cmake ..
-        make -j$NUM_PROCESSORS
-        make test
+        make_with_progress -j$NUM_PROCESSORS
       fi
 
       cd $DEPS_DIR/$CERES_DIR/$BUILD_DIR
-      sudo make -j$NUM_PROCESSORS install
+      sudo make -j$NUM_PROCESSORS install > /dev/null
   fi
 }
 
@@ -146,10 +145,7 @@ install_pcl()
 
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
-    git clone --depth 1 https://github.com/PointCloudLibrary/pcl.git
-    cd $PCL_DIR
-    git checkout pcl-$PCL_VERSION
-    cd ..
+    git clone --depth 1 -b pcl-$PCL_VERSION https://github.com/PointCloudLibrary/pcl.git
   fi
   
   cd $PCL_DIR
@@ -174,11 +170,11 @@ install_pcl()
     fi
 
     cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_geographiclib()
@@ -207,7 +203,6 @@ install_geographiclib()
           cd $BUILD_DIR
           cmake ..
           make_with_progress -j$NUM_PROCESSORS
-          make test
         fi
 
         cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/$BUILD_DIR
@@ -231,18 +226,17 @@ install_gtsam()
       cd "$DEPS_DIR"
 
       if [ ! -d "$GTSAM_DIR" ]; then
-        git clone --depth 1 $GTSAM_URL
+        git clone --depth 1 -b $GTSAM_VERSION $GTSAM_URL
       fi
 
       cd $GTSAM_DIR
-      git checkout $GTSAM_VERSION
       if [ ! -d "$BUILD_DIR" ]; then
         mkdir -p $BUILD_DIR
         cd $BUILD_DIR
         cmake .. -DCMAKE_BUILD_TYPE=Release \
         -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_BUILD_WRAP=OFF \
         -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF  -DGTSAM_BUILD_DOCS=OFF
-        make -j$NUM_PROCESSORS
+        make_with_progress -j$NUM_PROCESSORS
       fi
 
       cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
@@ -303,11 +297,11 @@ install_libwave()
           mkdir -p $BUILD_DIR
           cd $BUILD_DIR
           cmake -DBUILD_TESTS=OFF ..
-          make -j$NUM_PROCESSORS
+          make_with_progress -j$NUM_PROCESSORS
         fi
 
         cd $DEPS_DIR/$LIBWAVE_DIR/$BUILD_DIR
-        sudo make -j$NUM_PROCESSORS install
+        sudo make -j$NUM_PROCESSORS install > /dev/null
     fi
 }
 
@@ -337,11 +331,11 @@ install_catch2()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake -DCMAKE_CXX_STANDARD=11 ..
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$CATCH2_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_cmake()
@@ -407,11 +401,11 @@ install_eigen3()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install . /dev/null
 }
 
 install_gflags()
@@ -435,11 +429,11 @@ install_gflags_from_source()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE=true
-    make
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 
   # remove error inducing gtest and gmock (should just exist in /usr/include)
   GTEST_PATH="/usr/local/include/gtest"
@@ -483,11 +477,11 @@ install_json()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_ladybug_sdk()
@@ -540,11 +534,11 @@ install_dbow3()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$DBOW_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_opencv4()
@@ -578,11 +572,10 @@ install_opencv4()
   VERSION="4.5.2"
 
   if [ ! -d "$OPENCV_CONTRIB_DIR" ]; then
-    git clone --depth 1 https://github.com/opencv/opencv_contrib.git
+    git clone --depth 1 -b $VERSION https://github.com/opencv/opencv_contrib.git
   fi
 
   cd $OPENCV_CONTRIB_DIR
-  git checkout $VERSION
 
   # next, install opencv and link to opencv_contrib
   cd $SRC_PATH
@@ -590,21 +583,20 @@ install_opencv4()
   VERSION="4.5.2"
 
   if [ ! -d "$OPENCV_DIR" ]; then
-    git clone --depth 1 https://github.com/opencv/opencv.git
+    git clone --depth 1 -b $VERSION https://github.com/opencv/opencv.git
   fi
 
   cd $OPENCV_DIR
-  git checkout $VERSION
 
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$SRC_PATH/$OPENCV_CONTRIB_DIR/modules ..
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
   
   cd $SRC_PATH/$OPENCV_DIR/$BUILD_DIR
-  make -j$NUM_PROCESSORS 
+  make_with_progress -j$NUM_PROCESSORS 
   
   if(( $INSTALL_OPENCV4_LOCALLY == 1 ))
   then
@@ -701,8 +693,7 @@ install_sophus()
 
   apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
   if [ ! -d "$SOPHUS_DIR" ]; then
-    git clone --depth 1 https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
-    git checkout 936265f # required by basalt
+    git clone --depth 1 -b 936265f https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
   fi
 
   cd $SOPHUS_DIR
@@ -710,11 +701,11 @@ install_sophus()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
-  sudo make install
+  sudo make install > /dev/null
 }
 
 install_teaserpp()
@@ -734,11 +725,11 @@ install_teaserpp()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake .. > /dev/null
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_docker()
