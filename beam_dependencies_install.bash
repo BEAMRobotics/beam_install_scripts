@@ -406,7 +406,7 @@ install_eigen3()
   fi
 
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install . /dev/null
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_gflags()
@@ -553,7 +553,7 @@ install_opencv4()
     echo "opencv4 not found in /usr/local/share, installing now."  
   fi
 
-  SRC_PATH = $DEPS_DIR
+  SRC_PATH=$DEPS_DIR
 
   # check if opencv src path set, if true then we will clone there
   if [ -z "$OPENCV_SRC_PATH" ]; 
@@ -561,7 +561,7 @@ install_opencv4()
     echo "cloning opencv4 to $DEPS_DIR"
   else 
     echo "cloning opencv4 to $OPENCV_SRC_PATH"
-    SRC_PATH = $OPENCV_SRC_PATH
+    SRC_PATH=$OPENCV_SRC_PATH
   fi
 
   mkdir -p $SRC_PATH
@@ -692,9 +692,10 @@ install_sophus()
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
-  apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
+  sudo apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
   if [ ! -d "$SOPHUS_DIR" ]; then
-    git clone --depth 1 -b 936265f https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
+    git clone https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
+    git checkout 936265f # required by basalt
   fi
 
   cd $SOPHUS_DIR
@@ -796,11 +797,11 @@ install_gazebo()
   cd $CATKIN_DIR/src
   if [ ! -d "heron_simulator" ]; then
       echo "cloning heron_simulator..." 
-      git clone git@github.com:BEAMRobotics/heron_simulator.git
+      git clone git@github.com:BEAMRobotics/heron_simulator.git --branch kinetic-devel-beam
   fi
   if [ ! -d "heron" ]; then
       echo "cloning heron..." 
-      git clone git@github.com:BEAMRobotics/heron.git --branch $ROS_DISTRO-beam-devel
+      git clone git@github.com:BEAMRobotics/heron.git --branch melodic-devel-beam
   fi
   cd .. 
   rosdep install --from-paths src --ignore-src
