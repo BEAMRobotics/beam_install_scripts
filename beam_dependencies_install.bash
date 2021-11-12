@@ -1,8 +1,5 @@
 #!/bin/bash
 set -e
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
-source $SCRIPT_DIR/identify_environment.bash
 
 DEPS_DIR="/tmp/beam_dependencies"
 
@@ -50,36 +47,44 @@ install_gcc7()
 
 install_ceres()
 {
-    CERES_DIR="ceres-solver-1.14.0"
-    BUILD_DIR="build"
+  # search for ceres in /usr/local/include
+  if [ -d '/usr/local/include/ceres' ]
+  then
+    echo "Found ceres. Not installing"
+    return
+  else 
+    echo "ceres not found in /usr/local/include, installing now."  
+  fi
 
-    sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
-    # this install script is for local machines.
-    if (find /usr/local/lib -name libceres.so | grep -q /usr/local/lib); then
-        echo "Ceres is already installed."
-    else
-        echo "Installing Ceres 1.14.0 ..."
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
+  CERES_DIR="ceres-solver-1.14.0"
+  BUILD_DIR="build"
 
-        if [ ! -d "$CERES_DIR" ]; then
-          wget "http://ceres-solver.org/$CERES_DIR.tar.gz"
-          tar zxf "$CERES_DIR.tar.gz"
-          rm -rf "$CERES_DIR.tar.gz"
-        fi
+  sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
+  # this install script is for local machines.
+  if (find /usr/local/lib -name libceres.so | grep -q /usr/local/lib); then
+      echo "Ceres is already installed."
+  else
+      echo "Installing Ceres 1.14.0 ..."
+      mkdir -p $DEPS_DIR
+      cd $DEPS_DIR
 
-        cd $CERES_DIR
-        if [ ! -d "$BUILD_DIR" ]; then
-          mkdir -p $BUILD_DIR
-          cd $BUILD_DIR
-          cmake ..
-          make -j$(nproc)
-          make test
-        fi
+      if [ ! -d "$CERES_DIR" ]; then
+        wget "http://ceres-solver.org/$CERES_DIR.tar.gz"
+        tar zxf "$CERES_DIR.tar.gz"
+        rm -rf "$CERES_DIR.tar.gz"
+      fi
 
-        cd $DEPS_DIR/$CERES_DIR/$BUILD_DIR
-        sudo make -j$(nproc) install
-    fi
+      cd $CERES_DIR
+      if [ ! -d "$BUILD_DIR" ]; then
+        mkdir -p $BUILD_DIR
+        cd $BUILD_DIR
+        cmake ..
+        make_with_progress -j$NUM_PROCESSORS
+      fi
+
+      cd $DEPS_DIR/$CERES_DIR/$BUILD_DIR
+      sudo make -j$NUM_PROCESSORS install > /dev/null
+  fi
 }
 
 install_protobuf()
@@ -92,8 +97,8 @@ install_protobuf()
         echo "Installing Protobuf 3.1.0"
         # tools needed to build protobuf
         sudo apt-get install -qq libtool unzip  > /dev/null
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
+        mkdir -p $DEPS_DIR
+        cd $DEPS_DIR
         PROTOBUF_DIR="protobuf-3.1.0"
         if [[ ! -d "$PROTOBUF_DIR" ]]; then
              local zipfile="protobuf-cpp-3.1.0.zip"
@@ -103,7 +108,7 @@ install_protobuf()
         fi
         cd "$PROTOBUF_DIR"
         ./configure -q --prefix /usr/local
-        make_with_progress -j$(nproc)
+        make_with_progress -j$NUM_PROCESSORS
         # Check commented out because it takes a lot of time to run all the tests
         # but leaving here in case we ever run into problems
         # make check > /dev/null
@@ -126,24 +131,21 @@ install_pcl()
   PCL_DIR="pcl"
   BUILD_DIR="build"
 
+  mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
-  if [ -d 'pcl-pcl-1.8.0' ]; then
-    echo "Removing old version of pcl (pcl-1.8.0) from deps"
-    sudo rm -rf pcl-pcl-1.8.0
-  fi
-
-  if [ -d 'pcl-pcl-1.8.1' ]; then
-    echo "Removing old version of pcl (pcl-1.8.1) from deps"
-    sudo rm -rf pcl-pcl-1.8.1
+  # search for pcl 1.11 in /usr/local/share
+  if [ -d '/usr/local/share/pcl-1.11' ]
+  then
+    echo "Found pcl 1.11. Not installing"
+    return
+  else 
+    echo "pcl 1.11 not found in /usr/local/share, installing now."  
   fi
 
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
-    git clone https://github.com/PointCloudLibrary/pcl.git
-    cd $PCL_DIR
-    git checkout pcl-$PCL_VERSION
-    cd ..
+    git clone --depth 1 -b pcl-$PCL_VERSION https://github.com/PointCloudLibrary/pcl.git
   fi
   
   cd $PCL_DIR
@@ -168,11 +170,11 @@ install_pcl()
     fi
 
     cmake .. ${PCL_CMAKE_ARGS} > /dev/null
-    make -j$NUM_PROCESSORS
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_geographiclib()
@@ -186,8 +188,8 @@ install_geographiclib()
         echo "GeographicLib version $GEOGRAPHICLIB_VERSION is already installed."
     else
         echo "Installing GeographicLib version $GEOGRAPHICLIB_VERSION ..."
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
+        mkdir -p $DEPS_DIR
+        cd $DEPS_DIR
 
         if [ ! -d "$GEOGRAPHICLIB_DIR" ]; then
           wget "$GEOGRAPHICLIB_URL"
@@ -200,12 +202,11 @@ install_geographiclib()
           mkdir -p $BUILD_DIR
           cd $BUILD_DIR
           cmake ..
-          make_with_progress -j$(nproc)
-          make test
+          make_with_progress -j$NUM_PROCESSORS
         fi
 
         cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/$BUILD_DIR
-        sudo make -j$(nproc) install > /dev/null
+        sudo make -j$NUM_PROCESSORS install > /dev/null
     fi
 }
 
@@ -221,11 +222,11 @@ install_gtsam()
         echo "GTSAM version $GTSAM_VERSION is already installed."
     else
       echo "Installing GTSAM version $GTSAM_VERSION ..."
-      mkdir -p "$DEPS_DIR"
-      cd "$DEPS_DIR"
+      mkdir -p $DEPS_DIR
+      cd $DEPS_DIR
 
       if [ ! -d "$GTSAM_DIR" ]; then
-        git clone $GTSAM_URL
+        git clone --depth 1 -b $GTSAM_VERSION $GTSAM_URL
       fi
 
       cd $GTSAM_DIR
@@ -236,7 +237,7 @@ install_gtsam()
         cmake .. -DCMAKE_BUILD_TYPE=Release \
         -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_BUILD_WRAP=OFF \
         -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF  -DGTSAM_BUILD_DOCS=OFF
-        make -j$(nproc)
+        make_with_progress -j$NUM_PROCESSORS
       fi
 
       cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
@@ -257,15 +258,15 @@ install_liquid-dsp()
 
     echo "Installing Liquid DSP version $LIQUID_VERSION ..."
     sudo apt-get -qq install automake autoconf
-    mkdir -p "$DEPS_DIR"
-    cd "$DEPS_DIR"
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
     wget "$LIQUID_URL"
     tar -xf "liquid-dsp-$LIQUID_VERSION.tar.gz"
     rm "liquid-dsp-$LIQUID_VERSION.tar.gz"
     cd "liquid-dsp-$LIQUID_VERSION"
     ./bootstrap.sh
     ./configure
-    make_with_progress -j$(nproc)
+    make_with_progress -j$NUM_PROCESSORS
     sudo make install > /dev/null
     echo "Liquid DSP installed successfully"
 }
@@ -282,7 +283,7 @@ install_libwave()
         # Install dependencies
         sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs\
         build-essential cmake
-
+        mkdir -p $DEPS_DIR
         cd $DEPS_DIR
         if [ -d "$LIBWAVE_DIR" ]; then
             echo "Libwave directory already cloned"
@@ -297,16 +298,25 @@ install_libwave()
           mkdir -p $BUILD_DIR
           cd $BUILD_DIR
           cmake -DBUILD_TESTS=OFF ..
-          make -j$(nproc)
+          make_with_progress -j$NUM_PROCESSORS
         fi
 
         cd $DEPS_DIR/$LIBWAVE_DIR/$BUILD_DIR
-        sudo make -j$(nproc) install
+        sudo make -j$NUM_PROCESSORS install > /dev/null
     fi
 }
 
 install_catch2()
 {
+  # search for Catch2 in /usr/local/share
+  if [ -d '/usr/local/share/Catch2' ]
+  then
+    echo "Found Catch2. Not installing"
+    return
+  else 
+    echo "Catch2 not found in /usr/local/share, installing now."  
+  fi
+
   echo "Installing Catch2..."
   CATCH2_DIR="Catch2"
   BUILD_DIR="build"
@@ -314,7 +324,7 @@ install_catch2()
   cd $DEPS_DIR
 
   if [ ! -d "$DEPS_DIR/$CATCH2_DIR" ]; then
-    git clone https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/$CATCH2_DIR
+    git clone --depth 1 https://github.com/catchorg/Catch2.git --branch v2.13.2 $DEPS_DIR/$CATCH2_DIR
   fi
 
   cd $CATCH2_DIR
@@ -322,11 +332,11 @@ install_catch2()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake -DCMAKE_CXX_STANDARD=11 ..
-    make -j$(nproc)
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$CATCH2_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_cmake()
@@ -367,6 +377,15 @@ install_cmake()
 
 install_eigen3()
 {
+  # search for eigen3 in /usr/local/share
+  if [ -d '/usr/local/share/eigen3' ]
+  then
+    echo "Found eigen3. Not installing"
+    return
+  else 
+    echo "eigen3 not found in /usr/local/share, installing now."  
+  fi
+
   EIGEN_DIR="eigen-3.3.7"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
@@ -383,11 +402,11 @@ install_eigen3()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make -j$NUM_PROCESSORS install . /dev/null
 }
 
 install_gflags()
@@ -403,7 +422,7 @@ install_gflags_from_source()
   cd $DEPS_DIR
 
   if [ ! -d "$GFLAGS_DIR" ]; then
-    git clone https://github.com/gflags/gflags.git
+    git clone --depth 1 https://github.com/gflags/gflags.git
   fi
 
   cd $GFLAGS_DIR
@@ -411,11 +430,11 @@ install_gflags_from_source()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE=true
-    make
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 
   # remove error inducing gtest and gmock (should just exist in /usr/include)
   GTEST_PATH="/usr/local/include/gtest"
@@ -436,13 +455,22 @@ install_pcap()
 
 install_json()
 {
+  # search for nlohmann in /usr/local/include
+  if [ -d '/usr/local/include/nlohmann' ]
+  then
+    echo "Found nlohmann. Not installing"
+    return
+  else 
+    echo "nlohmann not found in /usr/local/include, installing now."  
+  fi
+
   JSON_DIR="json"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
   if [ ! -d "$JSON_DIR" ]; then
-    git clone -b v3.6.1 https://github.com/nlohmann/json.git
+    git clone --depth 1 -b v3.6.1 https://github.com/nlohmann/json.git
   fi
 
   cd $JSON_DIR
@@ -450,11 +478,11 @@ install_json()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make -j$(nproc)
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_ladybug_sdk()
@@ -484,13 +512,22 @@ install_ladybug_sdk()
 
 install_dbow3()
 {
+  # search for DBow3 in /usr/local/include
+  if [ -d '/usr/local/include/DBow3' ]
+  then
+    echo "Found DBow3. Not installing"
+    return
+  else 
+    echo "DBow3 not found in /usr/local/include, installing now."  
+  fi
+
   DBOW_DIR="DBow3"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
   if [ ! -d "$DBOW_DIR" ]; then
-    git clone git@github.com:BEAMRobotics/DBow3.git
+    git clone --depth 1 git@github.com:BEAMRobotics/DBow3.git
   fi
 
   cd $DBOW_DIR
@@ -498,17 +535,37 @@ install_dbow3()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make -j$(nproc)
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$DBOW_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_opencv4()
 {
-  mkdir -p $DEPS_DIR
-  cd $DEPS_DIR
+  # search for opencv4 in /usr/local/share
+  if [ -d '/usr/local/share/opencv4' ]
+  then
+    echo "Found opencv4. Not installing"
+    return
+  else 
+    echo "opencv4 not found in /usr/local/share, installing now."  
+  fi
+
+  SRC_PATH = $DEPS_DIR
+
+  # check if opencv src path set, if true then we will clone there
+  if [ -z "$OPENCV_SRC_PATH" ]; 
+  then 
+    echo "cloning opencv4 to $DEPS_DIR"
+  else 
+    echo "cloning opencv4 to $OPENCV_SRC_PATH"
+    SRC_PATH = $OPENCV_SRC_PATH
+  fi
+
+  mkdir -p $SRC_PATH
+  cd $SRC_PATH
 
   # first, get opencv_contrib
   OPENCV_CONTRIB_DIR="opencv_contrib"
@@ -516,33 +573,43 @@ install_opencv4()
   VERSION="4.5.2"
 
   if [ ! -d "$OPENCV_CONTRIB_DIR" ]; then
-    git clone https://github.com/opencv/opencv_contrib.git
+    git clone --depth 1 -b $VERSION https://github.com/opencv/opencv_contrib.git
   fi
 
   cd $OPENCV_CONTRIB_DIR
-  git checkout $VERSION
 
   # next, install opencv and link to opencv_contrib
-  cd $DEPS_DIR
+  cd $SRC_PATH
   OPENCV_DIR="opencv"
   VERSION="4.5.2"
 
   if [ ! -d "$OPENCV_DIR" ]; then
-    git clone https://github.com/opencv/opencv.git
+    git clone --depth 1 -b $VERSION https://github.com/opencv/opencv.git
   fi
 
   cd $OPENCV_DIR
-  git checkout $VERSION
 
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
-    cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$DEPS_DIR/$OPENCV_CONTRIB_DIR/modules ..
-    make -j$NUM_PROCESSORS
+    cmake -DOPENCV_ENABLE_NONFREE:BOOL=ON -DOPENCV_EXTRA_MODULES_PATH=$SRC_PATH/$OPENCV_CONTRIB_DIR/modules ..
+    make_with_progress -j$NUM_PROCESSORS
   fi
   
-  cd $DEPS_DIR/$OPENCV_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install 
+  cd $SRC_PATH/$OPENCV_DIR/$BUILD_DIR
+  make_with_progress -j$NUM_PROCESSORS 
+  
+  if(( $INSTALL_OPENCV4_LOCALLY == 1 ))
+  then
+      echo "Not installing opencv4 to system"
+  else 
+      echo "Installing opencv4 to system"
+      sudo make install > /dev/null
+      echo "removing opencv4 src/build files"
+      rm -rf $SRC_PATH/$OPENCV_DIR
+      rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
+  fi
+  
 }
 
 install_cuda()
@@ -576,7 +643,7 @@ install_pytorch()
   cd $DEPS_DIR
 
   if [ ! -d "$DEPS_DIR/$PYTORCH_DIR" ]; then
-    git clone -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
+    git clone --depth 1 -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
   fi
 
   cd $PYTORCH_DIR
@@ -606,7 +673,7 @@ install_pytorch_cuda()
   cd $DEPS_DIR
 
   if [ ! -d "$DEPS_DIR/$PYTORCH_DIR" ]; then
-    git clone -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
+    git clone --depth 1 -b v1.7.0 --recurse-submodule https://github.com/pytorch/pytorch.git $DEPS_DIR/$PYTORCH_DIR
   fi
 
   cd $PYTORCH_DIR
@@ -627,8 +694,7 @@ install_sophus()
 
   apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
   if [ ! -d "$SOPHUS_DIR" ]; then
-    git clone https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
-    git checkout 936265f # required by basalt
+    git clone --depth 1 -b 936265f https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
   fi
 
   cd $SOPHUS_DIR
@@ -636,11 +702,11 @@ install_sophus()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake ..
-    make -j$(nproc)
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
-  sudo make install
+  sudo make install > /dev/null
 }
 
 install_teaserpp()
@@ -648,11 +714,12 @@ install_teaserpp()
   TEASERPP_DIR="TEASER-plusplus"
   BUILD_DIR="build"
 
+  mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
   if [ ! -d "$TEASERPP_DIR" ]; then
     echo "teaserpp not found... cloning"
-    git clone https://github.com/BEAMRobotics/TEASER-plusplus
+    git clone --depth 1 https://github.com/BEAMRobotics/TEASER-plusplus
   fi
 
   cd $TEASERPP_DIR
@@ -660,11 +727,11 @@ install_teaserpp()
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
     cmake .. > /dev/null
-    make -j$(nproc)
+    make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
-  sudo make -j$(nproc) install
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_docker()

@@ -17,8 +17,7 @@ esac
 
 # get number of processors for high-load installs
 if [ $(nproc) -lt 2 ]; then
-  echo "A minimum of 2 processors is required for installation. Exiting."
-  exit  1
+  export NUM_PROCESSORS=1
 else
   export NUM_PROCESSORS=$(( $(nproc) / 2 ))
 fi
