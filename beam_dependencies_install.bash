@@ -405,7 +405,7 @@ install_eigen3()
   fi
 
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install . /dev/null
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_gflags()
