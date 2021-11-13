@@ -27,6 +27,8 @@ config_bashrc()
     echo "ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
     
     echo "Done configuring bashrc."
+    echo "Sourcing bashrc"
+    source "/home/$USER/.bashrc"
 }
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
