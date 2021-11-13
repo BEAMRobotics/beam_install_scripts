@@ -66,8 +66,8 @@ install_ceres()
       echo "Ceres is already installed."
   else
       echo "Installing Ceres 1.14.0 ..."
-      mkdir -p "$DEPS_DIR"
-      cd "$DEPS_DIR"
+      mkdir -p $DEPS_DIR
+      cd $DEPS_DIR
 
       if [ ! -d "$CERES_DIR" ]; then
         wget "http://ceres-solver.org/$CERES_DIR.tar.gz"
@@ -98,8 +98,8 @@ install_protobuf()
         echo "Installing Protobuf 3.1.0"
         # tools needed to build protobuf
         sudo apt-get install -qq libtool unzip  > /dev/null
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
+        mkdir -p $DEPS_DIR
+        cd $DEPS_DIR
         PROTOBUF_DIR="protobuf-3.1.0"
         if [[ ! -d "$PROTOBUF_DIR" ]]; then
              local zipfile="protobuf-cpp-3.1.0.zip"
@@ -132,6 +132,7 @@ install_pcl()
   PCL_DIR="pcl"
   BUILD_DIR="build"
 
+  mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
   # search for pcl 1.11 in /usr/local/share
@@ -188,8 +189,8 @@ install_geographiclib()
         echo "GeographicLib version $GEOGRAPHICLIB_VERSION is already installed."
     else
         echo "Installing GeographicLib version $GEOGRAPHICLIB_VERSION ..."
-        mkdir -p "$DEPS_DIR"
-        cd "$DEPS_DIR"
+        mkdir -p $DEPS_DIR
+        cd $DEPS_DIR
 
         if [ ! -d "$GEOGRAPHICLIB_DIR" ]; then
           wget "$GEOGRAPHICLIB_URL"
@@ -222,8 +223,8 @@ install_gtsam()
         echo "GTSAM version $GTSAM_VERSION is already installed."
     else
       echo "Installing GTSAM version $GTSAM_VERSION ..."
-      mkdir -p "$DEPS_DIR"
-      cd "$DEPS_DIR"
+      mkdir -p $DEPS_DIR
+      cd $DEPS_DIR
 
       if [ ! -d "$GTSAM_DIR" ]; then
         git clone --depth 1 -b $GTSAM_VERSION $GTSAM_URL
@@ -257,8 +258,8 @@ install_liquid-dsp()
 
     echo "Installing Liquid DSP version $LIQUID_VERSION ..."
     sudo apt-get -qq install automake autoconf
-    mkdir -p "$DEPS_DIR"
-    cd "$DEPS_DIR"
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
     wget "$LIQUID_URL"
     tar -xf "liquid-dsp-$LIQUID_VERSION.tar.gz"
     rm "liquid-dsp-$LIQUID_VERSION.tar.gz"
@@ -282,7 +283,7 @@ install_libwave()
         # Install dependencies
         sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs\
         build-essential cmake
-
+        mkdir -p $DEPS_DIR
         cd $DEPS_DIR
         if [ -d "$LIBWAVE_DIR" ]; then
             echo "Libwave directory already cloned"
@@ -713,6 +714,7 @@ install_teaserpp()
   TEASERPP_DIR="TEASER-plusplus"
   BUILD_DIR="build"
 
+  mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
   if [ ! -d "$TEASERPP_DIR" ]; then
