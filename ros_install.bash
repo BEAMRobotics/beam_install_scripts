@@ -27,6 +27,8 @@ config_bashrc()
   echo "ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
   
   echo "Done configuring bashrc."
+  echo "Sourcing bashrc"
+  source "/home/$USER/.bashrc"
 }
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
@@ -54,6 +56,7 @@ case $UBUNTU_CODENAME in
     exit  1
 esac
 
+echo "Installing ROS $ROS_DISTRO ..." 
 yes | sudo apt install python-rosinstall python-catkin-pkg python-rosdep python-wstool \
 ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop ros-$ROS_DISTRO-pcl-ros \
 ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins \

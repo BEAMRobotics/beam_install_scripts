@@ -341,6 +341,23 @@ install_catch2()
 
 install_cmake()
 {
+  # get cmake version (first 3 number only, e.g.., 3.14)
+  version=$( cmake --version)
+  version="${version//'cmake version '}"
+  version=${version:0:4}
+
+  # remove period (e.g., 314)
+  version="${version//'.'}"
+
+  # if version is greater or qual to 3.14, then we return
+  if(( "$version" >= "314" ))
+  then
+    echo "Cmake version install is greater or equal to min. 3.14. Not installing."
+    return
+  else
+    echo "Cmake version install is less than min. 3.14. Removing current and installing newer version."
+  fi
+
   #Remove existing cmake
   if [ ! -d "/usr/local/cmake*" ]; then
     echo "CMAKE installation found in /usr/local/, deleting..."
@@ -406,7 +423,7 @@ install_eigen3()
   fi
 
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install . /dev/null
+  sudo make -j$NUM_PROCESSORS install > /dev/null
 }
 
 install_gflags()
