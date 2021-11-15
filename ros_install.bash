@@ -39,12 +39,12 @@ echo "Updating package lists ..."
 sudo apt update
 
 echo "Installing ROS $ROS_DISTRO ..." 
-yes | sudo apt install python-rosinstall python-catkin-pkg python-rosdep \python-wstool \
-python-catkin-tools ros-$ROS_DISTRO-catkin \ 
-ros-$ROS_DISTRO-desktop ros-$ROS_DISTRO-pcl-ros \
-ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins \
-ros-$ROS_DISTRO-libg2o ros-$ROS_DISTRO-geographic-msgs \
-ros-$ROS_DISTRO-tf2-geometry-msgs > /dev/null
+yes | sudo apt-get install python-rosinstall python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop  > /dev/null
+yes | sudo apt-get install ros-$ROS_DISTRO-pcl-ros ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins ros-$ROS_DISTRO-libg2o  > /dev/null
+yes | sudo apt-get install ros-$ROS_DISTRO-geographic-msgs > /dev/null
+yes | sudo apt-get install ros-$ROS_DISTRO-tf2-geometry-msgs > /dev/null
+yes | sudo apt install python-catkin-tools  > /dev/null
+
 
 # ROS environment setup
 echo "Setting up ROS environment..."
