@@ -807,22 +807,6 @@ install_gazebo()
   sudo apt-get install ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
   sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control  
 
-  # heron
-  sudo apt-get install ros-$ROS_DISTRO-heron-description ros-$ROS_DISTRO-heron-viz ros-$ROS_DISTRO-heron-desktop
-  sudo apt-get install ros-$ROS_DISTRO-uuv-*
-
-  cd $CATKIN_DIR/src
-  if [ ! -d "heron_simulator" ]; then
-      echo "cloning heron_simulator..." 
-      git clone git@github.com:BEAMRobotics/heron_simulator.git --branch kinetic-devel-beam
-  fi
-  if [ ! -d "heron" ]; then
-      echo "cloning heron..." 
-      git clone git@github.com:BEAMRobotics/heron.git --branch melodic-devel-beam
-  fi
-  cd .. 
-  rosdep install --from-paths src --ignore-src
-
   # husky 
   sudo apt-get install ros-$ROS_DISTRO-husky-desktop ros-$ROS_DISTRO-husky-description ros-$ROS_DISTRO-husky-viz
   sudo apt-get install ros-$ROS_DISTRO-husky-simulator
