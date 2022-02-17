@@ -12,7 +12,7 @@ export REPO_DIR=$SCRIPT_DIR
 # get UBUNTU_CODENAME, ROS_DISTRO, CATKIN_DIR
 source $INSTALL_SCRIPTS/identify_environment.bash
 
-main() 
+main()
 {
     menu
     parse_arguments $@
@@ -112,7 +112,8 @@ install_routine()
     install_gtsam
     install_pcl
     install_geographiclib
-    install_libpcap
+    install_pcap
+    install_parmetis
     install_json
     install_dbow3
     install_opencv4
@@ -132,7 +133,7 @@ install_routine()
 
     if [ ! -z "$ROBOT" ]; then
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      clone_ros_drivers   
+      clone_ros_drivers
       if [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
         install_spinnaker_sdk

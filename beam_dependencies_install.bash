@@ -118,7 +118,7 @@ install_protobuf()
     fi
 }
 
-install_libpcap()
+install_pcap()
 {
     # for velodyne driver
     echo "installing velodyne driver dependencies..."
@@ -465,11 +465,6 @@ install_gflags_from_source()
   fi
 }
 
-install_pcap()
-{
-  sudo apt-get install libpcap-dev
-}
-
 install_json()
 {
   # search for nlohmann in /usr/local/include
@@ -793,6 +788,11 @@ install_docker()
 install_qwt()
 {
   sudo apt-get install libqwt-dev
+}
+
+install_parmetis()
+{
+  sudo apt-get install libparmetis-dev
 }
 
 install_gazebo()
