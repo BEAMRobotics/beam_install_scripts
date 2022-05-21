@@ -570,7 +570,7 @@ install_opencv4()
     echo "opencv4 not found in /usr/local/share, installing now."  
   fi
 
-  SRC_PATH = $DEPS_DIR
+  SRC_PATH=$DEPS_DIR
 
   # check if opencv src path set, if true then we will clone there
   if [ -z "$OPENCV_SRC_PATH" ]; 
@@ -623,8 +623,8 @@ install_opencv4()
       echo "Installing opencv4 to system"
       sudo make install > /dev/null
       echo "removing opencv4 src/build files"
-      rm -rf $SRC_PATH/$OPENCV_DIR
-      rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
+      # rm -rf $SRC_PATH/$OPENCV_DIR
+      # rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
   fi
   
 }
