@@ -137,12 +137,12 @@ install_spinnaker_sdk()
     cd $LB_DIR
     # Eventually replace with better links. Currently in adthoms Dropbox
     if [ "$ROS_DISTRO" = "kinetic" ]; then
-      wget https://www.dropbox.com/s/8rw5g4lad1ibngb/spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0        
+      wget https://drive.google.com/file/d/1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi/view?usp=sharing.gz?dl=0        
       tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
       rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64/
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      wget https://www.dropbox.com/s/v7lyllpvd7cche6/spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0        
+      wget https://drive.google.com/file/d/1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF/view?usp=sharing.gz?dl=0        
       tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0
       rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.4.0.143-amd64/
