@@ -618,8 +618,8 @@ install_opencv4()
       echo "Installing opencv4 to system"
       sudo make install > /dev/null
       echo "removing opencv4 src/build files"
-      rm -rf $SRC_PATH/$OPENCV_DIR
-      rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
+      # rm -rf $SRC_PATH/$OPENCV_DIR
+      # rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
   fi
   
 }
