@@ -102,7 +102,9 @@ install_routine()
 
     # Echo success
     echo "Catkin workspace successfully compiled. Please open a new terminal to re-source environment variables."
-
+    gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z/view?usp=sharing.gz?dl=0        
+    tar -xvf MT_Software_suite_linux-x64_2021.2.tar.gz?dl=0
+    rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz?dl=0   
     echo "INSTALL COMPLETE. YOU WILL NEED TO INSTALL THE MTI SOFTWARE AVAILABLE HERE: "
     echo "https://content.xsens.com/mt-software-suite-download?hsCtaTracking=e7ef7e11-db88-4d9e-b36e-3f937ea4ae15%7Cd6a8454e-6db4-41e7-9f81-f8fc1c4891b3"
     echo "unpack, then run mtsdk_linux-x64_2021.2.sh (without sudo), then follow instructions in install_dir/xsens_ros_mti_driver/README.txt"

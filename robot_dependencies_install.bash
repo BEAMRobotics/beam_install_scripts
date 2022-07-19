@@ -118,6 +118,7 @@ enable_passwordless_sudo()
   echo "robot ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 }
 
+
 install_spinnaker_sdk()
 {
   echo "Installing spinnaker SDK..."
@@ -137,12 +138,12 @@ install_spinnaker_sdk()
     cd $LB_DIR
     # Eventually replace with better links. Currently in adthoms Dropbox
     if [ "$ROS_DISTRO" = "kinetic" ]; then
-      wget https://drive.google.com/file/d/1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi/view?usp=sharing.gz?dl=0        
+      gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi/view?usp=sharing.gz?dl=0        
       tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
       rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64/
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      wget https://drive.google.com/file/d/1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF/view?usp=sharing.gz?dl=0        
+      gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF/view?usp=sharing.gz?dl=0        
       tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0
       rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.4.0.143-amd64/
@@ -180,6 +181,7 @@ install_virtual_box()
   sudo apt-get install virtualbox-6.1
   echo "Virtual Box successfully installed."
 }
+
 
 install_dt100()
 {
