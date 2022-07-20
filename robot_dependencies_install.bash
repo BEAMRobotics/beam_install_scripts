@@ -164,7 +164,7 @@ install_spinnaker_sdk()
     elif [ "$ROS_DISTRO" = "melodic" ]; then
      gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF     
      tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
-      #cd spinnaker-2.4.0.143-amd64
+      cd spinnaker-2.4.0.143-amd64
     fi
     sudo sh install_spinnaker.sh
     echo "Spinnaker SDK successfully installed."
