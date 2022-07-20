@@ -138,14 +138,16 @@ install_spinnaker_sdk()
     cd $LB_DIR
     # Eventually replace with better links. Currently in adthoms Dropbox
     if [ "$ROS_DISTRO" = "kinetic" ]; then
-      wget https://drive.google.com/file/d/1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi/view?usp=sharing       
-      tar -xvf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0
-      rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
+      # gets the file for spinnekar from the google drive folder we have
+      gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi 
+      # extracts the files we have retrieved and places them in a directory with the given file names       
+      tar fxv spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
+      #rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      wget https://drive.google.com/file/d/1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF/view?usp=sharing       
-      tar -xvf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0
-      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
+      gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF      
+      tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
+      #rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.4.0.143-amd64
     fi
     sudo sh install_spinnaker.sh
@@ -154,9 +156,15 @@ install_spinnaker_sdk()
     echo "Already have spinnaker folder..."
     cd $LB_DIR
     if [ "$ROS_DISTRO" = "kinetic" ]; then
+      # these commnads ave to be here so that the files can b scannd ino our system to be properly installed
+      gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi
+      # extracts the files we have retrieved and places them in a directory with the given file names       
+      tar fxv spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
       cd spinnaker-2.0.0.146-amd64
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-      cd ~/LB_DIR/spinnaker-2.4.0.143-amd64
+     gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF     
+     tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
+      #cd spinnaker-2.4.0.143-amd64
     fi
     sudo sh install_spinnaker.sh
     echo "Spinnaker SDK successfully installed."
@@ -204,7 +212,7 @@ install_dt100()
   if [ ! -d "/home/$USER/VirtualBox\ VMs/Windows_XP_32_DT100" ]; then
     if [ ! -f "Windows_XP_32_DT100.ova" ]; then
       echo "Importing virtual machine..."
-      wget https://drive.google.com/file/d/1q60G1HUlCU5dJjeiJXBkdC5bBnX_8Uh_/view?usp=sharing
+      gdown https://drive.google.com/file/d/1q60G1HUlCU5dJjeiJXBkdC5bBnX_8Uh_/view?usp=sharing
       mv Windows_XP_32_DT100.ova?dl=0 Windows_XP_32_DT100.ova
       vboxmanage import Windows_XP_32_DT100.ova
     else 

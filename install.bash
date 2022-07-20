@@ -318,7 +318,7 @@ install_routine()
       clone_ros_drivers
      # if [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
-       # install_spinnaker_sdk
+        install_spinnaker_sdk
         echo "spinnaker installed"
         echo "Do you wish to continue? (y/n):"
 
