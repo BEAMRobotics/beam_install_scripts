@@ -706,7 +706,7 @@ install_sophus()
 
   sudo apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
   if [ ! -d "$SOPHUS_DIR" ]; then
-    git clone https://github.com/strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
+    git clone git@github.com:strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
     git checkout 936265f # required by basalt
   fi
 
