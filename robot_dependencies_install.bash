@@ -147,7 +147,7 @@ install_spinnaker_sdk()
     elif [ "$ROS_DISTRO" = "melodic" ]; then
       gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF      
       tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
-      #rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz?dl=0      
+      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz      
       cd spinnaker-2.4.0.143-amd64
     fi
     sudo sh install_spinnaker.sh
@@ -212,12 +212,40 @@ install_dt100()
   if [ ! -d "/home/$USER/VirtualBox\ VMs/Windows_XP_32_DT100" ]; then
     if [ ! -f "Windows_XP_32_DT100.ova" ]; then
       echo "Importing virtual machine..."
-      gdown https://drive.google.com/file/d/1q60G1HUlCU5dJjeiJXBkdC5bBnX_8Uh_/view?usp=sharing
-      mv Windows_XP_32_DT100.ova?dl=0 Windows_XP_32_DT100.ova
+      gdown --id 1q60G1HUlCU5dJjeiJXBkdC5bBnX_8Uh_
+      ./DT100_v1_05_07.exe
+      mv "Windows_XP_32_DT100.ova" "Windows_XP_32_DT100.ova"
       vboxmanage import Windows_XP_32_DT100.ova
     else 
       echo "virtual machine has already been imported."
     fi
   fi
   echo "dt100 dependencies successfully installed."
+}
+
+
+install_mti_sdk()
+{
+  # creates a directory to store the MTI software
+  MT_DIR="MTIsoftware"
+  # checks to see if there is already a MTI directory in our package. if there is then it continues if there is not a directory, then it will create a directory
+  if [ ! -d "$MT_DIR" ]; then
+    mkdir -p $MT_DIR
+  fi
+
+  # opens the directory
+  cd $MT_DIR
+  # downloads the necessary files from the google drive using the gdown command
+  gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z        
+  #extracts the first set of tar files and moves everything to a folder labeled as MT_Software_Suite_linux-x64_2021.2
+  tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz
+  # enters the newly created folder
+  cd MT_Software_Suite_linux-x64_2021.2
+  # there are an additional set of tar files inside this new foler so the following two commands extract the corresponding tar files
+  tar xvf mtmanager_linux-x64_2021.2.tar.gz
+  tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
+  rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz  
+  chmod +x mtsdk_linux-x64_2021.2.sh
+  bash mtsdk_linux-x64_2021.2.sh
+    
 }

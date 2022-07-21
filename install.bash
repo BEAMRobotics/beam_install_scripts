@@ -85,6 +85,10 @@ install_routine()
 
     # Ensure wget is available
     sudo apt-get install -qq wget  > /dev/null
+    # installs the ability to execute.exe files on linux
+    #sudo apt install wine64
+    #installs stuff for mti drivers
+    #sudo apt-get install sharutils
 
     # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
     source $INSTALL_SCRIPTS/identify_environment.bash
@@ -105,7 +109,7 @@ install_routine()
     # Install development machine dependencies
     install_cmake
     echo "cmak installed"
-    echo "Do you wish to continue? (y/n):"
+    #echo "Do you wish to continue? (y/n):"
 
     # while read ans; do
     #     case "$ans" in
@@ -318,7 +322,7 @@ install_routine()
       clone_ros_drivers
      # if [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
-        install_spinnaker_sdk
+        #install_spinnaker_sdk
         echo "spinnaker installed"
         echo "Do you wish to continue? (y/n):"
 
@@ -329,7 +333,7 @@ install_routine()
               *) echo "(y/n):";;
           esac
         done
-        # install_rosserial
+         install_rosserial
         # echo "rosserial installed"
         # echo "Do you wish to continue? (y/n):"
 
@@ -340,7 +344,7 @@ install_routine()
         #       *) echo "(y/n):";;
         #   esac
         # done
-        install_dt100
+        #install_dt100
         echo "dt100 installed"
         echo "Do you wish to continue? (y/n):"
 
@@ -385,15 +389,7 @@ install_routine()
     done
 
     
-    MT_DIR="MTIsoftware"
-    mkdir -p $MT_DIR
-    cd $MT_DIR
-    gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z/view?usp=sharing.gz?dl=0        
-    tar -xvf MT_Software_suite_linux-x64_2021.2.tar.gz?dl=0
-    rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz?dl=0  
-    chmod +x mtsdk_linux-x64_2021.2.sh
-    bash mtsdk_linux-x64_2021.2.sh
-    
+   install_mti_sdk
     # Compile 
     echo "Beam robotics installation completed. Compiling catkin workspace..."
     compile
