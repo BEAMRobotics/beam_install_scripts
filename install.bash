@@ -83,13 +83,12 @@ install_routine()
 {
     sudo -v
 
-    # Ensure wget is available
-    sudo apt-get install -qq wget  > /dev/null
-     
     #installs stuff for mti drivers
     sudo apt-get install sharutils
     # allows for pulling from google drive using a sharable link
-    sudo apt-get install gdown
+    sudo apt install python-pip
+    pip install gdown
+    pip install --upgrade gdown
 
     # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
     source $INSTALL_SCRIPTS/identify_environment.bash
@@ -108,220 +107,44 @@ install_routine()
     bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
     # Install development machine dependencies
-    install_cmake
-    echo "cmak installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_qwt
-    echo "qwt installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_catch2
-    echo "catch2 installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_eigen3
-    echo "eigen3 installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_sophus
-    echo "sophus installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_ceres
-    echo "ceres installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_gtsam
-    echo "gtsam installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_pcl
-    echo "pcl installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_geographiclib
-    echo "geographic installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_pcap
-    echo "pcap installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_parmetis
-    echo "parmetis installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_json
-    echo "json installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_dbow3
-    echo "dbow3 installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_opencv4
-    echo "opencv4 installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_docker
-    echo "docker installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    install_gazebo
-    echo "gazebo installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-
+    install_cmake   
+    install_qwt    
+    install_catch2    
+    install_eigen3    
+    install_sophus    
+    install_ceres    
+    install_gtsam   
+    install_pcl    
+    install_geographiclib    
+    install_pcap    
+    install_parmetis    
+    install_json    
+    install_dbow3    
+    install_opencv4    
+    install_docker    
+    install_gazebo   
+    
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
       install_pytorch
+      
     fi
 
-    echo "pytorch installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
+    
 
     if [ $UBUNTU_CODENAME = xenial ]; then
       echo "Installing gflags and ladybug sdk..."
       install_gflags_from_source
       install_ladybug_sdk
+       
     fi   
 
-    echo "gflags and ladybug sdk installed"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
+   
 
     if [ ! -z "$ROBOT" ]; then
       # executes the main install scripts to un th robot
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      if [ "$ROBOT" = "ig_handle" ]; then
+      if [ "$ROBOT" = "ig-handle" ]; then
         echo "Installing drivers for $ROBOT..."
         # contains the drivers for the hand held lidar scanner
         install_ig_handle
@@ -355,16 +178,7 @@ install_routine()
         exit
     fi
 
-    echo "preparing to install mti software"
-    echo "Do you wish to continue? (y/n):"
-
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
+    
 
     
  
