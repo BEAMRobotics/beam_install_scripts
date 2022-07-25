@@ -9,20 +9,14 @@ catkin_build()
   catkin build
 }
 
+
+
 install_chrony_deps()
 {
   echo "installing chrony and its dependencies"
   sudo dpkg --configure -a
   sudo apt-get update
   sudo apt-get install gpsd gpsd-clients chrony
-}
-
-clone_ig2_ros_drivers()
-{
-  sudo apt-get install ros-melodic-velodyne
-  cd /home/"$USER"/catkin_ws/src/
-  git clone https://github.com/BEAMRobotics/ig_handle.git
-  sudo apt-get install sharutils
 }
 
 clone_ros_drivers()
@@ -84,6 +78,42 @@ update_udev_ig2()
   sudo cp ~/catkin_ws/src/ig_hangle/config/99-ig2_udev.rules /etc/udev/rules.d/
   sudo udevadm control --reload-rules && sudo service udev restart && sudo udevadm trigger
   sudo cp ~/catkin_ws/src/ig_hangle/config/01-ig2_netplan.yaml /etc/netplan/
+}
+
+install_ig_handle()
+{
+  
+  cd home/"$USER"/catkin_ws/src/
+  echo "Installing Ig Handle files"
+  git clone git@github.com:BEAMRobotics/ig_handle.git 
+   
+  sudo apt-get install sharutils
+  sudo apt-get install gdown
+  # we only want these to be called if we use install_ig_handle
+  install_spinnaker_sdk
+  echo "spinnaker installed"
+  echo "Do you wish to continue? (y/n):"
+
+  while read ans; do
+    case "$ans" in
+        y) break;;
+        n) exit; break;;
+        *) echo "(y/n):";;
+    esac
+  done
+  install_mti_sdk
+  echo "mti installed"
+  echo "Do you wish to continue? (y/n):"
+
+  while read ans; do
+    case "$ans" in
+        y) break;;
+        n) exit; break;;
+        *) echo "(y/n):";;
+    esac
+  done
+
+  install_arduino_teensyduino
 }
 
 install_gps()
@@ -171,12 +201,31 @@ install_spinnaker_sdk()
   fi
 }
 
-install_rosserial()
+install_arduino_teensyduino()
 {
   echo "Installing rosserial..."
   sudo apt-get install ros-$ROS_DISTRO-rosserial-arduino
   sudo apt-get install ros-$ROS_DISTRO-rosserial
   echo "rosserial successfully installed."
+
+  echo "Installng arduino and Teensyduino"
+  wget https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz  
+  wget https://www.pjrc.com/teensy/td_153/TeensyduinoInstall.linux64  
+  wget https://www.pjrc.com/teensy/00-teensy.rules  
+  sudo cp 00-teensy.rules /etc/udev/rules.d/  
+  tar -xf arduino-1.8.13-linux64.tar.xz  
+  chmod 755 TeensyduinoInstall.linux64  
+  ./TeensyduinoInstall.linux64 --dir=arduino-1.8.13 
+  echo "Arduino Teensy installed"
+  echo "Do you wish to continue? (y/n):"
+
+  while read ans; do
+    case "$ans" in
+        y) break;;
+        n) exit; break;;
+        *) echo "(y/n):";;
+    esac
+  
 }
 
 install_virtual_box()
@@ -212,9 +261,8 @@ install_dt100()
   if [ ! -d "/home/$USER/VirtualBox\ VMs/Windows_XP_32_DT100" ]; then
     if [ ! -f "Windows_XP_32_DT100.ova" ]; then
       echo "Importing virtual machine..."
-      gdown --id 1q60G1HUlCU5dJjeiJXBkdC5bBnX_8Uh_
-      ./DT100_v1_05_07.exe
-      mv "Windows_XP_32_DT100.ova" "Windows_XP_32_DT100.ova"
+      gdown --id 1_X6_pstzYwIVQBICmkU4EMvxtBkayy_1
+      mv Windows_XP_32_DT100.ova Windows_XP_32_DT100.ova
       vboxmanage import Windows_XP_32_DT100.ova
     else 
       echo "virtual machine has already been imported."

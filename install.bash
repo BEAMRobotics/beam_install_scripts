@@ -85,10 +85,11 @@ install_routine()
 
     # Ensure wget is available
     sudo apt-get install -qq wget  > /dev/null
-    # installs the ability to execute.exe files on linux
-    #sudo apt install wine64
+     
     #installs stuff for mti drivers
-    #sudo apt-get install sharutils
+    sudo apt-get install sharutils
+    # allows for pulling from google drive using a sharable link
+    sudo apt-get install gdown
 
     # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
     source $INSTALL_SCRIPTS/identify_environment.bash
@@ -109,254 +110,231 @@ install_routine()
     # Install development machine dependencies
     install_cmake
     echo "cmak installed"
-    #echo "Do you wish to continue? (y/n):"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_qwt
-    # echo "qwt installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_qwt
+    echo "qwt installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_catch2
-    # echo "catch2 installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_catch2
+    echo "catch2 installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_eigen3
-    # echo "eigen3 installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_eigen3
+    echo "eigen3 installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_sophus
-    # echo "sophus installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_sophus
+    echo "sophus installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_ceres
-    # echo "ceres installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_ceres
+    echo "ceres installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_gtsam
-    # echo "gtsam installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_gtsam
+    echo "gtsam installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_pcl
-    # echo "pcl installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_pcl
+    echo "pcl installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_geographiclib
-    # echo "geographic installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_geographiclib
+    echo "geographic installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_pcap
-    # echo "pcap installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_pcap
+    echo "pcap installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_parmetis
-    # echo "parmetis installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_parmetis
+    echo "parmetis installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_json
-    # echo "json installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_json
+    echo "json installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_dbow3
-    # echo "dbow3 installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_dbow3
+    echo "dbow3 installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_opencv4
-    # echo "opencv4 installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_opencv4
+    echo "opencv4 installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_docker
-    # echo "docker installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_docker
+    echo "docker installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
-    # install_gazebo
-    # echo "gazebo installed"
-    # echo "Do you wish to continue? (y/n):"
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
+    install_gazebo
+    echo "gazebo installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
 
-    # if [ "$PYTORCH" = true ]; then
-    #   echo "Installing pytorch..."
-    #   install_pytorch
-    # fi
+    if [ "$PYTORCH" = true ]; then
+      echo "Installing pytorch..."
+      install_pytorch
+    fi
 
-    # echo "pytorch installed"
-    # echo "Do you wish to continue? (y/n):"
+    echo "pytorch installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
 
-    # if [ $UBUNTU_CODENAME = xenial ]; then
-    #   echo "Installing gflags and ladybug sdk..."
-    #   install_gflags_from_source
-    #   install_ladybug_sdk
-    # fi   
+    if [ $UBUNTU_CODENAME = xenial ]; then
+      echo "Installing gflags and ladybug sdk..."
+      install_gflags_from_source
+      install_ladybug_sdk
+    fi   
 
-    # echo "gflags and ladybug sdk installed"
-    # echo "Do you wish to continue? (y/n):"
+    echo "gflags and ladybug sdk installed"
+    echo "Do you wish to continue? (y/n):"
 
-    # while read ans; do
-    #     case "$ans" in
-    #         y) break;;
-    #         n) exit; break;;
-    #         *) echo "(y/n):";;
-    #     esac
-    # done
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
 
-    #if [ ! -z "$ROBOT" ]; then
+    if [ ! -z "$ROBOT" ]; then
+      # executes the main install scripts to un th robot
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      clone_ros_drivers
-     # if [ "$ROBOT" = "ig2" ]; then
+      if [ "$ROBOT" = "ig_handle" ]; then
         echo "Installing drivers for $ROBOT..."
-        #install_spinnaker_sdk
-        echo "spinnaker installed"
-        echo "Do you wish to continue? (y/n):"
-
-        while read ans; do
-          case "$ans" in
-              y) break;;
-              n) exit; break;;
-              *) echo "(y/n):";;
-          esac
-        done
-         install_rosserial
-        # echo "rosserial installed"
-        # echo "Do you wish to continue? (y/n):"
-
-        # while read ans; do
-        #   case "$ans" in
-        #       y) break;;
-        #       n) exit; break;;
-        #       *) echo "(y/n):";;
-        #   esac
-        # done
-        #install_dt100
-        echo "dt100 installed"
-        echo "Do you wish to continue? (y/n):"
-
-        while read ans; do
-          case "$ans" in
-              y) break;;
-              n) exit; break;;
-              *) echo "(y/n):";;
-          esac
-        done
-      #fi
-    #fi
+        # contains the drivers for the hand held lidar scanner
+        install_ig_handle
+      elif [ "$ROBOT" = "ig2" ]; then
+        echo "Installing drivers for $ROBOT..."
+        # same drivers are the handle bu this is for the lidar system that is not hand held. Although this code repeats it is done to seperate the systems
+        install_ig_handle
+      elif [ "$ROBOT" = "pierre" ]; then
+        echo "Installing drivers for $ROBOT..."
+        install_ig_handle
+        install_dt100
+      fi
+    fi
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
@@ -389,7 +367,7 @@ install_routine()
     done
 
     
-   install_mti_sdk
+ 
     # Compile 
     echo "Beam robotics installation completed. Compiling catkin workspace..."
     compile
