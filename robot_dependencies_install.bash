@@ -243,11 +243,12 @@ install_mti_sdk()
   mkdir -p $MT_DIR
   cd $MT_DIR  
   gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z     
-  tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz  
+  tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz 
+  rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz 
   cd MT_Software_Suite_linux-x64_2021.2 
   tar xvf mtmanager_linux-x64_2021.2.tar.gz
   tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
-  rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz
+  
   rm -rf mtmanager_linux-x64_2021.2.tar.gz
   rm -rf magfieldmapper_linux-x64_2021.2.tar.gz 
    
