@@ -83,8 +83,7 @@ install_routine()
 {
     sudo -v
 
-    #installs stuff for mti drivers
-    sudo apt-get install sharutils
+    
     # allows for pulling from google drive using a sharable link
     sudo apt install python-pip
     pip install gdown
@@ -122,7 +121,7 @@ install_routine()
     install_dbow3    
     install_opencv4    
     install_docker    
-    install_gazebo   
+    # install_gazebo   
     
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
@@ -142,7 +141,7 @@ install_routine()
    
 
     if [ ! -z "$ROBOT" ]; then
-      # executes the main install scripts to un th robot
+      # executes the main install scripts for the robot
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
       if [ "$ROBOT" = "ig-handle" ]; then
         echo "Installing drivers for $ROBOT..."

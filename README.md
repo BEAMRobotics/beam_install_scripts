@@ -19,3 +19,6 @@ Beam repo containing all required install scripts. For installation information 
 
 ## Depenedencies and Versions (Beam Robots)
 - Spinnaker 2.0.0.146
+- MTI Software Suite Linux 2021
+- Windows XP 32 DT 100
+- Virtual Box

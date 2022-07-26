@@ -88,31 +88,9 @@ install_ig_handle()
   git clone git@github.com:BEAMRobotics/ig_handle.git 
    
   sudo apt-get install sharutils
-  sudo apt-get install gdown
   # we only want these to be called if we use install_ig_handle
-  install_spinnaker_sdk
-  echo "spinnaker installed"
-  echo "Do you wish to continue? (y/n):"
-
-  while read ans; do
-    case "$ans" in
-        y) break;;
-        n) exit; break;;
-        *) echo "(y/n):";;
-    esac
-  done
+  install_spinnaker_sdk  
   install_mti_sdk
-  echo "mti installed"
-  echo "Do you wish to continue? (y/n):"
-
-  while read ans; do
-    case "$ans" in
-        y) break;;
-        n) exit; break;;
-        *) echo "(y/n):";;
-    esac
-  done
-
   install_arduino_teensyduino
 }
 
@@ -136,9 +114,9 @@ install_husky_packages()
   ros-$ROS_DISTRO-teleop-* \
   ros-$ROS_DISTRO-twist-mux* \
   ros-$ROS_DISTRO-lms1xx \
-  # ros-$ROS_DISTRO-ur-description \
+  ros-$ROS_DISTRO-ur-description \
   # ros-$ROS_DISTRO-joint-state-publisher \
-  ros-$ROS_DISTRO-joint-state-controller \
+  # ros-$ROS_DISTRO-joint-state-controller \
   ros-$ROS_DISTRO-diff-drive-controller
 }
 
@@ -172,7 +150,7 @@ install_spinnaker_sdk()
       gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi 
       # extracts the files we have retrieved and places them in a directory with the given file names       
       tar fxv spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
-      #rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
+      rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64
     elif [ "$ROS_DISTRO" = "melodic" ]; then
       gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF      
@@ -185,10 +163,8 @@ install_spinnaker_sdk()
   else
     echo "Already have spinnaker folder..."
     cd $LB_DIR
-    if [ "$ROS_DISTRO" = "kinetic" ]; then
-      # these commnads ave to be here so that the files can b scannd ino our system to be properly installed
-      gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi
-      # extracts the files we have retrieved and places them in a directory with the given file names       
+    if [ "$ROS_DISTRO" = "kinetic" ]; then      
+      gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi          
       tar fxv spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
       cd spinnaker-2.0.0.146-amd64
     elif [ "$ROS_DISTRO" = "melodic" ]; then
@@ -208,7 +184,7 @@ install_arduino_teensyduino()
   sudo apt-get install ros-$ROS_DISTRO-rosserial
   echo "rosserial successfully installed."
 
-  echo "Installng arduino and Teensyduino"
+  echo "Installing arduino and Teensyduino"
   wget https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz  
   wget https://www.pjrc.com/teensy/td_153/TeensyduinoInstall.linux64  
   wget https://www.pjrc.com/teensy/00-teensy.rules  
@@ -216,16 +192,7 @@ install_arduino_teensyduino()
   tar -xf arduino-1.8.13-linux64.tar.xz  
   chmod 755 TeensyduinoInstall.linux64  
   ./TeensyduinoInstall.linux64 --dir=arduino-1.8.13 
-  echo "Arduino Teensy installed"
-  echo "Do you wish to continue? (y/n):"
-
-  while read ans; do
-    case "$ans" in
-        y) break;;
-        n) exit; break;;
-        *) echo "(y/n):";;
-    esac
-  
+   
 }
 
 install_virtual_box()
@@ -244,16 +211,7 @@ install_dt100()
 {
   echo "Installing dt100 dependencies..."
   install_virtual_box
-  echo "virtual box installed"
-  echo "Do you wish to continue? (y/n):"
-
-  while read ans; do
-    case "$ans" in
-        y) break;;
-        n) exit; break;;
-        *) echo "(y/n):";;
-    esac
-  done
+  
   VM_DIR="/home/$USER/virtual_machines/"
   mkdir -p $VM_DIR
 
@@ -275,24 +233,17 @@ install_dt100()
 install_mti_sdk()
 {
   # creates a directory to store the MTI software
-  MT_DIR="MTIsoftware"
-  # checks to see if there is already a MTI directory in our package. if there is then it continues if there is not a directory, then it will create a directory
-  if [ ! -d "$MT_DIR" ]; then
-    mkdir -p $MT_DIR
-  fi
-
-  # opens the directory
-  cd $MT_DIR
-  # downloads the necessary files from the google drive using the gdown command
-  gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z        
-  #extracts the first set of tar files and moves everything to a folder labeled as MT_Software_Suite_linux-x64_2021.2
-  tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz
-  # enters the newly created folder
-  cd MT_Software_Suite_linux-x64_2021.2
-  # there are an additional set of tar files inside this new foler so the following two commands extract the corresponding tar files
+  MT_DIR="MTIsoftware"  
+  mkdir -p $MT_DIR
+  cd $MT_DIR  
+  gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z     
+  tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz  
+  cd MT_Software_Suite_linux-x64_2021.2  
   tar xvf mtmanager_linux-x64_2021.2.tar.gz
   tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
-  rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz  
+  rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz
+  rm -rf mtmanager_linux-x64_2021.2.tar.gz
+  rm -rf magfieldmapper_linux-x64_2021.2.tar.gz 
   chmod +x mtsdk_linux-x64_2021.2.sh
   bash mtsdk_linux-x64_2021.2.sh
     
