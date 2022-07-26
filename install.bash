@@ -43,7 +43,7 @@ parse_arguments()
 {
   # defaults
   PYTORCH=false
-  ROBOT=""
+  ROBOT="ig-handle"
 
   echo "Parsing any optional commandline arguments..."
   while getopts ":pr:" arg; do

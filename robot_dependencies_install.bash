@@ -83,10 +83,11 @@ update_udev_ig2()
 install_ig_handle()
 {
   
-  cd home/"$USER"/catkin_ws/src/
+  cd /home/"$USER"/catkin_ws/src/
   echo "Installing Ig Handle files"
   git clone git@github.com:BEAMRobotics/ig_handle.git 
-   
+  pip install gdown
+  pip install --upgrade gdown
   sudo apt-get install sharutils
   # we only want these to be called if we use install_ig_handle
   install_spinnaker_sdk  
@@ -129,6 +130,7 @@ enable_passwordless_sudo()
 
 install_spinnaker_sdk()
 {
+  
   echo "Installing spinnaker SDK..."
   LB_DIR="spinnaker"
   mkdir -p $DEPS_DIR
@@ -138,12 +140,14 @@ install_spinnaker_sdk()
   sudo apt-get install ros-$ROS_DISTRO-image-exposure-msgs
   sudo apt-get install ros-$ROS_DISTRO-wfov-camera-msgs
   sudo apt-get install ros-$ROS_DISTRO-image-proc
+  
   # sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 
 
   if [ ! -d "$LB_DIR" ]; then
     echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
     mkdir -p $LB_DIR
     cd $LB_DIR
+    
     # Eventually replace with better links. Currently in adthoms Dropbox
     if [ "$ROS_DISTRO" = "kinetic" ]; then
       # gets the file for spinnekar from the google drive folder we have
@@ -166,10 +170,12 @@ install_spinnaker_sdk()
     if [ "$ROS_DISTRO" = "kinetic" ]; then      
       gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi          
       tar fxv spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
+      rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
       cd spinnaker-2.0.0.146-amd64
     elif [ "$ROS_DISTRO" = "melodic" ]; then
-     gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF     
-     tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
+      gdown --id 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF
+      tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
+      rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
       cd spinnaker-2.4.0.143-amd64
     fi
     sudo sh install_spinnaker.sh
@@ -238,12 +244,13 @@ install_mti_sdk()
   cd $MT_DIR  
   gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z     
   tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz  
-  cd MT_Software_Suite_linux-x64_2021.2  
+  
   tar xvf mtmanager_linux-x64_2021.2.tar.gz
   tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
   rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz
   rm -rf mtmanager_linux-x64_2021.2.tar.gz
   rm -rf magfieldmapper_linux-x64_2021.2.tar.gz 
+  cd MT_Software_Suite_linux-x64_2021.2  
   chmod +x mtsdk_linux-x64_2021.2.sh
   bash mtsdk_linux-x64_2021.2.sh
     
