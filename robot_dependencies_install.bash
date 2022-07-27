@@ -79,8 +79,7 @@ update_udev_ig2()
 }
 
 install_ig_handle()
-{
-  
+{  
   cd /home/"$USER"/catkin_ws/src/
   echo "Installing ig-handle driver and dependencies..."
   git clone git@github.com:BEAMRobotics/ig_handle.git   

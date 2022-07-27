@@ -147,6 +147,16 @@ install_routine()
         echo "Installing drivers for $ROBOT..."
         install_ig_handle
         install_dt100
+      else
+        echo "Specified Beam Robot Does not exist and no robot drivers/dependencies were installed"
+        echo "Do you wish to continue? (y/n):"
+        while read ans; do
+            case "$ans" in
+                y) break;;
+                n) exit; break;;
+                *) echo "(y/n):";;
+            esac
+        done
       fi
     fi
 
@@ -168,11 +178,7 @@ install_routine()
         echo "Catkin Directory not created"
         exit
     fi
-
     
-
-    
- 
     # Compile 
     echo "Beam robotics installation completed. Compiling catkin workspace..."
     compile
