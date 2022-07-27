@@ -18,7 +18,7 @@ install_dataspeed()
 
 install_gdown()
 {
-  sudo apt install install_python_pip
+  sudo apt install python-pip
   pip install gdown
   pip install --upgrade gdown
 }

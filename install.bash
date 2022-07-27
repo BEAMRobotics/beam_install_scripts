@@ -81,13 +81,8 @@ print_usage()
 
 install_routine() 
 {
-    sudo -v
-
-    
-    # allows for pulling from google drive using a sharable link
-    sudo apt install python-pip
-    
-
+    sudo -v    
+   
     # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
     source $INSTALL_SCRIPTS/identify_environment.bash
 
