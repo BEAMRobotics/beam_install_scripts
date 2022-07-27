@@ -86,8 +86,7 @@ install_routine()
     
     # allows for pulling from google drive using a sharable link
     sudo apt install python-pip
-    pip install gdown
-    pip install --upgrade gdown
+    
 
     # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
     source $INSTALL_SCRIPTS/identify_environment.bash
@@ -95,6 +94,7 @@ install_routine()
     # Import functions to install required dependencies
     source $INSTALL_SCRIPTS/beam_dependencies_install.bash
     install_gcc7
+    
 
     # source catkin setup script
     source $INSTALL_SCRIPTS/catkin_setup.bash
@@ -106,6 +106,7 @@ install_routine()
     bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
     # Install development machine dependencies
+    install_gdown
     install_cmake   
     install_qwt    
     install_catch2    
@@ -120,28 +121,20 @@ install_routine()
     install_json    
     install_dbow3    
     install_opencv4    
-    install_docker    
-    # install_gazebo   
+    install_docker   
     
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
-      install_pytorch
-      
+      install_pytorch      
     fi
-
-    
 
     if [ $UBUNTU_CODENAME = xenial ]; then
       echo "Installing gflags and ladybug sdk..."
       install_gflags_from_source
-      install_ladybug_sdk
-       
-    fi   
-
-   
+      install_ladybug_sdk       
+    fi      
 
     if [ ! -z "$ROBOT" ]; then
-      # executes the main install scripts for the robot
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
       if [ "$ROBOT" = "ig-handle" ]; then
         echo "Installing drivers for $ROBOT..."
@@ -149,7 +142,6 @@ install_routine()
         install_ig_handle
       elif [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
-        # same drivers are the handle bu this is for the lidar system that is not hand held. Although this code repeats it is done to seperate the systems
         install_ig_handle
       elif [ "$ROBOT" = "pierre" ]; then
         echo "Installing drivers for $ROBOT..."

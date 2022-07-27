@@ -9,8 +9,6 @@ catkin_build()
   catkin build
 }
 
-
-
 install_chrony_deps()
 {
   echo "installing chrony and its dependencies"
@@ -84,12 +82,10 @@ install_ig_handle()
 {
   
   cd /home/"$USER"/catkin_ws/src/
-  echo "Installing Ig Handle files"
-  git clone git@github.com:BEAMRobotics/ig_handle.git 
-  pip install gdown
-  pip install --upgrade gdown
+  echo "Installing ig-handle driver and dependencies..."
+  git clone git@github.com:BEAMRobotics/ig_handle.git   
   sudo apt-get install sharutils
-  # we only want these to be called if we use install_ig_handle
+  
   install_spinnaker_sdk  
   install_mti_sdk
   install_arduino_teensyduino
@@ -139,20 +135,16 @@ install_spinnaker_sdk()
   sudo apt-get install ros-$ROS_DISTRO-image-common
   sudo apt-get install ros-$ROS_DISTRO-image-exposure-msgs
   sudo apt-get install ros-$ROS_DISTRO-wfov-camera-msgs
-  sudo apt-get install ros-$ROS_DISTRO-image-proc
-  
+  sudo apt-get install ros-$ROS_DISTRO-image-proc  
   # sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 
 
   if [ ! -d "$LB_DIR" ]; then
     echo "Don't have Spinnaker SDK Directory, creating & downloading SDK..."
     mkdir -p $LB_DIR
-    cd $LB_DIR
-    
-    # Eventually replace with better links. Currently in adthoms Dropbox
+    cd $LB_DIR        
     if [ "$ROS_DISTRO" = "kinetic" ]; then
-      # gets the file for spinnekar from the google drive folder we have
+      # download Spinnaker SDK from sri_lab/robotics/software/apis/spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
       gdown --id 1se0fe_gu2IOxQHwVEdKLcOANbWdqoAAi 
-      # extracts the files we have retrieved and places them in a directory with the given file names       
       tar fxv spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz
       rm -rf spinnaker-2.0.0.146-Ubuntu16.04-amd64-pkg.tar.gz?dl=0      
       cd spinnaker-2.0.0.146-amd64
@@ -185,12 +177,14 @@ install_spinnaker_sdk()
 
 install_arduino_teensyduino()
 {
+  
+  echo "Installing arduino and Teensyduino..."
+
   echo "Installing rosserial..."
   sudo apt-get install ros-$ROS_DISTRO-rosserial-arduino
   sudo apt-get install ros-$ROS_DISTRO-rosserial
   echo "rosserial successfully installed."
 
-  echo "Installing arduino and Teensyduino"
   wget https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz  
   wget https://www.pjrc.com/teensy/td_153/TeensyduinoInstall.linux64  
   wget https://www.pjrc.com/teensy/00-teensy.rules  
@@ -198,7 +192,7 @@ install_arduino_teensyduino()
   tar -xf arduino-1.8.13-linux64.tar.xz  
   chmod 755 TeensyduinoInstall.linux64  
   ./TeensyduinoInstall.linux64 --dir=arduino-1.8.13 
-   
+   echo "arduino and Teensyduino successfully installed"
 }
 
 install_virtual_box()
@@ -217,10 +211,11 @@ install_dt100()
 {
   echo "Installing dt100 dependencies..."
   install_virtual_box
-  
+  # download Windows XP 32 DT100 virtual machine from sri_lab/robotics/software/vms/Windows_XP_32_DT100.ova
+  cd /home/$USER/catkin_ws/src
+  git clone git@github.com:BEAMRobotics/dt100_driver.git  
   VM_DIR="/home/$USER/virtual_machines/"
   mkdir -p $VM_DIR
-
   cd $VM_DIR
   if [ ! -d "/home/$USER/VirtualBox\ VMs/Windows_XP_32_DT100" ]; then
     if [ ! -f "Windows_XP_32_DT100.ova" ]; then
@@ -232,27 +227,33 @@ install_dt100()
       echo "virtual machine has already been imported."
     fi
   fi
-  echo "dt100 dependencies successfully installed."
+  echo "dt100 driver and dependencies successfully installed."
 }
 
 
 install_mti_sdk()
 {
+  echo "Installing MTI SDK..."
   # creates a directory to store the MTI software
   MT_DIR="MTIsoftware"  
   mkdir -p $MT_DIR
+
   cd $MT_DIR  
+
   gdown --id 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z     
   tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz 
   rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz 
+
   cd MT_Software_Suite_linux-x64_2021.2 
+
   tar xvf mtmanager_linux-x64_2021.2.tar.gz
-  tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
-  
+  tar xvf magfieldmapper_linux-x64_2021.2.tar.gz  
   rm -rf mtmanager_linux-x64_2021.2.tar.gz
   rm -rf magfieldmapper_linux-x64_2021.2.tar.gz 
    
   chmod +x mtsdk_linux-x64_2021.2.sh
   bash mtsdk_linux-x64_2021.2.sh
+
+  echo "MTI SDK sucessfully installed."
     
 }

@@ -18,7 +18,11 @@ Beam repo containing all required install scripts. For installation information 
 - PCL 1.11.1
 
 ## Depenedencies and Versions (Beam Robots)
-- Spinnaker 2.0.0.146
-- MTI Software Suite Linux 2021
-- Windows XP 32 DT 100
-- Virtual Box
+[ig_handle} (https://github.com/BEAMRobotics/ig_handle.git) driver (master branch)
+-- Spinnaker 2.0.0.146 (xenial) / Spinnaker 2.4.0.143 (bionic)
+-- MTI Software Suite Linux 2021
+-- arduino-1.8.13-linux64
+
+- [DT 100](https://github.com/BEAMRobotics/dt100_driver.git) driver (master branch)
+-- Virtual Box
+-- Windows_XP_32_DT100.ova (Windows XP virtual macine containing DT100_v1_05_07.exe)

@@ -16,6 +16,13 @@ install_dataspeed()
     fi
 }
 
+install_gdown()
+{
+  sudo apt install install_python_pip
+  pip install gdown
+  pip install --upgrade gdown
+}
+
 make_with_progress()
 {
     if [ -z "$CONTINUOUS_INTEGRATION" ]; then
