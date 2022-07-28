@@ -17,15 +17,23 @@ config_bashrc()
 {
   echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
 
-  echo "Enter the path to your catkin workspace (e.g., /home/user/catkin_ws)"
-  read ans
-  echo "adding the following to your bashrc:"
-  echo "  source $ans/devel/setup.bash"
-  echo "  ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH"
+  echo "Enter the path to your catkin workspace. Press enter to accept the default location '$CATKIN_DIR' "
+  read custom_catkin_ws
 
-  echo "source $ans/devel/setup.bash" >> ~/.bashrc
-  echo "ROS_PACKAGE_PATH=$ans/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH" >> ~/.bashrc
-  
+  if [-z "$custom_catkin_ws" ]; then
+    CATKIN_DIR=custom_catkin_ws
+  fi
+
+  BASHRC_PATH_STRING="source $CATKIN_DIR/devel/setup.bash"
+  ROS_PACKAGE_PATH_STRING="ROS_PACKAGE_PATH=$CATKIN_DIR/src:/opt/ros/$ROS_DISTRO/share:$ROS_PACKAGE_PATH"
+
+  echo "adding the following to your bashrc:"
+  echo "  $BASHRC_PATH_STRING"
+  echo "  $ROS_PACKAGE_PATH_STRING"
+
+  echo "$BASHRC_PATH_STRING" >> ~/.bashrc
+  echo "$ROS_PACKAGE_PATH_STRING" >> ~/.bashrc
+
   echo "Done configuring bashrc."
   echo "Sourcing bashrc"
   source "/home/$USER/.bashrc"

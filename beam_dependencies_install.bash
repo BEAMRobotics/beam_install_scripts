@@ -16,9 +16,14 @@ install_dataspeed()
     fi
 }
 
-install_gdown()
+install_python_pip()
 {
   sudo apt install python-pip
+}
+
+install_gdown()
+{
+  install_python_pip
   pip install gdown
   pip install --upgrade gdown
 }
@@ -480,7 +485,7 @@ install_json()
     echo "Found nlohmann. Not installing"
     return
   else 
-    echo "nlohmann not found in /usr/local/include, installing now."  
+    echo "nlohmann not found in /usr/local/include, installing now."
   fi
 
   JSON_DIR="json"
@@ -509,7 +514,8 @@ install_ladybug_sdk()
     LB_DIR="ladybug"
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
-    sudo apt-get -y install libraw1394-11 libraw1394-dev libraw1394-tools libgtkmm-2.4-1v5 libglademm-2.4-1v5 libgtkglextmm-x11-1.2-dev libgtkglextmm-x11-1.2 libusb-1.0-0
+    sudo apt-get -y install libraw1394-11 libraw1394-dev libraw1394-tools libgtkmm-2.4-1v5 \ 
+    libglademm-2.4-1v5 libgtkglextmm-x11-1.2-dev libgtkglextmm-x11-1.2 libusb-1.0-0
 
     if [ ! -d "$LB_DIR" ]; then
         echo "Don't have Ladybug SDK Directory, creating & downloading SDK..."
@@ -521,7 +527,7 @@ install_ladybug_sdk()
         sudo cp -a usr/. /usr/local/
         echo "Ladybug SDK successfully installed in /usr/local/"
     else
-	echo "Already have ladybug folder..."
+	      echo "Already have ladybug folder..."
         cd $LB_DIR
         sudo dpkg -x ladybug-1.16.3.48_amd64.deb .
         sudo cp -a usr/. /usr/local/
@@ -624,7 +630,7 @@ install_opencv4()
   else 
       echo "Installing opencv4 to system"
       sudo make install > /dev/null
-      echo "removing opencv4 src/build files"
+      # echo "removing opencv4 src/build files"
       # rm -rf $SRC_PATH/$OPENCV_DIR
       # rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
   fi
@@ -633,7 +639,7 @@ install_opencv4()
 
 install_cuda()
 {
-  echo "installing cuda..."
+  echo "Installing cuda..."
   sudo apt-get purge nvidia-cuda*
   wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-ubuntu1604.pin
   sudo mv cuda-ubuntu1604.pin /etc/apt/preferences.d/cuda-repository-pin-600
@@ -642,6 +648,7 @@ install_cuda()
   sudo apt-key add /var/cuda-repo-ubuntu1604-11-2-local/7fa2af80.pub
   sudo apt-get update
   sudo apt-get -y install cuda
+  echo "cuda successfully installed."
 }
 
 install_pytorch()
@@ -714,10 +721,10 @@ install_sophus()
   sudo apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
   if [ ! -d "$SOPHUS_DIR" ]; then
     git clone git@github.com:strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
-    git checkout 936265f # required by basalt
   fi
 
   cd $SOPHUS_DIR
+  git checkout 936265f # required by basalt
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR

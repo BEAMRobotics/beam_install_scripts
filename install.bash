@@ -22,12 +22,6 @@ main()
 menu()
 {
     echo "Running this script will delete your /build /devel and /logs folders in your $CATKIN_DIR directory and re-build them."
-    echo "Also, this script assumes the following things:"
-    echo "  - Your ROS version is $ROS_DISTRO"
-    echo "  - Your catkin workspace is located at: $CATKIN_DIR"
-    echo "  - Catkin tools is installed"
-    echo "  - Your bashrc sources $CATKIN_DIR/devel/setup.bash"
-    echo "If any of the above assumptions are not true, the following script will make them so."
     echo "Do you wish to continue? (y/n):"
 
     while read ans; do
@@ -42,12 +36,14 @@ menu()
 parse_arguments()
 {
   # defaults
+  GTSAM=false
   PYTORCH=false
-  ROBOT="ig-handle"
+  ROBOT=""
 
   echo "Parsing any optional commandline arguments..."
   while getopts ":pr:" arg; do
     case $arg in
+      g) GTSAM=true; echo "-g) GTSAM option <$GTSAM> selected...";;
       p) PYTORCH=true; echo "-p) Pytorch option <$PYTORCH> selected...";;
       r) ROBOT="$OPTARG"; verify_robot;;
       \?) print_usage;;
@@ -55,9 +51,9 @@ parse_arguments()
   done
 }
 
-verify_robot() 
+verify_robot()
 {
-  declare -a robot_list=("ig2")
+  declare -a robot_list=("ig-handle" "ig2" "pierre")
   if printf '%s\n' "${robot_list[@]}" | grep -P "$ROBOT" > /dev/null; then
     echo "-r) Robot option <$ROBOT> selected..."
   else
@@ -66,12 +62,13 @@ verify_robot()
   fi
 }
 
-print_usage() 
+print_usage()
 {
   echo "Usage:"
-  echo "   -p: install pytorch"
-  echo "   -r: install software on a specific beam robot"
-  printf "       options: "
+  echo "  -g: install GTSAM"
+  echo "  -p: install pytorch"
+  echo "  -r: install software on a specific beam robot"
+  printf "    options: "
   for val in ${robot_list[@]}; do
     printf "$val "
   done
@@ -79,17 +76,19 @@ print_usage()
   exit 1
 }
 
-install_routine() 
+install_routine()
 {
-    sudo -v    
-   
+    sudo -v
+
+    # Ensure wget is available
+    sudo apt-get install -qq wget > /dev/null
+
     # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
     source $INSTALL_SCRIPTS/identify_environment.bash
 
     # Import functions to install required dependencies
     source $INSTALL_SCRIPTS/beam_dependencies_install.bash
     install_gcc7
-    
 
     # source catkin setup script
     source $INSTALL_SCRIPTS/catkin_setup.bash
@@ -98,42 +97,49 @@ install_routine()
     bash $INSTALL_SCRIPTS/ros_install.bash
     create_catkin_ws
 
+    # Install ROS dependencies
     bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
+    while read ans; do
+        case "$ans" in
+            y) break;;
+            n) exit; break;;
+            *) echo "(y/n):";;
+        esac
+    done
     # Install development machine dependencies
     install_gdown
-    install_cmake   
-    install_qwt    
-    install_catch2    
-    install_eigen3    
-    install_sophus    
-    install_ceres    
-    install_gtsam   
-    install_pcl    
-    install_geographiclib    
-    install_pcap    
-    install_parmetis    
-    install_json    
-    install_dbow3    
-    install_opencv4    
-    install_docker   
-    
+    install_cmake
+    install_catch2
+    install_eigen3
+    install_sophus
+    install_ceres
+    install_pcl
+    install_geographiclib
+    install_pcap
+    install_parmetis
+    install_json
+    install_dbow3
+    install_opencv4
+    install_docker
+
+    if [ "$GTSAM" = true ]; then
+      install_gtsam
+    fi
+
     if [ "$PYTORCH" = true ]; then
-      echo "Installing pytorch..."
-      install_pytorch      
+      install_pytorch
     fi
 
     if [ $UBUNTU_CODENAME = xenial ]; then
-      echo "Installing gflags and ladybug sdk..."
       install_gflags_from_source
-      install_ladybug_sdk       
-    fi      
+      install_ladybug_sdk
+    fi
 
     if [ ! -z "$ROBOT" ]; then
       source $INSTALL_SCRIPTS/robot_dependencies_install.bash
       if [ "$ROBOT" = "ig-handle" ]; then
         echo "Installing drivers for $ROBOT..."
-        # contains the drivers for the hand held lidar scanner
         install_ig_handle
       elif [ "$ROBOT" = "ig2" ]; then
         echo "Installing drivers for $ROBOT..."
@@ -142,39 +148,29 @@ install_routine()
         echo "Installing drivers for $ROBOT..."
         install_ig_handle
         install_dt100
-      else
-        echo "Specified Beam Robot Does not exist and no robot drivers/dependencies were installed"
-        echo "Do you wish to continue? (y/n):"
-        while read ans; do
-            case "$ans" in
-                y) break;;
-                n) exit; break;;
-                *) echo "(y/n):";;
-            esac
-        done
       fi
     fi
 
     # check that ros installed correctly
     ROS_CHECK="$(rosversion -d)"
     if [ "$ROS_CHECK" == "$ROS_DISTRO" ]; then
-        echo "Ros install okay"
+      echo "Ros install okay"
     else
-        echo $ROS_CHECK
-        echo $ROS_DISTRO
-        echo "ROS not installed"
-        exit
+      echo $ROS_CHECK
+      echo $ROS_DISTRO
+      echo "ROS not installed"
+      exit
     fi
 
     # check that catkin_ws was created
     if [ -d "$CATKIN_DIR" ]; then
-        echo "Catkin Directory found"
+      echo "Catkin Directory found"
     else
-        echo "Catkin Directory not created"
-        exit
+      echo "Catkin Directory not created"
+      exit
     fi
-    
-    # Compile 
+
+    # Compile
     echo "Beam robotics installation completed. Compiling catkin workspace..."
     compile
 
