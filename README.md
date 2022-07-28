@@ -23,10 +23,10 @@ Beam repo containing all required install scripts. For installation, please refe
 
 ## Depenedencies and Versions (Beam Robots)
 [ig-handle](https://github.com/BEAMRobotics/ig_handle.git) driver (master branch)
--- Spinnaker 2.0.0.146 (xenial) / Spinnaker 2.4.0.143 (bionic)
--- MTI Software Suite Linux 2021
--- arduino-1.8.13-linux64
+- Spinnaker 2.4.0.143
+- MTI Software Suite Linux 2021
+- arduino-1.8.13-linux64
 
-- [DT 100](https://github.com/BEAMRobotics/dt100_driver.git) driver (master branch)
--- Virtual Box
--- Windows_XP_32_DT100.ova (Windows XP virtual machine containing DT100_v1_05_07.exe)
+[DT 100](https://github.com/BEAMRobotics/dt100_driver.git) driver (master branch)
+- Virtual Box
+- Windows_XP_32_DT100.ova (Windows XP virtual machine containing DT100_v1_05_07.exe)
