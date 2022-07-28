@@ -5,8 +5,8 @@ update_rosdep()
 {
   # Prepare rosdep to install dependencies.
   if [ ! -d /etc/ros/rosdep ]; then
-      echo "Initializing rosdep ..."
-      sudo rosdep init > /dev/null
+    echo "Initializing rosdep ..."
+    sudo rosdep init > /dev/null
   fi
   echo "Updating rosdep ..."
   rosdep update > /dev/null

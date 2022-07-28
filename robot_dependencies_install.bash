@@ -48,6 +48,7 @@ update_udev()
   sudo cp $CATKIN_DIR/src/ig_hangle/config/99-ig2_udev.rules /etc/udev/rules.d/
   sudo udevadm control --reload-rules && sudo service udev restart && sudo udevadm trigger
   sudo cp $CATKIN_DIR/src/ig_hangle/config/01-ig2_netplan.yaml /etc/netplan/
+  echo "udev rules copied."
 }
 
 install_ig_handle()
@@ -57,11 +58,13 @@ install_ig_handle()
   echo "Installing ig-handle driver and dependencies..."
 
   if [ ! -d "$IG_HANDLE_DIR" ]; then
+    echo "$IG_HANDLE_DIR does not exist, cloning driver..."
     git clone git@github.com:BEAMRobotics/ig_handle.git
+  else
+    echo "$IG_HANDLE_DIR exists."
   fi
 
   sudo apt-get install sharutils
-
   install_spinnaker_sdk
   install_mti_sdk
   install_arduino_teensyduino
@@ -89,8 +92,8 @@ install_husky_packages()
   ros-$ROS_DISTRO-twist-mux* \
   ros-$ROS_DISTRO-lms1xx \
   ros-$ROS_DISTRO-ur-description \
-  # ros-$ROS_DISTRO-joint-state-publisher \
-  # ros-$ROS_DISTRO-joint-state-controller \
+  ros-$ROS_DISTRO-joint-state-publisher \
+  ros-$ROS_DISTRO-joint-state-controller \
   ros-$ROS_DISTRO-diff-drive-controller
 }
 
@@ -113,7 +116,7 @@ install_spinnaker_sdk()
   sudo apt-get install ros-$ROS_DISTRO-image-exposure-msgs
   sudo apt-get install ros-$ROS_DISTRO-wfov-camera-msgs
   sudo apt-get install ros-$ROS_DISTRO-image-proc
-  # sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55 
+  # sudo apt-get install libavcodec57 libavformat57 libswscale4 libswresample2 libavutil55
 
   # download Spinnaker SDK from sri_lab/robotics/software/apis/spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
   if [ ! -d "$SP_SDK_DIR" ]; then

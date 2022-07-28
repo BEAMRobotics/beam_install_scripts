@@ -14,23 +14,23 @@ source $INSTALL_SCRIPTS/identify_environment.bash
 
 main()
 {
-    menu
-    parse_arguments $@
-    install_routine
+  menu
+  parse_arguments $@
+  install_routine
 }
 
 menu()
 {
-    echo "Running this script will delete your /build /devel and /logs folders in your $CATKIN_DIR directory and re-build them."
-    echo "Do you wish to continue? (y/n):"
+  echo "Running this script will delete your /build /devel and /logs folders in your $CATKIN_DIR directory and re-build them."
+  echo "Do you wish to continue? (y/n):"
 
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
+  while read ans; do
+    case "$ans" in
+      y) break;;
+      n) exit; break;;
+      *) echo "(y/n):";;
+    esac
+  done
 }
 
 parse_arguments()
@@ -78,104 +78,97 @@ print_usage()
 
 install_routine()
 {
-    sudo -v
+  sudo -v
 
-    # Ensure wget is available
-    sudo apt-get install -qq wget > /dev/null
+  # Ensure wget is available
+  sudo apt-get install -qq wget > /dev/null
 
-    # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
-    source $INSTALL_SCRIPTS/identify_environment.bash
+  # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
+  source $INSTALL_SCRIPTS/identify_environment.bash
 
-    # Import functions to install required dependencies
-    source $INSTALL_SCRIPTS/beam_dependencies_install.bash
-    install_gcc7
+  # Import functions to install required dependencies
+  source $INSTALL_SCRIPTS/beam_dependencies_install.bash
+  install_gcc7
 
-    # source catkin setup script
-    source $INSTALL_SCRIPTS/catkin_setup.bash
+  # source catkin setup script
+  source $INSTALL_SCRIPTS/catkin_setup.bash
 
-    # Install ROS
-    bash $INSTALL_SCRIPTS/ros_install.bash
-    create_catkin_ws
+  # Install ROS
+  bash $INSTALL_SCRIPTS/ros_install.bash
+  create_catkin_ws
 
-    # Install ROS dependencies
-    bash $INSTALL_SCRIPTS/rosdeps_install.bash
+  # Install ROS dependencies
+  bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
-    while read ans; do
-        case "$ans" in
-            y) break;;
-            n) exit; break;;
-            *) echo "(y/n):";;
-        esac
-    done
-    # Install development machine dependencies
-    install_gdown
-    install_cmake
-    install_catch2
-    install_eigen3
-    install_sophus
-    install_ceres
-    install_pcl
-    install_geographiclib
-    install_pcap
-    install_parmetis
-    install_json
-    install_dbow3
-    install_opencv4
-    install_docker
+  # Install development machine dependencies
+  install_gdown
+  install_cmake
+  install_catch2
+  install_eigen3
+  install_sophus
+  install_ceres
+  install_pcl
+  install_geographiclib
+  install_pcap
+  install_parmetis
+  install_json
+  install_dbow3
+  install_opencv4
+  install_docker
 
-    if [ "$GTSAM" = true ]; then
-      install_gtsam
+  if [ "$GTSAM" = true ]; then
+    install_gtsam
+  fi
+
+  if [ "$PYTORCH" = true ]; then
+    install_pytorch
+  fi
+
+  if [ $UBUNTU_CODENAME = xenial ]; then
+    install_gflags_from_source
+    install_ladybug_sdk
+  fi
+
+  if [ ! -z "$ROBOT" ]; then
+    source $INSTALL_SCRIPTS/robot_dependencies_install.bash
+    if [ "$ROBOT" = "ig-handle" ]; then
+      echo "Installing drivers for $ROBOT..."
+      install_ig_handle
+    elif [ "$ROBOT" = "ig2" ]; then
+      echo "Installing drivers for $ROBOT..."
+      install_ig_handle
+    elif [ "$ROBOT" = "pierre" ]; then
+      echo "Installing drivers for $ROBOT..."
+      install_ig_handle
+      install_dt100
     fi
+  fi
 
-    if [ "$PYTORCH" = true ]; then
-      install_pytorch
-    fi
+  # check that ros installed correctly
+  ROS_CHECK="$(rosversion -d)"
+  if [ "$ROS_CHECK" == "$ROS_DISTRO" ]; then
+    echo "Ros install okay"
+  else
+    echo $ROS_CHECK
+    echo $ROS_DISTRO
+    echo "ROS not installed"
+    exit
+  fi
 
-    if [ $UBUNTU_CODENAME = xenial ]; then
-      install_gflags_from_source
-      install_ladybug_sdk
-    fi
+  # check that catkin_ws was created
+  if [ -d "$CATKIN_DIR" ]; then
+    echo "Catkin Directory found"
+  else
+    echo "Catkin Directory not created"
+    exit
+  fi
 
-    if [ ! -z "$ROBOT" ]; then
-      source $INSTALL_SCRIPTS/robot_dependencies_install.bash
-      if [ "$ROBOT" = "ig-handle" ]; then
-        echo "Installing drivers for $ROBOT..."
-        install_ig_handle
-      elif [ "$ROBOT" = "ig2" ]; then
-        echo "Installing drivers for $ROBOT..."
-        install_ig_handle
-      elif [ "$ROBOT" = "pierre" ]; then
-        echo "Installing drivers for $ROBOT..."
-        install_ig_handle
-        install_dt100
-      fi
-    fi
+  # Compile
+  echo "Beam robotics installation completed. Compiling catkin workspace..."
+  compile
 
-    # check that ros installed correctly
-    ROS_CHECK="$(rosversion -d)"
-    if [ "$ROS_CHECK" == "$ROS_DISTRO" ]; then
-      echo "Ros install okay"
-    else
-      echo $ROS_CHECK
-      echo $ROS_DISTRO
-      echo "ROS not installed"
-      exit
-    fi
-
-    # check that catkin_ws was created
-    if [ -d "$CATKIN_DIR" ]; then
-      echo "Catkin Directory found"
-    else
-      echo "Catkin Directory not created"
-      exit
-    fi
-
-    # Compile
-    echo "Beam robotics installation completed. Compiling catkin workspace..."
-    compile
-
-    # Echo success
-    echo "Catkin workspace successfully compiled. Please open a new terminal to re-source environment variables."
+  # Echo success
+  echo "Catkin workspace successfully compiled. Please open a new terminal to re-source environment variables."
 }
 
 main $@
