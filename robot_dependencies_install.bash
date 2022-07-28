@@ -45,9 +45,9 @@ update_udev()
 {
   # copy udev rules from ig_handle
   echo "copying udev rules..."
-  sudo cp $CATKIN_DIR/src/ig_hangle/config/99-ig2_udev.rules /etc/udev/rules.d/
+  sudo cp $CATKIN_DIR/src/ig_handle/config/99-ig2_udev.rules /etc/udev/rules.d/
   sudo udevadm control --reload-rules && sudo service udev restart && sudo udevadm trigger
-  sudo cp $CATKIN_DIR/src/ig_hangle/config/01-ig2_netplan.yaml /etc/netplan/
+  sudo cp $CATKIN_DIR/src/ig_handle/config/01-ig2_netplan.yaml /etc/netplan/
   echo "udev rules copied."
 }
 
