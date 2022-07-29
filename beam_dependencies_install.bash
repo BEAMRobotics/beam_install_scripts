@@ -5,8 +5,7 @@ DEPS_DIR="/tmp/beam_dependencies"
 
 # This script contains a series of functions to install 'other' dependencies for development machines.
 
-install_dataspeed()
-{
+install_dataspeed() {
   # We want all Dataspeed packages if not Travis
   # The required apt repository was already added in ros_install.bash
   # Also, the required dependency `dbw_mkz_msgs` was already installed there.
@@ -16,20 +15,17 @@ install_dataspeed()
   fi
 }
 
-install_python_pip()
-{
+install_python_pip() {
   sudo apt install python-pip
 }
 
-install_gdown()
-{
+install_gdown() {
   install_python_pip
   pip install gdown
   pip install --upgrade gdown
 }
 
-make_with_progress()
-{
+make_with_progress() {
   if [ -z "$CONTINUOUS_INTEGRATION" ]; then
     local awk_arg="-W interactive"
   fi
@@ -38,8 +34,7 @@ make_with_progress()
   echo "done"
 }
 
-install_gcc7()
-{
+install_gcc7() {
   sudo apt update
   sudo apt install build-essential
 
@@ -57,21 +52,19 @@ install_gcc7()
   sudo ln -s /usr/bin/g++-7 /usr/bin/g++
 }
 
-install_ceres()
-{
+install_ceres() {
   # search for ceres in /usr/local/include
-  if [ -d '/usr/local/include/ceres' ]
-  then
+  if [ -d '/usr/local/include/ceres' ]; then
     echo "Found ceres. Not installing"
     return
   else
-    echo "ceres not found in /usr/local/include, installing now."  
+    echo "ceres not found in /usr/local/include, installing now."
   fi
 
   CERES_DIR="ceres-solver-1.14.0"
   BUILD_DIR="build"
 
-  sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev > /dev/null
+  sudo apt-get -qq install libgoogle-glog-dev libatlas-base-dev >/dev/null
   # this install script is for local machines.
   if (find /usr/local/lib -name libceres.so | grep -q /usr/local/lib); then
     echo "Ceres is already installed."
@@ -95,28 +88,27 @@ install_ceres()
     fi
 
     cd $DEPS_DIR/$CERES_DIR/$BUILD_DIR
-    sudo make -j$NUM_PROCESSORS install > /dev/null
+    sudo make -j$NUM_PROCESSORS install >/dev/null
   fi
 }
 
-install_protobuf()
-{
+install_protobuf() {
   LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
   # this install script is for local machines.
-  if (ldconfig -p | grep -q libprotobuf.so.11 ); then
+  if (ldconfig -p | grep -q libprotobuf.so.11); then
     echo "Protobuf is already installed."
   else
     echo "Installing Protobuf 3.1.0"
     # tools needed to build protobuf
-    sudo apt-get install -qq libtool unzip  > /dev/null
+    sudo apt-get install -qq libtool unzip >/dev/null
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
     PROTOBUF_DIR="protobuf-3.1.0"
     if [[ ! -d "$PROTOBUF_DIR" ]]; then
-          local zipfile="protobuf-cpp-3.1.0.zip"
-          wget "https://github.com/google/protobuf/releases/download/v3.1.0/$zipfile"
-          unzip -qq "$zipfile"
-          rm -f "$zipfile"
+      local zipfile="protobuf-cpp-3.1.0.zip"
+      wget "https://github.com/google/protobuf/releases/download/v3.1.0/$zipfile"
+      unzip -qq "$zipfile"
+      rm -f "$zipfile"
     fi
     cd "$PROTOBUF_DIR"
     ./configure -q --prefix /usr/local
@@ -124,21 +116,19 @@ install_protobuf()
     # Check commented out because it takes a lot of time to run all the tests
     # but leaving here in case we ever run into problems
     # make check > /dev/null
-    sudo make install > /dev/null
+    sudo make install >/dev/null
     sudo ldconfig # refresh shared library cache.
     echo "Protobuf successfully installed."
   fi
 }
 
-install_pcap()
-{
+install_pcap() {
   # for velodyne driver
   echo "installing velodyne driver dependencies..."
   sudo apt-get install libpcap-dev
 }
 
-install_pcl()
-{
+install_pcl() {
   PCL_VERSION="1.11.1"
   PCL_DIR="pcl"
   BUILD_DIR="build"
@@ -147,19 +137,18 @@ install_pcl()
   cd $DEPS_DIR
 
   # search for pcl 1.11 in /usr/local/share
-  if [ -d '/usr/local/share/pcl-1.11' ]
-  then
+  if [ -d '/usr/local/share/pcl-1.11' ]; then
     echo "Found pcl 1.11. Not installing"
     return
-  else 
-    echo "pcl 1.11 not found in /usr/local/share, installing now."  
+  else
+    echo "pcl 1.11 not found in /usr/local/share, installing now."
   fi
 
   if [ ! -d "$PCL_DIR" ]; then
     echo "pcl not found... cloning"
     git clone --depth 1 -b pcl-$PCL_VERSION https://github.com/PointCloudLibrary/pcl.git
   fi
-  
+
   cd $PCL_DIR
   if [ ! -d "$BUILD_DIR" ]; then
     echo "Existing build of PCL not found.. building from scratch"
@@ -181,22 +170,21 @@ install_pcl()
       -DBUILD_examples=OFF -DBUILD_tools=OFF -DBUILD_visualization=ON"
     fi
 
-    cmake .. ${PCL_CMAKE_ARGS} > /dev/null
+    cmake .. ${PCL_CMAKE_ARGS} >/dev/null
     make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$PCL_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_geographiclib()
-{
+install_geographiclib() {
   GEOGRAPHICLIB_VERSION="1.49"
   GEOGRAPHICLIB_URL="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-$GEOGRAPHICLIB_VERSION.tar.gz"
   GEOGRAPHICLIB_DIR="GeographicLib-$GEOGRAPHICLIB_VERSION"
   BUILD_DIR="build"
 
-  if (ldconfig -p | grep -q libGeographic.so.17 ); then
+  if (ldconfig -p | grep -q libGeographic.so.17); then
     echo "GeographicLib version $GEOGRAPHICLIB_VERSION is already installed."
   else
     echo "Installing GeographicLib version $GEOGRAPHICLIB_VERSION ..."
@@ -218,20 +206,19 @@ install_geographiclib()
     fi
 
     cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/$BUILD_DIR
-    sudo make -j$NUM_PROCESSORS install > /dev/null
+    sudo make -j$NUM_PROCESSORS install >/dev/null
   fi
 }
 
-install_gtsam()
-{
+install_gtsam() {
   GTSAM_VERSION="4.0.2"
   GTSAM_URL="git@github.com:borglab/gtsam.git"
   GTSAM_DIR="gtsam"
   BUILD_DIR="build"
 
   if (find /usr/local/lib -name libgtsam.so | grep -q /usr/local/lib); then
-  #if (ldconfig -p | grep -q libgtsam.so); then
-      echo "GTSAM version $GTSAM_VERSION is already installed."
+    #if (ldconfig -p | grep -q libgtsam.so); then
+    echo "GTSAM version $GTSAM_VERSION is already installed."
   else
     echo "Installing GTSAM version $GTSAM_VERSION ..."
     mkdir -p $DEPS_DIR
@@ -247,25 +234,24 @@ install_gtsam()
       mkdir -p $BUILD_DIR
       cd $BUILD_DIR
       cmake .. -DCMAKE_BUILD_TYPE=Release \
-      -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_BUILD_WRAP=OFF \
-      -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF  -DGTSAM_BUILD_DOCS=OFF
+        -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_BUILD_WRAP=OFF \
+        -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DGTSAM_BUILD_DOCS=OFF
       make_with_progress -j$NUM_PROCESSORS
     fi
 
     cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
-    sudo make install > /dev/null
+    sudo make install >/dev/null
     echo "GTSAM installed successfully"
   fi
 }
 
-install_liquid-dsp()
-{
+install_liquid-dsp() {
   LIQUID_VERSION="1.3.1"
   LIQUID_URL="http://liquidsdr.org/downloads/liquid-dsp-$LIQUID_VERSION.tar.gz"
 
   if (ldconfig -p | grep -q libliquid.so); then
-      echo "Liquid DSP version $LIQUID_VERSION is already installed."
-      return
+    echo "Liquid DSP version $LIQUID_VERSION is already installed."
+    return
   fi
 
   echo "Installing Liquid DSP version $LIQUID_VERSION ..."
@@ -279,12 +265,11 @@ install_liquid-dsp()
   ./bootstrap.sh
   ./configure
   make_with_progress -j$NUM_PROCESSORS
-  sudo make install > /dev/null
+  sudo make install >/dev/null
   echo "Liquid DSP installed successfully"
 }
 
-install_libwave()
-{
+install_libwave() {
   LIBWAVE_DIR="libwave"
   BUILD_DIR="build"
 
@@ -293,16 +278,15 @@ install_libwave()
   else
     echo "Installing libwave SLAM library"
     # Install dependencies
-    sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs\
-    build-essential cmake
+    sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs build-essential cmake
     mkdir -p $DEPS_DIR
     cd $DEPS_DIR
     if [ -d "$LIBWAVE_DIR" ]; then
-        echo "Libwave directory already cloned"
+      echo "Libwave directory already cloned"
     else
-        echo "Cloning libwave into home directory"
-        git clone --recursive https://github.com/wavelab/libwave.git
-        echo "Success"
+      echo "Cloning libwave into home directory"
+      git clone --recursive https://github.com/wavelab/libwave.git
+      echo "Success"
     fi
 
     cd $LIBWAVE_DIR
@@ -314,19 +298,17 @@ install_libwave()
     fi
 
     cd $DEPS_DIR/$LIBWAVE_DIR/$BUILD_DIR
-    sudo make -j$NUM_PROCESSORS install > /dev/null
+    sudo make -j$NUM_PROCESSORS install >/dev/null
   fi
 }
 
-install_catch2()
-{
+install_catch2() {
   # search for Catch2 in /usr/local/share
-  if [ -d '/usr/local/share/Catch2' ]
-  then
+  if [ -d '/usr/local/share/Catch2' ]; then
     echo "Found Catch2. Not installing"
     return
-  else 
-    echo "Catch2 not found in /usr/local/share, installing now."  
+  else
+    echo "Catch2 not found in /usr/local/share, installing now."
   fi
 
   echo "Installing Catch2..."
@@ -348,22 +330,20 @@ install_catch2()
   fi
 
   cd $DEPS_DIR/$CATCH2_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_cmake()
-{
+install_cmake() {
   # get cmake version (first 3 number only, e.g.., 3.14)
-  version=$( cmake --version)
-  version="${version//'cmake version '}"
+  version=$(cmake --version)
+  version="${version//'cmake version '/}"
   version=${version:0:4}
 
   # remove period (e.g., 314)
-  version="${version//'.'}"
+  version="${version//'.'/}"
 
   # if version is greater or qual to 3.14, then we return
-  if(( "$version" >= "314" ))
-  then
+  if (("$version" >= "314")); then
     echo "Cmake version install is greater or equal to min. 3.14. Not installing."
     return
   else
@@ -378,9 +358,9 @@ install_cmake()
 
   #Remove CMake symlink if it exists. This is necessary if doing a re-install
   CMAKE_SYMLINK_PATH="/usr/local/bin/cmake"
-  if [[ -h "$CMAKE_SYMLINK_PATH" ]]; then
+  if [[ -L "$CMAKE_SYMLINK_PATH" ]]; then
     echo "Removing existing CMAKE symbolic link: $CMAKE_SYMLINK_PATH"
-    sudo rm $CMAKE_SYMLINK_PATH  
+    sudo rm $CMAKE_SYMLINK_PATH
   fi
 
   echo $PATH
@@ -395,7 +375,7 @@ install_cmake()
 
   wget "https://cmake.org/files/v$VERSION/cmake-$VERSION.$BUILD-Linux-x86_64.sh"
   sudo mkdir -p /opt/cmake
-  yes | sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake > /dev/null
+  yes | sudo sh cmake-$VERSION.$BUILD-Linux-x86_64.sh --prefix=/opt/cmake >/dev/null
   sudo ln -s "/opt/cmake/cmake-$VERSION.$BUILD-Linux-x86_64/bin/cmake" /usr/local/bin/cmake
   /usr/local/bin/cmake --version
   cmake --version
@@ -404,15 +384,13 @@ install_cmake()
   export PATH="/usr/local/bin:$PATH"
 }
 
-install_eigen3()
-{
+install_eigen3() {
   # search for eigen3 in /usr/local/share
-  if [ -d '/usr/local/share/eigen3' ]
-  then
+  if [ -d '/usr/local/share/eigen3' ]; then
     echo "Found eigen3. Not installing"
     return
-  else 
-    echo "eigen3 not found in /usr/local/share, installing now."  
+  else
+    echo "eigen3 not found in /usr/local/share, installing now."
   fi
 
   EIGEN_DIR="eigen-3.3.7"
@@ -435,16 +413,14 @@ install_eigen3()
   fi
 
   cd $DEPS_DIR/$EIGEN_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_gflags()
-{
+install_gflags() {
   sudo apt-get install libgflags-dev
 }
 
-install_gflags_from_source()
-{
+install_gflags_from_source() {
   GFLAGS_DIR="gflags"
   BUILD_DIR="build"
   mkdir -p $DEPS_DIR
@@ -463,7 +439,7 @@ install_gflags_from_source()
   fi
 
   cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 
   # remove error inducing gtest and gmock (should just exist in /usr/include)
   GTEST_PATH="/usr/local/include/gtest"
@@ -477,14 +453,12 @@ install_gflags_from_source()
   fi
 }
 
-install_json()
-{
+install_json() {
   # search for nlohmann in /usr/local/include
-  if [ -d '/usr/local/include/nlohmann' ]
-  then
+  if [ -d '/usr/local/include/nlohmann' ]; then
     echo "Found nlohmann. Not installing"
     return
-  else 
+  else
     echo "nlohmann not found in /usr/local/include, installing now."
   fi
 
@@ -506,11 +480,10 @@ install_json()
   fi
 
   cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_ladybug_sdk()
-{
+install_ladybug_sdk() {
   LB_DIR="ladybug"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
@@ -535,15 +508,13 @@ install_ladybug_sdk()
   fi
 }
 
-install_dbow3()
-{
+install_dbow3() {
   # search for DBow3 in /usr/local/include
-  if [ -d '/usr/local/include/DBow3' ]
-  then
+  if [ -d '/usr/local/include/DBow3' ]; then
     echo "Found DBow3. Not installing"
     return
-  else 
-    echo "DBow3 not found in /usr/local/include, installing now."  
+  else
+    echo "DBow3 not found in /usr/local/include, installing now."
   fi
 
   DBOW_DIR="DBow3"
@@ -564,25 +535,22 @@ install_dbow3()
   fi
 
   cd $DEPS_DIR/$DBOW_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_opencv4()
-{
+install_opencv4() {
   # search for opencv4 in /usr/local/share
-  if [ -d '/usr/local/share/opencv4' ]
-  then
+  if [ -d '/usr/local/share/opencv4' ]; then
     echo "Found opencv4. Not installing"
     return
-  else 
-    echo "opencv4 not found in /usr/local/share, installing now."  
+  else
+    echo "opencv4 not found in /usr/local/share, installing now."
   fi
 
   SRC_PATH=$DEPS_DIR
 
   # check if opencv src path set, if true then we will clone there
-  if [ -z "$OPENCV_SRC_PATH" ]; 
-  then 
+  if [ -z "$OPENCV_SRC_PATH" ]; then
     echo "cloning opencv4 to $DEPS_DIR"
   else
     echo "cloning opencv4 to $OPENCV_SRC_PATH"
@@ -622,22 +590,20 @@ install_opencv4()
   fi
 
   cd $SRC_PATH/$OPENCV_DIR/$BUILD_DIR
-  make_with_progress -j$NUM_PROCESSORS 
+  make_with_progress -j$NUM_PROCESSORS
 
-  if(( $INSTALL_OPENCV4_LOCALLY == 1 ))
-  then
+  if (($INSTALL_OPENCV4_LOCALLY == 1)); then
     echo "Not installing opencv4 to system"
   else
     echo "Installing opencv4 to system"
-    sudo make install > /dev/null
+    sudo make install >/dev/null
     # echo "removing opencv4 src/build files"
     # rm -rf $SRC_PATH/$OPENCV_DIR
     # rm -rf $SRC_PATH/$OPENCV_CONTRIB_DIR
   fi
 }
 
-install_cuda()
-{
+install_cuda() {
   echo "Installing cuda..."
   sudo apt-get purge nvidia-cuda*
   wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1604/x86_64/cuda-ubuntu1604.pin
@@ -650,8 +616,7 @@ install_cuda()
   echo "cuda successfully installed."
 }
 
-install_pytorch()
-{
+install_pytorch() {
   if test -f "/usr/bin/python3.7"; then
     echo "Python version 3.7 found."
   else
@@ -680,8 +645,7 @@ install_pytorch()
   fi
 }
 
-install_pytorch_cuda()
-{
+install_pytorch_cuda() {
   if test -f "/usr/bin/python3.7"; then
     echo "Python version 3.7 found."
   else
@@ -710,10 +674,9 @@ install_pytorch_cuda()
   fi
 }
 
-install_sophus()
-{
+install_sophus() {
   SOPHUS_DIR="Sophus"
-  BUILD_DIR="build" 
+  BUILD_DIR="build"
   mkdir -p $DEPS_DIR
   cd $DEPS_DIR
 
@@ -732,11 +695,10 @@ install_sophus()
   fi
 
   cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
-  sudo make install > /dev/null
+  sudo make install >/dev/null
 }
 
-install_teaserpp()
-{
+install_teaserpp() {
   TEASERPP_DIR="TEASER-plusplus"
   BUILD_DIR="build"
 
@@ -752,16 +714,15 @@ install_teaserpp()
   if [ ! -d "$BUILD_DIR" ]; then
     mkdir -p $BUILD_DIR
     cd $BUILD_DIR
-    cmake .. > /dev/null
+    cmake .. >/dev/null
     make_with_progress -j$NUM_PROCESSORS
   fi
 
   cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install > /dev/null
+  sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_docker()
-{
+install_docker() {
   # installation process follows https://docs.docker.com/engine/install/ubuntu/
 
   # uninstall old versions
@@ -770,18 +731,18 @@ install_docker()
   # set up the repository
   sudo apt-get update
   sudo apt-get install \
-      apt-transport-https \
-      ca-certificates \
-      curl \
-      gnupg \
-      lsb-release
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
 
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-  sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg |
+    sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
   echo \
-  "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list >/dev/null
 
   # install Docker Engine
   sudo apt-get update
@@ -789,27 +750,24 @@ install_docker()
 
   # version 5:20.10.7~3-0 is stable on xenial and bionic
   sudo apt-get install docker-ce=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME \
-  docker-ce-cli=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME containerd.io
+    docker-ce-cli=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME containerd.io
 
   # test install
-  sudo docker run hello-world 
+  sudo docker run hello-world
 
-  # pull docker images required for beam robotics 
+  # pull docker images required for beam robotics
   sudo docker pull stereolabs/kalibr
 }
 
-install_qwt()
-{
+install_qwt() {
   sudo apt-get install libqwt-dev
 }
 
-install_parmetis()
-{
+install_parmetis() {
   sudo apt-get install libparmetis-dev
 }
 
-install_gazebo()
-{
+install_gazebo() {
   # tested with ros melodic
   sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
   wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
@@ -818,9 +776,9 @@ install_gazebo()
   sudo apt install gazebo11-common
   sudo apt install libgazebo11
   sudo apt-get install ros-$ROS_DISTRO-gazebo-ros ros-$ROS_DISTRO-gazebo-plugins
-  sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control  
+  sudo apt-get install ros-$ROS_DISTRO-gazebo-ros-pkgs ros-$ROS_DISTRO-gazebo-ros-control
 
-  # husky 
+  # husky
   sudo apt-get install ros-$ROS_DISTRO-husky-desktop ros-$ROS_DISTRO-husky-description ros-$ROS_DISTRO-husky-viz
   sudo apt-get install ros-$ROS_DISTRO-husky-simulator
 
@@ -830,11 +788,11 @@ install_gazebo()
 
   cd $CATKIN_DIR/src
   if [ ! -d "roben_description" ]; then
-    echo "cloning roben_description..." 
-    git clone git@github.com:BEAMRobotics/roben_description.git 
+    echo "cloning roben_description..."
+    git clone git@github.com:BEAMRobotics/roben_description.git
   fi
   if [ ! -d "roben_simulation" ]; then
-    echo "cloning roben_simulation..." 
+    echo "cloning roben_simulation..."
     git clone git@github.com:BEAMRobotics/roben_simulation.git
   fi
 

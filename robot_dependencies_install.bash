@@ -3,22 +3,19 @@ set -e
 
 # This script contains a series of functions to install dependencies for beam robots.
 
-catkin_build()
-{
+catkin_build() {
   cd $CATKIN_DIR
   catkin build
 }
 
-install_chrony_deps()
-{
+install_chrony_deps() {
   echo "installing chrony and its dependencies"
   sudo dpkg --configure -a
   sudo apt-get update
   sudo apt-get install gpsd gpsd-clients chrony
 }
 
-install_ximea_deps()
-{
+install_ximea_deps() {
   echo "installing ximea dependencies..."
   cd ~/
   mkdir tmp
@@ -41,8 +38,7 @@ install_ximea_deps()
   sudo gpasswd -a $USER realtime
 }
 
-update_udev()
-{
+update_udev() {
   # copy udev rules from ig_handle
   echo "copying udev rules..."
   sudo cp $CATKIN_DIR/src/ig_handle/config/99-ig2_udev.rules /etc/udev/rules.d/
@@ -51,8 +47,7 @@ update_udev()
   echo "udev rules copied."
 }
 
-install_ig_handle()
-{
+install_ig_handle() {
   IG_HANDLE_DIR="ig_handle"
   cd $CATKIN_DIR/src/
   echo "Installing ig-handle driver and dependencies..."
@@ -71,40 +66,35 @@ install_ig_handle()
   update_udev
 }
 
-install_gps()
-{
+install_gps() {
   echo "installing GPS piksi deps..."
   yes | source $INSTALL_SCRIPTS/install_piksi_deps.bash
 }
 
-install_um7()
-{
+install_um7() {
   echo "installing um7 driver..."
   sudo apt-get install ros-$ROS_DISTRO-um7 #install ros driver
   sudo apt-get install ros-$ROS_DISTRO-geographic-msgs
 }
 
-install_husky_packages()
-{
+install_husky_packages() {
   echo "installing husky dependencies..."
   sudo apt-get install ros-$ROS_DISTRO-controller-manager* \
-  ros-$ROS_DISTRO-teleop-* \
-  ros-$ROS_DISTRO-twist-mux* \
-  ros-$ROS_DISTRO-lms1xx \
-  ros-$ROS_DISTRO-ur-description \
-  ros-$ROS_DISTRO-joint-state-publisher \
-  ros-$ROS_DISTRO-joint-state-controller \
-  ros-$ROS_DISTRO-diff-drive-controller
+    ros-$ROS_DISTRO-teleop-* \
+    ros-$ROS_DISTRO-twist-mux* \
+    ros-$ROS_DISTRO-lms1xx \
+    ros-$ROS_DISTRO-ur-description \
+    ros-$ROS_DISTRO-joint-state-publisher \
+    ros-$ROS_DISTRO-joint-state-controller \
+    ros-$ROS_DISTRO-diff-drive-controller
 }
 
-enable_passwordless_sudo()
-{
+enable_passwordless_sudo() {
   #sudo echo 'robot ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
   echo "robot ALL=(ALL) NOPASSWD:ALL" | sudo tee -a /etc/sudoers
 }
 
-install_spinnaker_sdk()
-{
+install_spinnaker_sdk() {
   echo "Installing Spinnaker SDK..."
   SP_DIR="spinnaker"
   SP_SDK_DIR="spinnaker-2.4.0.143-amd64"
@@ -131,8 +121,7 @@ install_spinnaker_sdk()
   echo "Spinnaker SDK successfully installed."
 }
 
-install_arduino_teensyduino()
-{
+install_arduino_teensyduino() {
   echo "Installing arduino and Teensyduino..."
   sudo apt-get install ros-$ROS_DISTRO-rosserial
   sudo apt-get install ros-$ROS_DISTRO-rosserial-arduino
@@ -147,8 +136,7 @@ install_arduino_teensyduino()
   echo "arduino and Teensyduino successfully installed."
 }
 
-install_virtual_box()
-{
+install_virtual_box() {
   echo "Installing Virtual Box..."
   wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -
   wget -q https://www.virtualbox.org/download/oracle_vbox.asc -O- | sudo apt-key add -
@@ -158,8 +146,7 @@ install_virtual_box()
   echo "Virtual Box successfully installed."
 }
 
-install_dt100()
-{
+install_dt100() {
   echo "Installing DT100 driver and dependencies..."
   DT100_DIR="dt100_driver"
   cd $CATKIN_DIR/src/
@@ -188,9 +175,7 @@ install_dt100()
   echo "dt100 driver and dependencies successfully installed."
 }
 
-
-install_mti_sdk()
-{
+install_mti_sdk() {
   echo "Installing MTI SDK..."
   MT_DIR="mti"
   MT_SDK_DIR="MT_Software_Suite_linux-x64_2021.2"

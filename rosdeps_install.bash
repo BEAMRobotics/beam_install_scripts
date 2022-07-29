@@ -7,7 +7,7 @@ ROSPACKAGES_DIR="$REPO_DIR/rospackages"
 echo "Setting up Dataspeed apt and rosdep repositories"
 bash <(wget -q -O - https://bitbucket.org/DataspeedInc/ros_binaries/raw/default/scripts/setup.bash)
 
-rosdep update > /dev/null
+rosdep update >/dev/null
 
 # Install system dependencies listed in ROS packages' package.xml
 # Note: dependencies needed on embedded systems must still be included
