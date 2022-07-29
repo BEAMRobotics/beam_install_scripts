@@ -15,16 +15,6 @@ install_dataspeed() {
   fi
 }
 
-install_python_pip() {
-  sudo apt install python-pip
-}
-
-install_gdown() {
-  install_python_pip
-  pip install gdown
-  pip install --upgrade gdown
-}
-
 make_with_progress() {
   if [ -z "$CONTINUOUS_INTEGRATION" ]; then
     local awk_arg="-W interactive"

@@ -107,7 +107,6 @@ install_routine() {
   bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
   # Install development machine dependencies
-  install_gdown
   install_cmake
   install_catch2
   install_eigen3
