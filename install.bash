@@ -3,7 +3,7 @@ set -e
 # This script is called by install.bash in beam_robotics/scripts
 
 # Specify location of installation scripts
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_SCRIPTS=$SCRIPT_DIR
 
 # Set the repo directory as an environment variable
@@ -12,29 +12,29 @@ export REPO_DIR=$SCRIPT_DIR
 # get UBUNTU_CODENAME, ROS_DISTRO, CATKIN_DIR
 source $INSTALL_SCRIPTS/identify_environment.bash
 
-main()
-{
+main() {
   menu
   parse_arguments $@
   install_routine
 }
 
-menu()
-{
+menu() {
   echo "Running this script will delete your /build /devel and /logs folders in your $CATKIN_DIR directory and re-build them."
   echo "Do you wish to continue? (y/n):"
 
   while read ans; do
     case "$ans" in
-      y) break;;
-      n) exit; break;;
-      *) echo "(y/n):";;
+    y) break ;;
+    n)
+      exit
+      break
+      ;;
+    *) echo "(y/n):" ;;
     esac
   done
 }
 
-parse_arguments()
-{
+parse_arguments() {
   # defaults
   GTSAM=false
   PYTORCH=false
@@ -43,18 +43,26 @@ parse_arguments()
   echo "Parsing any optional commandline arguments..."
   while getopts ":pr:" arg; do
     case $arg in
-      g) GTSAM=true; echo "-g) GTSAM option <$GTSAM> selected...";;
-      p) PYTORCH=true; echo "-p) Pytorch option <$PYTORCH> selected...";;
-      r) ROBOT="$OPTARG"; verify_robot;;
-      \?) print_usage;;
+    g)
+      GTSAM=true
+      echo "-g) GTSAM option <$GTSAM> selected..."
+      ;;
+    p)
+      PYTORCH=true
+      echo "-p) Pytorch option <$PYTORCH> selected..."
+      ;;
+    r)
+      ROBOT="$OPTARG"
+      verify_robot
+      ;;
+    \?) print_usage ;;
     esac
   done
 }
 
-verify_robot()
-{
+verify_robot() {
   declare -a robot_list=("ig-handle" "ig2" "pierre")
-  if printf '%s\n' "${robot_list[@]}" | grep -P "$ROBOT" > /dev/null; then
+  if printf '%s\n' "${robot_list[@]}" | grep -P "$ROBOT" >/dev/null; then
     echo "-r) Robot option <$ROBOT> selected..."
   else
     echo "-r) Robot option <$ROBOT> not available. Exiting."
@@ -62,8 +70,7 @@ verify_robot()
   fi
 }
 
-print_usage()
-{
+print_usage() {
   echo "Usage:"
   echo "  -g: install GTSAM"
   echo "  -p: install pytorch"
@@ -76,12 +83,11 @@ print_usage()
   exit 1
 }
 
-install_routine()
-{
+install_routine() {
   sudo -v
 
   # Ensure wget is available
-  sudo apt-get install -qq wget > /dev/null
+  sudo apt-get install -qq wget >/dev/null
 
   # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
   source $INSTALL_SCRIPTS/identify_environment.bash

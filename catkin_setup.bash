@@ -3,8 +3,7 @@ set -e
 
 # This script contains functions to add/remove a symlink repo from catkin_ws/src
 
-create_catkin_ws()
-{
+create_catkin_ws() {
   # Check if workspace exists
   install_catkin_tools
   if [ -e "$CATKIN_DIR/.catkin_workspace" ] || [ -d "$CATKIN_DIR/.catkin_tools" ]; then
@@ -14,43 +13,39 @@ create_catkin_ws()
     source /opt/ros/$ROS_DISTRO/setup.bash
     mkdir -p "$CATKIN_DIR/src"
     cd "$CATKIN_DIR"
-    catkin init > /dev/null
+    catkin init >/dev/null
     echo "Catkin workspace created successfully."
   fi
 }
 
-install_catkin_tools()
-{
+install_catkin_tools() {
   # Check if already installed
-  if type catkin > /dev/null 2>&1; then
+  if type catkin >/dev/null 2>&1; then
     echo "Catkin tools is already installed"
   else
     echo "Installing catkin tools ..."
     sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros-latest.list'
     wget -qO - http://packages.ros.org/ros.key | sudo apt-key add -
     sudo apt-get -qq update
-    sudo apt-get -qq install python-catkin-tools > /dev/null
+    sudo apt-get -qq install python-catkin-tools >/dev/null
     echo "Catkin tools installed successfully."
   fi
 }
 
-link_routine()
-{
+link_routine() {
   # link repo being installed to catkin_ws
   ln -sfn "$SYMLINKS_REPO_DIR" "$CATKIN_DIR/src"
   echo "Symlink to $SYMLINKS_REPO_DIR created successfully"
 }
 
-unlink_routine()
-{
+unlink_routine() {
   # Need to remove just the symlink for the linked repo
   REPO_BASE_NAME=$(basename "$SYMLINKS_REPO_DIR")
   rm -f "$CATKIN_DIR/src/$REPO_BASE_NAME"
   echo "Symlink $CATKIN_DIR/src/$REPO_BASE_NAME removed successfully"
 }
 
-catkin_clean()
-{
+catkin_clean() {
   rm -rf "$CATKIN_DIR/devel"
   rm -rf "$CATKIN_DIR/build"
   rm -rf "$CATKIN_DIR/install"
@@ -59,8 +54,7 @@ catkin_clean()
   echo "Catkin workspace cleaned"
 }
 
-compile()
-{
+compile() {
   cd "$CATKIN_DIR"
   source /opt/ros/$ROS_DISTRO/setup.bash
   if [ -z "$CONTINUOUS_INTEGRATION" ]; then

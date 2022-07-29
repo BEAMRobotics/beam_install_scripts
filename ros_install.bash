@@ -1,21 +1,19 @@
 #!/bin/bash
-set -e  # exit on first error
+set -e # exit on first error
 
-update_rosdep()
-{
+update_rosdep() {
   # Prepare rosdep to install dependencies.
   if [ ! -d /etc/ros/rosdep ]; then
     echo "Initializing rosdep ..."
-    sudo rosdep init > /dev/null
+    sudo rosdep init >/dev/null
   fi
   echo "Updating rosdep ..."
-  rosdep update > /dev/null
+  rosdep update >/dev/null
   echo "Done updating rosdep."
 }
 
-config_bashrc()
-{
-  echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc
+config_bashrc() {
+  echo "source /opt/ros/$ROS_DISTRO/setup.bash" >>~/.bashrc
 
   echo "Enter the path to your catkin workspace. Press enter to accept the default location '$CATKIN_DIR' "
   read custom_catkin_ws
@@ -31,8 +29,8 @@ config_bashrc()
   echo "  $BASHRC_PATH_STRING"
   echo "  $ROS_PACKAGE_PATH_STRING"
 
-  echo "$BASHRC_PATH_STRING" >> ~/.bashrc
-  echo "$ROS_PACKAGE_PATH_STRING" >> ~/.bashrc
+  echo "$BASHRC_PATH_STRING" >>~/.bashrc
+  echo "$ROS_PACKAGE_PATH_STRING" >>~/.bashrc
 
   echo "Done configuring bashrc."
   echo "Sourcing bashrc"
@@ -50,26 +48,29 @@ echo "Installing ROS $ROS_DISTRO ..."
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 case $UBUNTU_CODENAME in
-  xenial)
-    wget -qO - http://packages.ros.org/ros.key | sudo apt-key add -
-    sudo apt-get -qq update
-    sudo apt-get -qq install ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop > /dev/null ;;
-  bionic)
-    sudo apt install curl
-    curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
-    sudo apt update
-    sudo apt install ros-$ROS_DISTRO-desktop;;
-  *)
-    echo "Unsupported version of Ubuntu detected. Only xenial (16.04.*) and bionic (18.04.*) are supported. Exiting."
-    exit  1
+xenial)
+  wget -qO - http://packages.ros.org/ros.key | sudo apt-key add -
+  sudo apt-get -qq update
+  sudo apt-get -qq install ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop >/dev/null
+  ;;
+bionic)
+  sudo apt install curl
+  curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+  sudo apt update
+  sudo apt install ros-$ROS_DISTRO-desktop
+  ;;
+*)
+  echo "Unsupported version of Ubuntu detected. Only xenial (16.04.*) and bionic (18.04.*) are supported. Exiting."
+  exit 1
+  ;;
 esac
 
-echo "Installing ROS $ROS_DISTRO ..." 
+echo "Installing ROS $ROS_DISTRO ..."
 yes | sudo apt install python-rosinstall python-catkin-pkg python-rosdep python-wstool \
-ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop ros-$ROS_DISTRO-pcl-ros \
-ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins \
-ros-$ROS_DISTRO-libg2o ros-$ROS_DISTRO-geographic-msgs \
-ros-$ROS_DISTRO-tf2-geometry-msgs > /dev/null
+  ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-desktop ros-$ROS_DISTRO-pcl-ros \
+  ros-$ROS_DISTRO-image-transport ros-$ROS_DISTRO-image-transport-plugins \
+  ros-$ROS_DISTRO-libg2o ros-$ROS_DISTRO-geographic-msgs \
+  ros-$ROS_DISTRO-tf2-geometry-msgs >/dev/null
 
 # ROS environment setup
 echo "Setting up ROS environment..."
@@ -80,8 +81,15 @@ echo "(If you have already added it manually or in previous install, enter n)"
 
 while read ans; do
   case "$ans" in
-    y) config_bashrc; update_rosdep; break;;
-    n) update_rosdep; break;;
-    *) echo "Invalid input (y/n):";;
+  y)
+    config_bashrc
+    update_rosdep
+    break
+    ;;
+  n)
+    update_rosdep
+    break
+    ;;
+  *) echo "Invalid input (y/n):" ;;
   esac
 done
