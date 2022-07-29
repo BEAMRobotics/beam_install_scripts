@@ -744,9 +744,6 @@ install_docker() {
 
   # test install
   sudo docker run hello-world
-
-  # pull docker images required for beam robotics
-  sudo docker pull stereolabs/kalibr
 }
 
 install_qwt() {
