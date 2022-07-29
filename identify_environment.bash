@@ -6,11 +6,12 @@ export CATKIN_DIR="$HOME/catkin_ws"
 # get release of Ubuntu
 export UBUNTU_CODENAME=$(lsb_release -s -c)
 case $UBUNTU_CODENAME in
-xenial)
-  export ROS_DISTRO=kinetic
-  ;;
 bionic)
   export ROS_DISTRO=melodic
+  ;;
+noetic)
+  export ROS_DISTRO=noetic
+  exit 1 # place holder if beam stack moves to noetic
   ;;
 *)
   echo "Unsupported version of Ubuntu detected. Only xenial (16.04.*) and bionic (18.04.*) are supported. Exiting."

@@ -129,11 +129,6 @@ install_routine() {
     install_pytorch
   fi
 
-  if [ $UBUNTU_CODENAME = xenial ]; then
-    install_gflags_from_source
-    install_ladybug_sdk
-  fi
-
   if [ ! -z "$ROBOT" ]; then
     source $INSTALL_SCRIPTS/robot_dependencies_install.bash
     if [ "$ROBOT" = "ig-handle" ]; then
