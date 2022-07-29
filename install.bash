@@ -107,7 +107,6 @@ install_routine() {
   bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
   # Install development machine dependencies
-  install_gdown
   install_cmake
   install_catch2
   install_eigen3
@@ -128,11 +127,6 @@ install_routine() {
 
   if [ "$PYTORCH" = true ]; then
     install_pytorch
-  fi
-
-  if [ $UBUNTU_CODENAME = xenial ]; then
-    install_gflags_from_source
-    install_ladybug_sdk
   fi
 
   if [ ! -z "$ROBOT" ]; then

@@ -10,9 +10,7 @@ Beam repo containing all required install scripts. For installation, please refe
 - DBow3
 - Eigen 3.3.7
 - Geographiclib 1.49
-- gflags (xenial)
 - JSON 3.6.1
-- Ladybug SDK 1.16.3.48 (xenial)
 - OpenCV 4.5.2
 - Protobuf 3.1.0
 - PCL 1.11.1
