@@ -1,20 +1,10 @@
 #!/bin/bash
 set -e
 
+# directory for cloning/downloading libraries installed using cmake/make. Upon reboot, this folder is wiped.
 DEPS_DIR="/tmp/beam_dependencies"
 
-# This script contains a series of functions to install 'other' dependencies for development machines.
-
-install_dataspeed() {
-  # We want all Dataspeed packages if not Travis
-  # The required apt repository was already added in ros_install.bash
-  # Also, the required dependency `dbw_mkz_msgs` was already installed there.
-  if [ -z "$CONTINUOUS_INTEGRATION" ]; then
-    echo "Installing or updating Dataspeed packages"
-    sudo apt-get -qq install ros-$ROS_DISTRO-dbw-mkz
-  fi
-}
-
+# helper function for make
 make_with_progress() {
   if [ -z "$CONTINUOUS_INTEGRATION" ]; then
     local awk_arg="-W interactive"
@@ -23,6 +13,8 @@ make_with_progress() {
   make "$@" | awk ${awk_arg} 'NR%5==1 { printf ".", $0}'
   echo "done"
 }
+
+# install functions required to compile and run beam_robotics on a development machine
 
 install_gcc7() {
   sudo apt update
@@ -113,9 +105,12 @@ install_protobuf() {
 }
 
 install_pcap() {
-  # for velodyne driver
-  echo "installing velodyne driver dependencies..."
+  echo "Installing velodyne driver dependencies..."
   sudo apt-get install libpcap-dev
+}
+
+install_parmetis() {
+  sudo apt-get install libparmetis-dev
 }
 
 install_pcl() {
@@ -196,98 +191,6 @@ install_geographiclib() {
     fi
 
     cd $DEPS_DIR/$GEOGRAPHICLIB_DIR/$BUILD_DIR
-    sudo make -j$NUM_PROCESSORS install >/dev/null
-  fi
-}
-
-install_gtsam() {
-  GTSAM_VERSION="4.0.2"
-  GTSAM_URL="git@github.com:borglab/gtsam.git"
-  GTSAM_DIR="gtsam"
-  BUILD_DIR="build"
-
-  if (find /usr/local/lib -name libgtsam.so | grep -q /usr/local/lib); then
-    #if (ldconfig -p | grep -q libgtsam.so); then
-    echo "GTSAM version $GTSAM_VERSION is already installed."
-  else
-    echo "Installing GTSAM version $GTSAM_VERSION ..."
-    mkdir -p $DEPS_DIR
-    cd $DEPS_DIR
-
-    if [ ! -d "$GTSAM_DIR" ]; then
-      git clone --depth 1 -b $GTSAM_VERSION $GTSAM_URL
-    fi
-
-    cd $GTSAM_DIR
-    git checkout -b $GTSAM_VERSION
-    if [ ! -d "$BUILD_DIR" ]; then
-      mkdir -p $BUILD_DIR
-      cd $BUILD_DIR
-      cmake .. -DCMAKE_BUILD_TYPE=Release \
-        -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_BUILD_WRAP=OFF \
-        -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DGTSAM_BUILD_DOCS=OFF
-      make_with_progress -j$NUM_PROCESSORS
-    fi
-
-    cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
-    sudo make install >/dev/null
-    echo "GTSAM installed successfully"
-  fi
-}
-
-install_liquid-dsp() {
-  LIQUID_VERSION="1.3.1"
-  LIQUID_URL="http://liquidsdr.org/downloads/liquid-dsp-$LIQUID_VERSION.tar.gz"
-
-  if (ldconfig -p | grep -q libliquid.so); then
-    echo "Liquid DSP version $LIQUID_VERSION is already installed."
-    return
-  fi
-
-  echo "Installing Liquid DSP version $LIQUID_VERSION ..."
-  sudo apt-get -qq install automake autoconf
-  mkdir -p $DEPS_DIR
-  cd $DEPS_DIR
-  wget "$LIQUID_URL"
-  tar -xf "liquid-dsp-$LIQUID_VERSION.tar.gz"
-  rm "liquid-dsp-$LIQUID_VERSION.tar.gz"
-  cd "liquid-dsp-$LIQUID_VERSION"
-  ./bootstrap.sh
-  ./configure
-  make_with_progress -j$NUM_PROCESSORS
-  sudo make install >/dev/null
-  echo "Liquid DSP installed successfully"
-}
-
-install_libwave() {
-  LIBWAVE_DIR="libwave"
-  BUILD_DIR="build"
-
-  if (find /usr/local/lib -name libwave_* | grep -q /usr/local/lib); then
-    echo "libwave SLAM library already installed"
-  else
-    echo "Installing libwave SLAM library"
-    # Install dependencies
-    sudo apt-get install libboost-dev libyaml-cpp-dev ros-kinetic-tf2-geometry-msgs build-essential cmake
-    mkdir -p $DEPS_DIR
-    cd $DEPS_DIR
-    if [ -d "$LIBWAVE_DIR" ]; then
-      echo "Libwave directory already cloned"
-    else
-      echo "Cloning libwave into home directory"
-      git clone --recursive https://github.com/wavelab/libwave.git
-      echo "Success"
-    fi
-
-    cd $LIBWAVE_DIR
-    if [ ! -d "$BUILD_DIR" ]; then
-      mkdir -p $BUILD_DIR
-      cd $BUILD_DIR
-      cmake -DBUILD_TESTS=OFF ..
-      make_with_progress -j$NUM_PROCESSORS
-    fi
-
-    cd $DEPS_DIR/$LIBWAVE_DIR/$BUILD_DIR
     sudo make -j$NUM_PROCESSORS install >/dev/null
   fi
 }
@@ -406,43 +309,6 @@ install_eigen3() {
   sudo make -j$NUM_PROCESSORS install >/dev/null
 }
 
-install_gflags() {
-  sudo apt-get install libgflags-dev
-}
-
-install_gflags_from_source() {
-  GFLAGS_DIR="gflags"
-  BUILD_DIR="build"
-  mkdir -p $DEPS_DIR
-  cd $DEPS_DIR
-
-  if [ ! -d "$GFLAGS_DIR" ]; then
-    git clone --depth 1 https://github.com/gflags/gflags.git
-  fi
-
-  cd $GFLAGS_DIR
-  if [ ! -d "$BUILD_DIR" ]; then
-    mkdir -p $BUILD_DIR
-    cd $BUILD_DIR
-    cmake .. -DCMAKE_POSITION_INDEPENDENT_CODE=true
-    make_with_progress -j$NUM_PROCESSORS
-  fi
-
-  cd $DEPS_DIR/$GFLAGS_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install >/dev/null
-
-  # remove error inducing gtest and gmock (should just exist in /usr/include)
-  GTEST_PATH="/usr/local/include/gtest"
-  GMOCK_PATH="/usr/local/include/gmock"
-  if test -f $GTEST_PATH; then
-    sudo rm -r $GTEST_PATH
-  fi
-
-  if test -f $GMOCK_PATH; then
-    sudo rm -r $GMOCK_PATH
-  fi
-}
-
 install_json() {
   # search for nlohmann in /usr/local/include
   if [ -d '/usr/local/include/nlohmann' ]; then
@@ -471,31 +337,6 @@ install_json() {
 
   cd $DEPS_DIR/$JSON_DIR/$BUILD_DIR
   sudo make -j$NUM_PROCESSORS install >/dev/null
-}
-
-install_ladybug_sdk() {
-  LB_DIR="ladybug"
-  mkdir -p $DEPS_DIR
-  cd $DEPS_DIR
-  sudo apt-get -y install libraw1394-11 libraw1394-dev libraw1394-tools libgtkmm-2.4-1v5 \ 
-  libglademm-2.4-1v5 libgtkglextmm-x11-1.2-dev libgtkglextmm-x11-1.2 libusb-1.0-0
-
-  if [ ! -d "$LB_DIR" ]; then
-    echo "Don't have Ladybug SDK Directory, creating & downloading SDK..."
-    mkdir -p $LB_DIR
-    cd $LB_DIR
-    wget https://www.dropbox.com/s/8d67i2jxmkwa52n/LaydbugSDK_1.16.3.48_amd64.tar?dl=0
-    tar -xvf LaydbugSDK_1.16.3.48_amd64.tar?dl=0
-    sudo dpkg -x ladybug-1.16.3.48_amd64.deb .
-    sudo cp -a usr/. /usr/local/
-    echo "Ladybug SDK successfully installed in /usr/local/"
-  else
-    echo "Already have ladybug folder..."
-    cd $LB_DIR
-    sudo dpkg -x ladybug-1.16.3.48_amd64.deb .
-    sudo cp -a usr/. /usr/local/
-    echo "Ladybug SDK successfully installed in /usr/local/"
-  fi
 }
 
 install_dbow3() {
@@ -593,6 +434,9 @@ install_opencv4() {
   fi
 }
 
+# install functions that are not required by beam_robotics, though are compatible with the beam robotics stack
+
+# serves a general purpose within the beam robotics stack for parallel computing
 install_cuda() {
   echo "Installing cuda..."
   sudo apt-get purge nvidia-cuda*
@@ -606,6 +450,7 @@ install_cuda() {
   echo "cuda successfully installed."
 }
 
+# serves a general purpose within the beam robotics stack for machine learning
 install_pytorch() {
   if test -f "/usr/bin/python3.7"; then
     echo "Python version 3.7 found."
@@ -635,6 +480,7 @@ install_pytorch() {
   fi
 }
 
+# serves a general purpose within the beam robotics stack for machine learning
 install_pytorch_cuda() {
   if test -f "/usr/bin/python3.7"; then
     echo "Python version 3.7 found."
@@ -664,54 +510,7 @@ install_pytorch_cuda() {
   fi
 }
 
-install_sophus() {
-  SOPHUS_DIR="Sophus"
-  BUILD_DIR="build"
-  mkdir -p $DEPS_DIR
-  cd $DEPS_DIR
-
-  sudo apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
-  if [ ! -d "$SOPHUS_DIR" ]; then
-    git clone git@github.com:strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
-  fi
-
-  cd $SOPHUS_DIR
-  git checkout 936265f # required by basalt
-  if [ ! -d "$BUILD_DIR" ]; then
-    mkdir -p $BUILD_DIR
-    cd $BUILD_DIR
-    cmake ..
-    make_with_progress -j$NUM_PROCESSORS
-  fi
-
-  cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
-  sudo make install >/dev/null
-}
-
-install_teaserpp() {
-  TEASERPP_DIR="TEASER-plusplus"
-  BUILD_DIR="build"
-
-  mkdir -p $DEPS_DIR
-  cd $DEPS_DIR
-
-  if [ ! -d "$TEASERPP_DIR" ]; then
-    echo "teaserpp not found... cloning"
-    git clone --depth 1 https://github.com/BEAMRobotics/TEASER-plusplus
-  fi
-
-  cd $TEASERPP_DIR
-  if [ ! -d "$BUILD_DIR" ]; then
-    mkdir -p $BUILD_DIR
-    cd $BUILD_DIR
-    cmake .. >/dev/null
-    make_with_progress -j$NUM_PROCESSORS
-  fi
-
-  cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
-  sudo make -j$NUM_PROCESSORS install >/dev/null
-}
-
+# serves a general purpose within the beam robotics stack to pull and create docker containers
 install_docker() {
   # installation process follows https://docs.docker.com/engine/install/ubuntu/
 
@@ -746,14 +545,98 @@ install_docker() {
   sudo docker run hello-world
 }
 
+# required by LVI-SAM/LIO-SAM
+install_gtsam() {
+  GTSAM_VERSION="4.0.2"
+  GTSAM_URL="git@github.com:borglab/gtsam.git"
+  GTSAM_DIR="gtsam"
+  BUILD_DIR="build"
+
+  if (find /usr/local/lib -name libgtsam.so | grep -q /usr/local/lib); then
+    #if (ldconfig -p | grep -q libgtsam.so); then
+    echo "GTSAM version $GTSAM_VERSION is already installed."
+  else
+    echo "Installing GTSAM version $GTSAM_VERSION ..."
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
+
+    if [ ! -d "$GTSAM_DIR" ]; then
+      git clone --depth 1 -b $GTSAM_VERSION $GTSAM_URL
+    fi
+
+    cd $GTSAM_DIR
+    git checkout -b $GTSAM_VERSION
+    if [ ! -d "$BUILD_DIR" ]; then
+      mkdir -p $BUILD_DIR
+      cd $BUILD_DIR
+      cmake .. -DCMAKE_BUILD_TYPE=Release \
+        -DGTSAM_USE_SYSTEM_EIGEN=ON -DGTSAM_BUILD_UNSTABLE=ON -DGTSAM_BUILD_WRAP=OFF \
+        -DGTSAM_BUILD_TESTS=OFF -DGTSAM_BUILD_EXAMPLES_ALWAYS=OFF -DGTSAM_BUILD_DOCS=OFF
+      make_with_progress -j$NUM_PROCESSORS
+    fi
+
+    cd $DEPS_DIR/$GTSAM_DIR/$BUILD_DIR
+    sudo make install >/dev/null
+    echo "GTSAM installed successfully"
+  fi
+}
+
+# required by beam_slam
 install_qwt() {
   sudo apt-get install libqwt-dev
 }
 
-install_parmetis() {
-  sudo apt-get install libparmetis-dev
+# required by beam_slam
+install_sophus() {
+  SOPHUS_DIR="Sophus"
+  BUILD_DIR="build"
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  sudo apt-get install gfortran libc++-dev libgoogle-glog-dev libatlas-base-dev libsuitesparse-dev
+  if [ ! -d "$SOPHUS_DIR" ]; then
+    git clone git@github.com:strasdat/Sophus.git $DEPS_DIR/$SOPHUS_DIR
+  fi
+
+  cd $SOPHUS_DIR
+  git checkout 936265f # required by basalt
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake ..
+    make_with_progress -j$NUM_PROCESSORS
+  fi
+
+  cd $DEPS_DIR/$SOPHUS_DIR/$BUILD_DIR
+  sudo make install >/dev/null
 }
 
+# required by beam_slam
+install_teaserpp() {
+  TEASERPP_DIR="TEASER-plusplus"
+  BUILD_DIR="build"
+
+  mkdir -p $DEPS_DIR
+  cd $DEPS_DIR
+
+  if [ ! -d "$TEASERPP_DIR" ]; then
+    echo "teaserpp not found... cloning"
+    git clone --depth 1 https://github.com/BEAMRobotics/TEASER-plusplus
+  fi
+
+  cd $TEASERPP_DIR
+  if [ ! -d "$BUILD_DIR" ]; then
+    mkdir -p $BUILD_DIR
+    cd $BUILD_DIR
+    cmake .. >/dev/null
+    make_with_progress -j$NUM_PROCESSORS
+  fi
+
+  cd $DEPS_DIR/$TEASERPP_DIR/$BUILD_DIR
+  sudo make -j$NUM_PROCESSORS install >/dev/null
+}
+
+# required by beam_simulation
 install_gazebo() {
   # tested with ros melodic
   sudo sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list'
