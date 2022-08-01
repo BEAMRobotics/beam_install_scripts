@@ -537,7 +537,7 @@ install_docker() {
   sudo apt-get update
   sudo apt-get install docker-ce docker-ce-cli containerd.io
 
-  # version 5:20.10.7~3-0 is stable on xenial and bionic
+  # version 5:20.10.7~3-0 is stable on bionic
   sudo apt-get install docker-ce=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME \
     docker-ce-cli=5:20.10.7~3-0~ubuntu-$UBUNTU_CODENAME containerd.io
 

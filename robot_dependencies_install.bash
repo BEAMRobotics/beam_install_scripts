@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# help function for building catkin packages
+# helper function for building catkin packages
 catkin_build() {
   cd $CATKIN_DIR
   catkin build -j$NUM_PROCESSORS
