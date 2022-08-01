@@ -11,6 +11,7 @@ bionic)
   ;;
 noetic)
   export ROS_DISTRO=noetic
+  echo "noetic (20.04.*) currently not supported. Exiting."
   exit 1 # place holder if beam stack moves to noetic
   ;;
 *)
