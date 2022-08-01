@@ -89,14 +89,14 @@ install_routine() {
   # Ensure wget is available
   sudo apt-get install -qq wget >/dev/null
 
-  # get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
+  # Get UBUNTU_CODENAME, ROS_DISTRO, REPO_DIR, CATKIN_DIR
   source $INSTALL_SCRIPTS/identify_environment.bash
 
   # Import functions to install required dependencies
   source $INSTALL_SCRIPTS/beam_dependencies_install.bash
   install_gcc7
 
-  # source catkin setup script
+  # Source catkin setup script
   source $INSTALL_SCRIPTS/catkin_setup.bash
 
   # Install ROS
@@ -106,11 +106,10 @@ install_routine() {
   # Install ROS dependencies
   bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
-  # Install development machine dependencies
+  # Install required development machine dependencies
   install_cmake
   install_catch2
   install_eigen3
-  install_sophus
   install_ceres
   install_pcl
   install_geographiclib
@@ -119,6 +118,8 @@ install_routine() {
   install_json
   install_dbow3
   install_opencv4
+
+  # Install optional software for development machines
   install_docker
 
   if [ "$GTSAM" = true ]; then
@@ -129,6 +130,7 @@ install_routine() {
     install_pytorch
   fi
 
+  # Install beam robot drivers and dependencies
   if [ ! -z "$ROBOT" ]; then
     source $INSTALL_SCRIPTS/robot_dependencies_install.bash
     if [ "$ROBOT" = "ig-handle" ]; then
@@ -137,6 +139,7 @@ install_routine() {
     elif [ "$ROBOT" = "ig2" ]; then
       echo "Installing drivers for $ROBOT..."
       install_ig_handle
+      install_husky_packages
     elif [ "$ROBOT" = "pierre" ]; then
       echo "Installing drivers for $ROBOT..."
       install_ig_handle
@@ -144,7 +147,7 @@ install_routine() {
     fi
   fi
 
-  # check that ros installed correctly
+  # Check that ros installed correctly
   ROS_CHECK="$(rosversion -d)"
   if [ "$ROS_CHECK" == "$ROS_DISTRO" ]; then
     echo "Ros install okay"
@@ -155,7 +158,7 @@ install_routine() {
     exit
   fi
 
-  # check that catkin_ws was created
+  # Check that catkin_ws was created
   if [ -d "$CATKIN_DIR" ]; then
     echo "Catkin Directory found"
   else
