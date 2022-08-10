@@ -127,7 +127,7 @@ install_routine() {
   fi
 
   if [ "$PYTORCH" = true ]; then
-    install_pytorch # computes data using tensors tha are accelerated by the GPU
+    install_pytorch # computes data using tensors that are accelerated by the GPU
   fi
 
   # Install beam robot drivers and dependencies
