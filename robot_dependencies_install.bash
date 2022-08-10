@@ -9,7 +9,7 @@ catkin_build() {
 
 # install functions required to compile and run software for beam robots
 
-# required by ig2
+# Packages for a unmanned ground vehicle operations
 install_husky_packages() {
   echo "installing husky dependencies..."
   sudo apt-get install ros-$ROS_DISTRO-controller-manager* \
@@ -21,7 +21,7 @@ install_husky_packages() {
     ros-$ROS_DISTRO-joint-state-controller \
     ros-$ROS_DISTRO-diff-drive-controller
 }
-
+# Contains all the launch and python scripts that allows for the operation of the cameras and lidar connected to the ig handle
 install_ig_handle() {
   IG_HANDLE_DIR="ig_handle"
   cd $CATKIN_DIR/src/
@@ -49,6 +49,7 @@ update_udev() {
   sudo cp $CATKIN_DIR/src/ig_handle/config/01-ig2_netplan.yaml /etc/netplan/
 }
 
+# installs the driver required to operate our Blackfly S USB3 camera. This software allows us to monitor and control 
 install_spinnaker_sdk() {
   echo "Installing Spinnaker SDK..."
   SP_DIR="spinnaker"
@@ -73,7 +74,7 @@ install_spinnaker_sdk() {
   cd $SP_SDK_DIR
   sudo sh install_spinnaker.sh
 }
-
+# Drivers to integrate XSENS IMU
 install_mti_sdk() {
   echo "Installing MTI SDK..."
   MT_DIR="mti"
@@ -99,6 +100,7 @@ install_mti_sdk() {
   bash mtsdk_linux-x64_2021.2.sh
 }
 
+# Allows us to control arduino and teensy using linux
 install_arduino_teensyduino() {
   echo "Installing arduino and Teensyduino..."
   sudo apt-get install ros-$ROS_DISTRO-rosserial
@@ -113,6 +115,7 @@ install_arduino_teensyduino() {
   ./TeensyduinoInstall.linux64 --dir=arduino-1.8.13
 }
 
+# NEED TO COMMENT WHY WE ARE INSTALLING THIS AND WHAT ITS USED FOR
 install_dt100() {
   echo "Installing DT100 driver and dependencies..."
   DT100_DIR="dt100_driver"
@@ -141,6 +144,7 @@ install_dt100() {
   fi
 }
 
+# NEED TO COMMENT WHY WE ARE INSTALLING THIS AND WHAT ITS USED FOR
 install_virtual_box() {
   echo "Installing Virtual Box..."
   wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O- | sudo apt-key add -

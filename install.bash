@@ -107,27 +107,27 @@ install_routine() {
   bash $INSTALL_SCRIPTS/rosdeps_install.bash
 
   # Install required development machine dependencies
-  install_cmake
-  install_catch2
-  install_eigen3
-  install_ceres
-  install_pcl
-  install_geographiclib
-  install_pcap
-  install_parmetis
-  install_json
-  install_dbow3
-  install_opencv4
+  install_cmake # tool box that allows us to make c++ projects in linux
+  install_catch2 #unit testing framework for C++  
+  install_eigen3 # C++ library for linear algebra
+  install_ceres # C++ library for modeling and solving large cmplicated optimization problems
+  install_pcl # (point cloud library) software for 2d/3d image and point cloud processing
+  install_geographiclib # C++ library for geodesic and rhumb line calculations; conversions between geographic, UTM, UPS, MGRS, geocentric, and local cartesian coordinates; gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2020) calculations
+  install_pcap # portable framework for lowlevel network monitoring
+  install_parmetis #library for partitioning unstructure graphs and hypergraphs,computing fill-reducing ordign for sparse materices, parallel AMR computations and large scale numerical simulations
+  install_json # allows for text based representiong of javascript object lterals, arrays and scalar data
+  install_dbow3 # C++ library for indexing and converting images into a bag of word represnation. Implements a hierarchical tree for approximation nerest neighbours in the mage feature space and creating a visual vocabulary
+  install_opencv4 #c++ tool for image processng and performing compute vision tasks, also supports python and java, allows for extraction of useful information and discarding of "background noise"
 
   # Install optional software for development machines
-  install_docker
+  install_docker # platfrom for seperating software from yor infrasture to deliver infomation more quickly (allow to rn applications in loosly isolted environment so we can run multiple applications simultaneously)
 
   if [ "$GTSAM" = true ]; then
-    install_gtsam
+    install_gtsam # C++ library that implements smoothing and mapping in robotics and vision using factor graphs and bayes networks as underlying computing paradgm
   fi
 
   if [ "$PYTORCH" = true ]; then
-    install_pytorch
+    install_pytorch # computes data using tensors tha are accelerated by the GPU
   fi
 
   # Install beam robot drivers and dependencies
