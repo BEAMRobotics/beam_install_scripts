@@ -86,7 +86,7 @@ install_mti_sdk() {
     echo "MTI SDK directory does not exist, downloading SDK..."
     gdown 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z
     tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz
-    rm -rf MT_Software_suite_linux-x64_2021.2.tar.gz
+    rm -rf MT_Software_Suite_linux-x64_2021.2.tar.gz
   fi
 
   cd $MT_SDK_DIR
@@ -97,20 +97,69 @@ install_mti_sdk() {
 
   chmod +x mtsdk_linux-x64_2021.2.sh
   bash mtsdk_linux-x64_2021.2.sh
+
+  # require user to enter default 'Xsens MT SDK' installation directory
+  ln -s /usr/local/xsens/xsens_ros_mti_driver $CATKIN_DIR
+  cd /usr/local/xsens/xsens_ros_mti_driver/lib/xspublic
+  sudo make -j$NUM_PROCESSORS >/dev/null
 }
 
 install_arduino_teensyduino() {
-  echo "Installing arduino and Teensyduino..."
+  echo "Installing Arduino and Teensyduino..."
+
+  ARDUINO_DIR="$HOME/Arduino" # default location of <sketchbook>
+  ARDUINO_TEENSYDUINO_INSTALL_DIR="$HOME/software/arduino_teensyduino"
+  mkdir -p $ARDUINO_TEENSYDUINO_INSTALL_DIR && cd $ARDUINO_TEENSYDUINO_INSTALL_DIR
+
+  # 1. Install Arduino + Teensyduino
+  if [ ! -d "arduino-1.8.13" ]; then
+    echo "arduino-1.8.13 does not exist, downloading..."
+    wget https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz
+    tar -xf arduino-1.8.13-linux64.tar.xz
+    rm -rf arduino-1.8.13-linux64.tar.xz
+  fi
+
+  if [ ! -f "TeensyduinoInstall.linux64" ]; then
+    echo "TeensyduinoInstall.linux64 does not exist, downloading..."
+    wget https://www.pjrc.com/teensy/td_153/TeensyduinoInstall.linux64
+  fi
+
+  if [ ! -f "00-teensy.rules" ]; then
+    echo "00-teensy.rules does not exist, downloading..."
+    wget https://www.pjrc.com/teensy/00-teensy.rules
+  fi
+
+  sudo cp 00-teensy.rules /etc/udev/rules.d/
+  chmod 755 TeensyduinoInstall.linux64
+
+  # Note: we have elected to install via the gui as specifying --dir leads to errors upon repeat installs.
+  # Note: If you receive the following error:
+  #   Unable to write file to "hardware/tools/teensy"
+  # reboot your system and continue install
+  echo "TeensyduinoInstall: When prompted to 'Select Arduino Folder', enter $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13"
+  sudo ./TeensyduinoInstall.linux64
+
+  # build core libraries for teensy3 and teensy4
+  cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/hardware/teensy/avr/cores/teensy3
+  sudo make -j$NUM_PROCESSORS >/dev/null
+  cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/hardware/teensy/avr/cores/teensy4
+  sudo make -j$NUM_PROCESSORS >/dev/null
+
+  # install arduino IDE and setup udev rules
+  cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/
+  ./uninstall.sh && ./install.sh && ./arduino-linux-setup.sh $USER
+
+  # 2. Install rosserial
   sudo apt-get install ros-$ROS_DISTRO-rosserial
   sudo apt-get install ros-$ROS_DISTRO-rosserial-arduino
 
-  wget https://downloads.arduino.cc/arduino-1.8.13-linux64.tar.xz
-  wget https://www.pjrc.com/teensy/td_153/TeensyduinoInstall.linux64
-  wget https://www.pjrc.com/teensy/00-teensy.rules
-  sudo cp 00-teensy.rules /etc/udev/rules.d/
-  tar -xf arduino-1.8.13-linux64.tar.xz
-  chmod 755 TeensyduinoInstall.linux64
-  ./TeensyduinoInstall.linux64 --dir=arduino-1.8.13
+  # 3. Install ros_lib
+  # Note: If you receive the following error:
+  #   Unable to build service: rviz/SendFilePath
+  # you may ignore this warning
+  mkdir -p $ARDUINO_DIR/libraries && cd $ARDUINO_DIR/libraries
+  rm -rf ros_lib
+  rosrun rosserial_arduino make_libraries.py . >/dev/null
 }
 
 install_dt100() {
