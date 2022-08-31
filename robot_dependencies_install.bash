@@ -23,10 +23,10 @@ install_husky_packages() {
 }
 
 install_ig_handle() {
-  IG_HANDLE_DIR="ig_handle"
   cd $CATKIN_DIR/src/
   echo "Installing ig-handle driver and dependencies..."
 
+  IG_HANDLE_DIR="ig_handle"
   if [ ! -d "$IG_HANDLE_DIR" ]; then
     echo "$IG_HANDLE_DIR does not exist, cloning driver..."
     git clone git@github.com:BEAMRobotics/ig_handle.git
@@ -72,6 +72,14 @@ install_spinnaker_sdk() {
 
   cd $SP_SDK_DIR
   sudo sh install_spinnaker.sh
+
+  FLIR_CAMERA_DRIVER_DIR="flir_camera_driver"
+  if [ ! -d "$FLIR_CAMERA_DRIVER_DIR" ]; then
+    echo "$FLIR_CAMERA_DRIVER_DIR does not exist, cloning driver..."
+    git@github.com:ros-drivers/flir_camera_driver.git
+  else
+    echo "$FLIR_CAMERA_DRIVER_DIR exists."
+  fi
 }
 
 install_mti_sdk() {
