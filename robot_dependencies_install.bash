@@ -73,6 +73,7 @@ install_spinnaker_sdk() {
   cd $SP_SDK_DIR
   sudo sh install_spinnaker.sh
 
+  cd $CATKIN_DIR/src/
   FLIR_CAMERA_DRIVER_DIR="flir_camera_driver"
   if [ ! -d "$FLIR_CAMERA_DRIVER_DIR" ]; then
     echo "$FLIR_CAMERA_DRIVER_DIR does not exist, cloning driver..."
