@@ -151,8 +151,10 @@ install_arduino_teensyduino() {
   # build core libraries for teensy3 and teensy4
   cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/hardware/teensy/avr/cores/teensy3
   sudo make -j$NUM_PROCESSORS >/dev/null
-  cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/hardware/teensy/avr/cores/teensy4
-  sudo make -j$NUM_PROCESSORS >/dev/null
+
+  # build core libraries for teensy4 (ig-handle currently does not support teensy4)
+  # cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/hardware/teensy/avr/cores/teensy4
+  # sudo make -j$NUM_PROCESSORS >/dev/null
 
   # install arduino IDE and setup udev rules
   cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/
