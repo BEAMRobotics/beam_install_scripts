@@ -148,7 +148,7 @@ install_arduino_teensyduino() {
   echo "TeensyduinoInstall: When prompted to 'Select Arduino Folder', enter $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13"
   sudo ./TeensyduinoInstall.linux64
 
-  # build core libraries for teensy3 and teensy4
+  # build core libraries for teensy3
   cd $ARDUINO_TEENSYDUINO_INSTALL_DIR/arduino-1.8.13/hardware/teensy/avr/cores/teensy3
   sudo make -j$NUM_PROCESSORS >/dev/null
 
