@@ -77,7 +77,7 @@ install_spinnaker_sdk() {
   FLIR_CAMERA_DRIVER_DIR="flir_camera_driver"
   if [ ! -d "$FLIR_CAMERA_DRIVER_DIR" ]; then
     echo "$FLIR_CAMERA_DRIVER_DIR does not exist, cloning driver..."
-    git@github.com:ros-drivers/flir_camera_driver.git
+    git clone git@github.com:ros-drivers/flir_camera_driver.git
   else
     echo "$FLIR_CAMERA_DRIVER_DIR exists."
   fi
