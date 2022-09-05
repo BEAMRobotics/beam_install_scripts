@@ -67,10 +67,11 @@ install_spinnaker_sdk() {
     echo "Spinnaker SDK directory does not exist, downloading SDK..."
     gdown 1_nT47nHHy6ugRxHH4frLV29wgCRhSRGF
     tar fxv spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
-    rm -rf spinnaker-2.4.0.143-Ubuntu18.04-amd64-pkg.tar.gz
   fi
 
+  # see installation wiki for correct input
   cd $SP_SDK_DIR
+  sudo sh remove_spinnaker.sh
   sudo sh install_spinnaker.sh
 
   cd $CATKIN_DIR/src/
@@ -95,20 +96,22 @@ install_mti_sdk() {
     echo "MTI SDK directory does not exist, downloading SDK..."
     gdown 1kTxxwwFHyDAJadEMhEjLIAN9_MnDgX-z
     tar xvf MT_Software_Suite_linux-x64_2021.2.tar.gz
-    rm -rf MT_Software_Suite_linux-x64_2021.2.tar.gz
+    cd $MT_SDK_DIR
+    tar xvf mtmanager_linux-x64_2021.2.tar.gz
+    tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
+  else
+    cd $MT_SDK_DIR
   fi
 
-  cd $MT_SDK_DIR
-  tar xvf mtmanager_linux-x64_2021.2.tar.gz
-  tar xvf magfieldmapper_linux-x64_2021.2.tar.gz
-  rm -rf mtmanager_linux-x64_2021.2.tar.gz
-  rm -rf magfieldmapper_linux-x64_2021.2.tar.gz
+  # require user to enter default 'Xsens MT SDK' installation directory:
+  #   [/usr/local/xsens]
+  sudo sh mtsdk_linux-x64_2021.2.sh
 
-  chmod +x mtsdk_linux-x64_2021.2.sh
-  bash mtsdk_linux-x64_2021.2.sh
+  # create symbolic link for driver in catkin workspace
+  rm -rf $CATKIN_DIR/src/xsens_ros_mti_driver
+  ln -s /usr/local/xsens/xsens_ros_mti_driver $CATKIN_DIR/src
 
-  # require user to enter default 'Xsens MT SDK' installation directory
-  ln -s /usr/local/xsens/xsens_ros_mti_driver $CATKIN_DIR
+  # build core library
   cd /usr/local/xsens/xsens_ros_mti_driver/lib/xspublic
   sudo make -j$NUM_PROCESSORS >/dev/null
 }
