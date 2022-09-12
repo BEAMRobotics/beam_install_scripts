@@ -15,6 +15,11 @@ make_with_progress() {
 }
 
 # install functions required to compile and run beam_robotics on a development machine
+install_git_lfs(){
+  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+  sudo apt-get install git-lfs
+}
+
 
 install_gcc7() {
   sudo apt update
