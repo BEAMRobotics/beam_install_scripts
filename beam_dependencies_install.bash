@@ -126,6 +126,25 @@ install_libpcap()
     sudo apt-get install libpcap-dev
 }
 
+install_nanoflann()
+{
+    echo "installing nanoflann..."
+    VERSION="v1.4.3"
+    DIR="nanoflann"
+    BUILD_DIR="build"
+
+    mkdir -p $DEPS_DIR
+    cd $DEPS_DIR
+    git clone git@github.com:jlblancoc/nanoflann.git
+    cd $DIR
+    git checkout $VERSION 
+    mkdir -p $BUILD_DIR 
+    cd $BUILD_DIR 
+    cmake ..
+    make_with_progress -j$NUM_PROCESSORS
+    sudo make -j$NUM_PROCESSORS install  > /dev/null
+}
+
 install_pcl()
 {
   PCL_VERSION="1.11.1"

@@ -116,6 +116,7 @@ install_routine()
     install_dbow3
     install_opencv4
     install_docker
+    install_nanoflann
 
     if [ "$PYTORCH" = true ]; then
       echo "Installing pytorch..."
