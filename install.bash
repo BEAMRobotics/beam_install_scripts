@@ -119,7 +119,6 @@ install_routine() {
   install_dbow3
   install_opencv4
   install_git_lfs
-  install_nanoflann
 
   # Install optional software for development machines
   install_docker
