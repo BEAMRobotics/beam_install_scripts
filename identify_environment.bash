@@ -8,14 +8,14 @@ export UBUNTU_CODENAME=$(lsb_release -s -c)
 case $UBUNTU_CODENAME in
 bionic)
   export ROS_DISTRO=melodic
+  export PYTHON_VERSION=python
   ;;
-noetic)
+focal)
   export ROS_DISTRO=noetic
-  echo "noetic (20.04.*) currently not supported. Exiting."
-  exit 1 # place holder if beam stack moves to noetic
+  export PYTHON_VERSION=python3
   ;;
 *)
-  echo "Unsupported version of Ubuntu detected. Only xenial (16.04.*) and bionic (18.04.*) are supported. Exiting."
+  echo "Unsupported version of Ubuntu detected. Only bionic (18.04.*) and focal (20.04.*) are supported. Exiting."
   exit 1
   ;;
 esac

@@ -39,6 +39,24 @@ install_gcc7() {
   sudo ln -s /usr/bin/g++-7 /usr/bin/g++
 }
 
+install_gcc9() {
+  sudo apt update
+  sudo apt install build-essential
+
+  GCC_PATH="/usr/bin/gcc"
+  GPP_PATH="/usr/bin/g++"
+  if test -f $GCC_PATH; then
+    sudo rm -r $GCC_PATH
+  fi
+
+  if test -f $GPP_PATH; then
+    sudo rm -r $GPP_PATH
+  fi
+
+  sudo ln -s /usr/bin/gcc-9 /usr/bin/gcc
+  sudo ln -s /usr/bin/g++-9 /usr/bin/g++
+}
+
 install_ceres() {
   # search for ceres in /usr/local/include
   if [ -d '/usr/local/include/ceres' ]; then
@@ -539,7 +557,7 @@ install_docker() {
   # installation process follows https://docs.docker.com/engine/install/ubuntu/
 
   # uninstall old versions
-  sudo apt-get remove docker docker-engine docker.io containerd runc
+  # sudo apt-get remove docker docker-engine docker.io containerd runc
 
   # set up the repository
   sudo apt-get update

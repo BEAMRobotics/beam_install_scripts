@@ -94,7 +94,13 @@ install_routine() {
 
   # Import functions to install required dependencies
   source $INSTALL_SCRIPTS/beam_dependencies_install.bash
-  install_gcc7
+  
+  if [ "$ROS_DISTRO" = "melodic" ]; then
+    install_gcc7
+  fi
+  if [ "$ROS_DISTRO" = "noetic" ]; then
+    install_gcc9
+  fi
 
   # Source catkin setup script
   source $INSTALL_SCRIPTS/catkin_setup.bash
